@@ -37,25 +37,24 @@ function Router() {
       <Route path="/reset-password" component={ResetPassword} />
       <Route path="/verify-email" component={VerifyEmail} />
       
-      {/* Public routes - accessible without authentication */}
-      {isLoading || !isAuthenticated ? (
+      {/* Public routes - always accessible */}
+      <Route path="/" component={Home} />
+      <Route path="/landing" component={Landing} />
+      
+      {/* Protected routes - require authentication */}
+      {isAuthenticated && !isLoading && (
         <>
-          <Route path="/" component={Landing} />
-          <Route path="/landing" component={Landing} />
-        </>
-      ) : (
-        <>
-          {/* Protected routes - require authentication */}
-          <Route path="/" component={Home} />
           <Route path="/chat" component={Chat} />
-          <Route path="/profile" component={ProfileDetail} />
           <Route path="/my-profile" component={Profile} />
-          <Route path="/explore" component={Explore} />
           <Route path="/albums" component={PrivateAlbums} />
           <Route path="/settings" component={Settings} />
           <Route path="/subscribe" component={Subscribe} />
         </>
       )}
+      
+      {/* Profile viewing - accessible but may require auth for contact */}
+      <Route path="/profile" component={ProfileDetail} />
+      <Route path="/explore" component={Explore} />
       <Route component={NotFound} />
     </Switch>
   );

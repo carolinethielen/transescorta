@@ -10,6 +10,17 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (January 2025)
 
+### Custom Authentication System
+- **Email/Password Auth**: Replaced Replit Auth with custom authentication using bcrypt password hashing
+- **Registration System**: Users can register as Trans escorts or male customers with email verification
+- **Secure Login**: JWT token-based authentication with session management and password reset functionality
+- **Demo Data**: Initialized platform with 5 demo trans escort profiles for testing
+
+### Public Browsing Experience (hunqz.com Style)
+- **No-Login Browsing**: Homepage allows visitors to browse and filter escorts without authentication
+- **Modal Authentication**: Seamless auth modal appears when trying to access profiles or contact features
+- **Real-time Updates**: No page reloads when switching between browsing and authenticated features
+
 ### Enhanced Filter System
 - **Active Filter Display**: Filter button now shows active filter content instead of generic "Filter aktiv" text
 - **Smart Filter Summary**: Displays abbreviated filter details (age range, price, services count, etc.)

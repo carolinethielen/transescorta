@@ -8,6 +8,7 @@ import { LocationSelector } from '@/components/LocationSelector';
 import { FilterDialog } from '@/components/FilterDialog';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/hooks/useAuth';
+import AuthModal from '@/components/AuthModal';
 import { useToast } from '@/hooks/use-toast';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { MapPin, Moon, Sun, MessageCircle, Crown, Star } from 'lucide-react';
@@ -30,7 +31,9 @@ export default function Home() {
   const [userCoordinates, setUserCoordinates] = useState<{ lat: number; lon: number } | null>(null);
   const [filters, setFilters] = useState<any>(null);
   const { theme, toggleTheme } = useTheme();
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
   const { toast } = useToast();
   const { coordinates, currentCity, isLoading: locationLoading } = useGeolocation();
   const queryClient = useQueryClient();
@@ -104,18 +107,12 @@ export default function Home() {
   const nearbyEscorts = [...filteredEscorts].sort((a, b) => a.distance - b.distance);
 
   const handleContactEscort = (escort: any) => {
-    if (!user) {
-      toast({
-        title: "Anmeldung erforderlich",
-        description: "Du musst dich anmelden, um Escorts zu kontaktieren",
-        variant: "destructive",
-      });
-      setTimeout(() => {
-        window.location.href = "/select-type";
-      }, 1000);
+    if (!isAuthenticated) {
+      setAuthTab('register');
+      setShowAuthModal(true);
       return;
     }
-    window.location.href = `/chat?user=${escort.id}`;
+    navigate(`/chat?user=${escort.id}`);
   };
 
   // Handle location change
@@ -127,15 +124,9 @@ export default function Home() {
   };
 
   const handleEscortClick = (escortId: string) => {
-    if (!user) {
-      toast({
-        title: "Anmeldung erforderlich",
-        description: "Du musst dich anmelden, um Profile anzusehen",
-        variant: "destructive",
-      });
-      setTimeout(() => {
-        window.location.href = "/select-type";
-      }, 1000);
+    if (!isAuthenticated) {
+      setAuthTab('login');
+      setShowAuthModal(true);
       return;
     }
     // Use wouter navigation for instant loading without page reload
@@ -302,6 +293,12 @@ export default function Home() {
           )}
         </div>
       </main>
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        defaultTab={authTab}
+      />
     </div>
   );
 }
