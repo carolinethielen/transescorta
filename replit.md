@@ -15,6 +15,7 @@ Preferred communication style: Simple, everyday language.
 - **Registration System**: Users can register as Trans escorts or male customers with email verification
 - **Secure Login**: JWT token-based authentication with session management and password reset functionality
 - **Demo Data**: Initialized platform with 5 demo trans escort profiles for testing
+- **Fixed Fetch API Error**: Replaced problematic fetch calls with XMLHttpRequest to resolve "Failed to execute 'fetch'" error during registration/login
 
 ### Public Browsing Experience (hunqz.com Style)
 - **No-Login Browsing**: Homepage allows visitors to browse and filter escorts without authentication

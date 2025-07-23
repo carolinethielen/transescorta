@@ -81,34 +81,37 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
   // Direct fetch implementation
   const loginMutation = useMutation({
     mutationFn: async (data: LoginForm) => {
-      console.log('Login data:', data);
-      console.log('Making fetch request to /api/auth/login');
-      
-      try {
-        const response = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-          credentials: 'include',
-        });
+      // Use XMLHttpRequest as fallback to avoid any fetch conflicts
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/auth/login', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.withCredentials = true;
         
-        console.log('Login response status:', response.status);
+        xhr.onload = function() {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              const result = JSON.parse(xhr.responseText);
+              resolve(result);
+            } catch (e) {
+              reject(new Error('Invalid JSON response'));
+            }
+          } else {
+            try {
+              const errorData = JSON.parse(xhr.responseText);
+              reject(new Error(errorData.message || 'Login failed'));
+            } catch (e) {
+              reject(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`));
+            }
+          }
+        };
         
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          console.error('Login error:', errorData);
-          throw new Error(errorData.message || 'Login failed');
-        }
+        xhr.onerror = function() {
+          reject(new Error('Network error'));
+        };
         
-        const result = await response.json();
-        console.log('Login successful:', result);
-        return result;
-      } catch (error) {
-        console.error('Fetch error during login:', error);
-        throw error;
-      }
+        xhr.send(JSON.stringify(data));
+      });
     },
     onSuccess: (data: any) => {
       toast({
@@ -131,34 +134,37 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
     mutationFn: async (data: RegisterForm) => {
       const { confirmPassword, ...registerData } = data;
       
-      console.log('Registration data:', registerData);
-      console.log('Making fetch request to /api/auth/register');
-      
-      try {
-        const response = await fetch('/api/auth/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(registerData),
-          credentials: 'include',
-        });
+      // Use XMLHttpRequest as fallback to avoid any fetch conflicts
+      return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/auth/register', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.withCredentials = true;
         
-        console.log('Response status:', response.status);
+        xhr.onload = function() {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              const result = JSON.parse(xhr.responseText);
+              resolve(result);
+            } catch (e) {
+              reject(new Error('Invalid JSON response'));
+            }
+          } else {
+            try {
+              const errorData = JSON.parse(xhr.responseText);
+              reject(new Error(errorData.message || 'Registration failed'));
+            } catch (e) {
+              reject(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`));
+            }
+          }
+        };
         
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          console.error('Registration error:', errorData);
-          throw new Error(errorData.message || 'Registration failed');
-        }
+        xhr.onerror = function() {
+          reject(new Error('Network error'));
+        };
         
-        const result = await response.json();
-        console.log('Registration successful:', result);
-        return result;
-      } catch (error) {
-        console.error('Fetch error during registration:', error);
-        throw error;
-      }
+        xhr.send(JSON.stringify(registerData));
+      });
     },
     onSuccess: (data: any) => {
       toast({
