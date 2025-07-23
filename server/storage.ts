@@ -26,14 +26,21 @@ import { eq, and, or, desc, asc, sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
 export interface IStorage {
-  // User operations (required for Replit Auth)
+  // User operations
   getUser(id: string): Promise<User | undefined>;
   getUserById(id: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  getUserByEmailVerificationToken(token: string): Promise<User | undefined>;
+  getUserByPasswordResetToken(token: string): Promise<User | undefined>;
+  createUser(user: Partial<User>): Promise<User>;
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserStripeInfo(userId: string, customerId: string, subscriptionId: string): Promise<User>;
   updateUserProfile(userId: string, profile: UpdateProfile): Promise<User>;
   updateUserLocation(userId: string, latitude: number, longitude: number, location: string): Promise<User>;
   updateUserOnlineStatus(userId: string, isOnline: boolean): Promise<User>;
+  updatePassword(userId: string, passwordHash: string): Promise<void>;
+  setPasswordResetToken(userId: string, token: string, expires: Date): Promise<void>;
+  verifyUserEmail(userId: string): Promise<void>;
   
   // Discovery operations
   getNearbyUsers(userId: string, latitude: number, longitude: number, radius: number, limit: number): Promise<User[]>;
@@ -64,10 +71,16 @@ export interface IStorage {
 export class DatabaseStorage implements IStorage {
   // Initialize demo data
   async initializeDemoData(): Promise<void> {
+    // Import bcrypt for demo password hashing
+    const bcrypt = await import('bcryptjs');
+    const demoPassword = await bcrypt.hash('demo123', 12);
+
     const demoTransUsers = [
       {
         id: 'demo_trans_1',
         email: 'lena@example.com',
+        passwordHash: demoPassword,
+        isEmailVerified: true,
         firstName: 'Lena',
         lastName: 'Schmidt',
         bio: 'Hallo! Ich bin Lena, 28 Jahre alt und biete diskrete Services in Berlin. Professionell und sinnlich. Nur ernsthafte Anfragen! ✨',
@@ -92,6 +105,8 @@ export class DatabaseStorage implements IStorage {
       {
         id: 'demo_trans_2',
         email: 'sofia@example.com',
+        passwordHash: demoPassword,
+        isEmailVerified: true,
         firstName: 'Sofia',
         lastName: 'Müller',
         bio: 'Sofia hier! 25 Jahre, Hamburg. Luxus-Escort mit viel Erfahrung. Diskret und professionell. 💋',
@@ -116,6 +131,8 @@ export class DatabaseStorage implements IStorage {
       {
         id: 'demo_trans_3',
         email: 'maya@example.com',
+        passwordHash: demoPassword,
+        isEmailVerified: true,
         firstName: 'Maya',
         lastName: 'Weber',
         bio: 'Maya, 30 Jahre, München. Exklusive Services für anspruchsvolle Herren. Sehr diskret! 🌹',
@@ -158,6 +175,8 @@ export class DatabaseStorage implements IStorage {
       {
         id: 'demo_trans_4',
         email: 'zara@example.com',
+        passwordHash: demoPassword,
+        isEmailVerified: true,
         firstName: 'Zara',
         lastName: 'Fischer',
         bio: 'Hi, ich bin Zara! 26 Jahre, Köln. Neue Escort mit viel Leidenschaft. Diskret und professionell! 💖',
@@ -199,6 +218,8 @@ export class DatabaseStorage implements IStorage {
       {
         id: 'demo_trans_5',
         email: 'lucia@example.com',
+        passwordHash: demoPassword,
+        isEmailVerified: true,
         firstName: 'Lucia',
         lastName: 'Rossi',
         bio: 'Ciao! Lucia hier, 29 Jahre aus Frankfurt. Italienisches Temperament trifft deutsche Gründlichkeit! 🇮🇹',
@@ -254,6 +275,69 @@ export class DatabaseStorage implements IStorage {
 
   async getUserById(id: string): Promise<User | undefined> {
     return this.getUser(id);
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
+  }
+
+  async getUserByEmailVerificationToken(token: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.emailVerificationToken, token));
+    return user;
+  }
+
+  async getUserByPasswordResetToken(token: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users)
+      .where(
+        and(
+          eq(users.passwordResetToken, token),
+          sql`${users.passwordResetExpires} > NOW()`
+        )
+      );
+    return user;
+  }
+
+  async createUser(userData: Partial<User>): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(userData as any)
+      .returning();
+    return user;
+  }
+
+  async updatePassword(userId: string, passwordHash: string): Promise<void> {
+    await db
+      .update(users)
+      .set({ 
+        passwordHash,
+        passwordResetToken: null,
+        passwordResetExpires: null,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, userId));
+  }
+
+  async setPasswordResetToken(userId: string, token: string, expires: Date): Promise<void> {
+    await db
+      .update(users)
+      .set({ 
+        passwordResetToken: token,
+        passwordResetExpires: expires,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, userId));
+  }
+
+  async verifyUserEmail(userId: string): Promise<void> {
+    await db
+      .update(users)
+      .set({ 
+        isEmailVerified: true,
+        emailVerificationToken: null,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, userId));
   }
 
   async upsertUser(userData: UpsertUser): Promise<User> {

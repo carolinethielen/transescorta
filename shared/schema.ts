@@ -23,16 +23,27 @@ export const sessions = pgTable(
   (table) => [index("IDX_session_expire").on(table.expire)],
 );
 
-// Users table (required for Replit Auth)
+// Enhanced users table with custom authentication
 export const users = pgTable("users", {
   id: varchar("id").primaryKey().notNull(),
-  email: varchar("email").unique(),
+  email: varchar("email").unique().notNull(),
+  passwordHash: varchar("password_hash").notNull(),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
+  
+  // Authentication fields
+  isEmailVerified: boolean("is_email_verified").default(false),
+  emailVerificationToken: varchar("email_verification_token"),
+  passwordResetToken: varchar("password_reset_token"),
+  passwordResetExpires: timestamp("password_reset_expires"),
+  
+  // Stripe fields
   stripeCustomerId: varchar("stripe_customer_id"),
   stripeSubscriptionId: varchar("stripe_subscription_id"),
   isPremium: boolean("is_premium").default(false),
+  
+  // Profile fields
   age: integer("age"),
   bio: text("bio"),
   height: integer("height"), // in cm
@@ -86,8 +97,37 @@ export const chatRooms = pgTable("chat_rooms", {
 });
 
 // Schema types
+// Zod schemas for validation
+export const registerUserSchema = createInsertSchema(users, {
+  email: z.string().email("Ungültige E-Mail-Adresse"),
+  passwordHash: z.string().min(8, "Passwort muss mindestens 8 Zeichen lang sein"),
+  firstName: z.string().min(1, "Vorname ist erforderlich"),
+  lastName: z.string().optional(),
+  userType: z.enum(['trans', 'man'], { required_error: "Benutzertyp ist erforderlich" }),
+}).omit({ id: true, createdAt: true, updatedAt: true, isEmailVerified: true, lastSeen: true });
+
+export const loginUserSchema = z.object({
+  email: z.string().email("Ungültige E-Mail-Adresse"),
+  password: z.string().min(1, "Passwort ist erforderlich"),
+});
+
+export const forgotPasswordSchema = z.object({
+  email: z.string().email("Ungültige E-Mail-Adresse"),
+});
+
+export const resetPasswordSchema = z.object({
+  token: z.string().min(1, "Token ist erforderlich"),
+  password: z.string().min(8, "Passwort muss mindestens 8 Zeichen lang sein"),
+});
+
+export const verifyEmailSchema = z.object({
+  token: z.string().min(1, "Verifizierungstoken ist erforderlich"),
+});
+
 export type UpsertUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
+export type RegisterUser = z.infer<typeof registerUserSchema>;
+export type LoginUser = z.infer<typeof loginUserSchema>;
 export type InsertMatch = typeof matches.$inferInsert;
 export type Match = typeof matches.$inferSelect;
 export type InsertMessage = typeof messages.$inferInsert;

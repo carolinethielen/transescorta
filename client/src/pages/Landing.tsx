@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Heart, Users, Shield, Crown } from 'lucide-react';
@@ -75,12 +76,8 @@ export default function Landing() {
           <p className="text-muted-foreground mb-6">
             Melde dich kostenlos an und finde deine Community.
           </p>
-          <Button 
-            variant="outline"
-            size="lg"
-            onClick={() => window.location.href = '/api/login'}
-          >
-            Kostenlos registrieren
+          <Button asChild size="lg" className="bg-[#FF007F] hover:bg-[#FF007F]/90 text-white px-8">
+            <Link href="/register">Jetzt registrieren</Link>
           </Button>
         </div>
       </div>

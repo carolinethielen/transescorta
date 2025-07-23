@@ -9,6 +9,8 @@ import { useAuth } from "@/hooks/useAuth";
 
 import NotFound from "@/pages/not-found";
 import Landing from "@/pages/Landing";
+import Login from "@/pages/Login";
+import Register from "@/pages/Register";
 import Home from "@/pages/HomeNew";
 import Chat from "@/pages/Chat";
 import Profile from "@/pages/Profile";
@@ -27,18 +29,24 @@ function Router() {
 
   return (
     <Switch>
+      {/* Authentication routes - always accessible */}
+      <Route path="/login" component={Login} />
+      <Route path="/register" component={Register} />
       <Route path="/select-type" component={UserTypeSelection} />
       <Route path="/forgot-password" component={ForgotPassword} />
       <Route path="/reset-password" component={ResetPassword} />
       <Route path="/verify-email" component={VerifyEmail} />
       
       {/* Public routes - accessible without authentication */}
-      <Route path="/" component={Home} />
-      <Route path="/landing" component={Landing} />
-      
-      {/* Protected routes - require authentication */}
-      {isAuthenticated && !isLoading && (
+      {isLoading || !isAuthenticated ? (
         <>
+          <Route path="/" component={Landing} />
+          <Route path="/landing" component={Landing} />
+        </>
+      ) : (
+        <>
+          {/* Protected routes - require authentication */}
+          <Route path="/" component={Home} />
           <Route path="/chat" component={Chat} />
           <Route path="/profile" component={ProfileDetail} />
           <Route path="/my-profile" component={Profile} />
