@@ -61,11 +61,52 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
     onFiltersChange(clearedFilters);
   };
 
+  // Function to generate active filter summary
+  const getActiveFilterSummary = () => {
+    const active = [];
+    
+    if (filters.ageRange[0] !== 18 || filters.ageRange[1] !== 50) {
+      active.push(`${filters.ageRange[0]}-${filters.ageRange[1]}J`);
+    }
+    if (filters.priceRange[0] !== 50 || filters.priceRange[1] !== 500) {
+      active.push(`${filters.priceRange[0]}-${filters.priceRange[1]}€`);
+    }
+    if (filters.position) {
+      active.push(filters.position);
+    }
+    if (filters.bodyType) {
+      active.push(filters.bodyType);
+    }
+    if (filters.ethnicity) {
+      active.push(filters.ethnicity);
+    }
+    if (filters.services.length > 0) {
+      active.push(`${filters.services.length} Service${filters.services.length > 1 ? 's' : ''}`);
+    }
+    if (filters.onlineOnly) {
+      active.push('Online');
+    }
+    if (filters.premiumOnly) {
+      active.push('Premium');
+    }
+    
+    return active.length > 0 ? active.join(', ') : null;
+  };
+
+  const activeSummary = getActiveFilterSummary();
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
-          <Filter className="w-4 h-4" />
+        <Button 
+          variant={activeSummary ? "default" : "outline"} 
+          size="sm"
+          className={activeSummary ? "bg-[#FF007F] hover:bg-[#FF007F]/90 text-white max-w-48" : ""}
+        >
+          <Filter className="w-4 h-4 mr-1 flex-shrink-0" />
+          <span className="truncate">
+            {activeSummary || 'Filter'}
+          </span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md max-h-[80vh] overflow-y-auto">

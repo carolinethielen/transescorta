@@ -56,7 +56,7 @@ export default function Home() {
   });
 
   // Use public escorts if recommended is empty or failed
-  const displayUsers = rawUsers.length > 0 ? rawUsers : publicUsers;
+  const displayUsers = (rawUsers && Array.isArray(rawUsers) && rawUsers.length > 0) ? rawUsers : publicUsers;
 
   // Convert and organize escorts by categories
   const escorts = (displayUsers as any[]).map((escort: any) => {
@@ -139,51 +139,87 @@ export default function Home() {
 
   const EscortCard = ({ escort }: { escort: any }) => (
     <div 
-      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-200 dark:border-gray-700"
+      className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-200 dark:border-gray-700 hover:scale-[1.02]"
       onClick={() => handleEscortClick(escort.id)}
     >
-      <div className="relative">
+      <div className="relative aspect-[3/4]">
         <img
-          src={escort.profileImageUrl || 'https://images.unsplash.com/photo-1494790108755-2616b612b977?w=400'}
+          src={escort.profileImageUrl || 'https://images.unsplash.com/photo-1494790108755-2616b612b977?w=600'}
           alt={escort.firstName || 'Escort Profile'}
-          className="w-full aspect-[3/4] object-cover"
+          className="w-full h-full object-cover"
+          onError={(e) => {
+            e.currentTarget.src = 'https://images.unsplash.com/photo-1494790108755-2616b612b977?w=600';
+          }}
         />
         
-        {/* Online Status - Subtle green dot */}
-        {escort.isOnline && (
-          <div className="absolute top-2 right-2 w-3 h-3 bg-green-500 border-2 border-white rounded-full shadow-sm"></div>
-        )}
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
         
-        {/* Premium Badge - Subtle */}
-        {escort.isPremium && (
-          <div className="absolute top-2 left-2 bg-yellow-500/90 text-white px-1.5 py-0.5 rounded text-xs font-medium flex items-center gap-1">
-            <Crown className="w-2.5 h-2.5" />
+        {/* Status Badges */}
+        <div className="absolute top-3 left-3 flex flex-col gap-2">
+          {escort.isOnline && (
+            <div className="flex items-center gap-1 bg-green-500/90 backdrop-blur-sm text-white px-2.5 py-1.5 rounded-full text-xs font-medium shadow-lg">
+              <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+              Online
+            </div>
+          )}
+          
+          {escort.isPremium && (
+            <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-2.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
+              <Crown className="w-3 h-3" />
+              Premium
+            </div>
+          )}
+        </div>
+        
+        {/* Price Badge */}
+        {escort.hourlyRate && (
+          <div className="absolute top-3 right-3 bg-[#FF007F]/90 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-sm font-bold shadow-lg">
+            {escort.hourlyRate}€/h
           </div>
         )}
+        
+        {/* Bottom Info Overlay */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="font-bold text-lg truncate">
+              {escort.firstName}
+            </h3>
+            <span className="text-sm bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">
+              {escort.age}J
+            </span>
+          </div>
+          
+          <div className="flex items-center text-sm opacity-90">
+            <MapPin className="w-3.5 h-3.5 mr-1" />
+            {escort.location}
+          </div>
+          
+          {/* Services Preview */}
+          {escort.services && escort.services.length > 0 && (
+            <div className="flex items-center gap-1 mt-2">
+              <div className="flex gap-1">
+                {escort.services.slice(0, 2).map((service: string, index: number) => (
+                  <span key={index} className="text-xs bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full">
+                    {service}
+                  </span>
+                ))}
+                {escort.services.length > 2 && (
+                  <span className="text-xs bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full">
+                    +{escort.services.length - 2}
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
 
-        {/* Distance */}
+        {/* Distance - if available */}
         {escort.distance > 0 && (
-          <div className="absolute bottom-2 right-2 bg-black/60 text-white px-2 py-1 rounded text-xs">
+          <div className="absolute bottom-16 right-3 bg-black/50 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
             {Math.round(escort.distance)}km
           </div>
         )}
-      </div>
-      
-      {/* Card Content - Minimal like hunqz.com */}
-      <div className="p-3">
-        <div className="flex justify-between items-center mb-1">
-          <h3 className="font-semibold text-base text-gray-900 dark:text-white truncate">
-            {escort.firstName}
-          </h3>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            {escort.age}
-          </span>
-        </div>
-        
-        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
-          <MapPin className="w-3 h-3 mr-1" />
-          {escort.location}
-        </div>
       </div>
     </div>
   );
@@ -223,16 +259,6 @@ export default function Home() {
               
               {/* Filter Button */}
               <FilterDialog onFiltersChange={setFilters} />
-              {filters && Object.keys(filters).some(key => 
-                key === 'onlineOnly' && filters[key] || 
-                key === 'premiumOnly' && filters[key] ||
-                key === 'services' && filters[key]?.length > 0 ||
-                key === 'ageRange' && (filters[key][0] !== 18 || filters[key][1] !== 50)
-              ) && (
-                <Badge variant="secondary" className="ml-2">
-                  Filter aktiv
-                </Badge>
-              )}
               
               {/* Theme Toggle */}
               <Button
@@ -261,7 +287,7 @@ export default function Home() {
           {premiumEscorts.length > 0 && (
             <section className="mb-8">
               <SectionHeader title="Premium Escorts" icon={Crown} count={premiumEscorts.length} />
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4">
                 {premiumEscorts.map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}
@@ -273,7 +299,7 @@ export default function Home() {
           {newEscorts.length > 0 && (
             <section className="mb-8">
               <SectionHeader title="Neue Escorts" icon={Star} count={newEscorts.slice(0, 10).length} />
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4">
                 {newEscorts.slice(0, 10).map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}
@@ -289,7 +315,7 @@ export default function Home() {
                 icon={MapPin} 
                 count={nearbyEscorts.length} 
               />
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4">
                 {nearbyEscorts.map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}

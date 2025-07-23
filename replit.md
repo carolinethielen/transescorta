@@ -8,6 +8,20 @@ TransConnect is a modern, mobile-first escort platform specifically designed fol
 
 Preferred communication style: Simple, everyday language.
 
+## Recent Changes (January 2025)
+
+### Enhanced Filter System
+- **Active Filter Display**: Filter button now shows active filter content instead of generic "Filter aktiv" text
+- **Smart Filter Summary**: Displays abbreviated filter details (age range, price, services count, etc.)
+- **Visual Feedback**: Active filters highlight the button with brand color and truncated content display
+
+### Improved Home Page Grid
+- **Larger Images**: Escort profile images now use 3:4 aspect ratio for better visual impact
+- **Enhanced Responsiveness**: Grid adapts from 2 columns on mobile to 7 columns on ultrawide screens
+- **Overlay Information**: Profile details displayed as overlay on images with gradient background
+- **Service Preview**: Shows first 2 services with overflow counter for additional services
+- **Modern Design**: Rounded corners, hover effects, and improved spacing for professional appearance
+
 ## System Architecture
 
 ### Frontend Architecture
