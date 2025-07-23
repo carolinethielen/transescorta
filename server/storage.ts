@@ -672,6 +672,20 @@ export class DatabaseStorage implements IStorage {
     return roomsWithUnread;
   }
 
+  async getUnreadMessageCount(userId: string): Promise<number> {
+    const result = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(messages)
+      .where(
+        and(
+          eq(messages.receiverId, userId),
+          eq(messages.isRead, false)
+        )
+      );
+    
+    return result[0]?.count || 0;
+  }
+
   async getOrCreateChatRoom(user1Id: string, user2Id: string): Promise<ChatRoom> {
     // Check if room exists
     const [existingRoom] = await db

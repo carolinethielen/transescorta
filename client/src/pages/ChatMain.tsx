@@ -34,14 +34,28 @@ export default function ChatMain() {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Get user from URL params if redirected from profile
+  // Get user from URL params if redirected from profile and create chat room
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const userId = urlParams.get('user');
-    if (userId) {
-      setSelectedChatUserId(userId);
+    if (userId && user) {
+      // Create chat room first, then select it
+      apiRequest('POST', '/api/chat/rooms', { otherUserId: userId })
+        .then(() => {
+          setSelectedChatUserId(userId);
+          // Refresh chat rooms list
+          queryClient.invalidateQueries({ queryKey: ['/api/chat/rooms'] });
+        })
+        .catch((error) => {
+          console.error('Failed to create chat room:', error);
+          toast({
+            title: "Fehler",
+            description: "Chat konnte nicht gestartet werden.",
+            variant: "destructive",
+          });
+        });
     }
-  }, []);
+  }, [user, queryClient, toast]);
 
   // Fetch chat rooms list
   const { data: chatRooms = [], isLoading: roomsLoading, error: roomsError } = useQuery<

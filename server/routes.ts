@@ -184,7 +184,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/chat/rooms', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.id;
+      console.log(`Getting chat rooms for user: ${userId}`);
       const rooms = await storage.getChatRooms(userId);
+      console.log(`Found ${rooms.length} chat rooms`);
       res.json(rooms);
     } catch (error) {
       console.error("Error fetching chat rooms:", error);
@@ -210,7 +212,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const senderId = req.user.id;
       const messageData = sendMessageSchema.parse(req.body);
+      
+      // Ensure chat room exists
+      await storage.getOrCreateChatRoom(senderId, messageData.receiverId);
+      
       const message = await storage.sendMessage(senderId, messageData);
+      console.log(`Message sent from ${senderId} to ${messageData.receiverId}: ${message.content}`);
       
       // Broadcast to WebSocket clients
       const otherUserId = messageData.receiverId;
@@ -254,6 +261,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error getting unread count:", error);
       res.status(500).json({ message: "Failed to get unread count" });
+    }
+  });
+
+  // Create or get chat room endpoint
+  app.post('/api/chat/rooms', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const { otherUserId } = req.body;
+      
+      if (!otherUserId) {
+        return res.status(400).json({ message: "otherUserId is required" });
+      }
+      
+      // Check if other user exists
+      const otherUser = await storage.getUserById(otherUserId);
+      if (!otherUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const chatRoom = await storage.getOrCreateChatRoom(userId, otherUserId);
+      console.log(`Chat room created/found: ${chatRoom.id} between ${userId} and ${otherUserId}`);
+      
+      res.json(chatRoom);
+    } catch (error) {
+      console.error("Error creating/getting chat room:", error);
+      res.status(500).json({ message: "Failed to create chat room" });
     }
   });
 
