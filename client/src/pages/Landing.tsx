@@ -13,7 +13,7 @@ export default function Landing() {
             TransConnect
           </h1>
           <p className="text-xl text-muted-foreground mb-8">
-            Die Dating-Plattform für die Trans*-Community
+            Die Premium-Escort-Plattform für Trans*-Services
           </p>
           <Button 
             size="lg"

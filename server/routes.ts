@@ -77,8 +77,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/users/recommended', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
+      const currentUser = await storage.getUserById(userId);
       const { limit = 20 } = req.query;
-      const users = await storage.getRecommendedUsers(userId, parseInt(limit as string));
+      
+      // If user is a man (customer), only show trans escorts
+      // If user is trans (escort), they can see everyone for networking
+      let users;
+      if (currentUser?.userType === 'man') {
+        users = await storage.getPublicTransUsers(parseInt(limit as string));
+      } else {
+        users = await storage.getRecommendedUsers(userId, parseInt(limit as string));
+      }
+      
       res.json(users);
     } catch (error) {
       console.error("Error fetching recommended users:", error);
@@ -86,15 +96,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Public route to get trans users for homepage (before login)
+  // Public route - ONLY trans escorts are shown (like hunqz.com model)
   app.get('/api/users/public', async (req, res) => {
     try {
       const limit = parseInt(req.query.limit as string) || 20;
-      const transUsers = await storage.getPublicTransUsers(limit);
-      res.json(transUsers);
+      const transEscorts = await storage.getPublicTransUsers(limit);
+      res.json(transEscorts);
     } catch (error) {
-      console.error("Error getting public trans users:", error);
-      res.status(500).json({ message: "Failed to get public users" });
+      console.error("Error getting public trans escorts:", error);
+      res.status(500).json({ message: "Failed to get public escorts" });
     }
   });
 

@@ -69,6 +69,15 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  async getUserById(userId: string): Promise<User | null> {
+    const [user] = await db
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .limit(1);
+    return user || null;
+  }
+
   async updateUserStripeInfo(userId: string, customerId: string, subscriptionId: string): Promise<User> {
     const [user] = await db
       .update(users)
@@ -411,22 +420,7 @@ export class DatabaseStorage implements IStorage {
     return newRoom;
   }
 
-  async updateUserStripeInfo(userId: string, customerId: string, subscriptionId: string): Promise<User> {
-    const updateData: any = {
-      stripeCustomerId: customerId,
-      stripeSubscriptionId: subscriptionId,
-      isPremium: true,
-      updatedAt: new Date(),
-    };
 
-    const [updatedUser] = await db
-      .update(users)
-      .set(updateData)
-      .where(eq(users.id, userId))
-      .returning();
-
-    return updatedUser;
-  }
 
   async updateUserType(userId: string, userType: 'trans' | 'man'): Promise<User> {
     const [updatedUser] = await db

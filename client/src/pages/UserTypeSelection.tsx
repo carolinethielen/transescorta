@@ -35,7 +35,7 @@ export default function UserTypeSelection() {
             TransConnect
           </h1>
           <p className="text-muted-foreground">
-            Wähle deinen Benutzertyp aus
+            Bist du Trans*-Escort oder suchst du Services?
           </p>
         </div>
 
@@ -55,9 +55,9 @@ export default function UserTypeSelection() {
                   <Heart className="w-6 h-6 text-[#FF007F]" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-lg">Als Trans-Person anmelden</h3>
+                  <h3 className="font-semibold text-lg">Als Trans*-Escort anmelden</h3>
                   <p className="text-sm text-muted-foreground">
-                    Dein Profil wird im Grid angezeigt und du kannst mit allen Nutzern chatten
+                    Biete deine Services an - dein Profil wird öffentlich gezeigt
                   </p>
                 </div>
                 {selectedType === 'trans' && (
@@ -84,9 +84,9 @@ export default function UserTypeSelection() {
                   <Users className="w-6 h-6 text-[#FF007F]" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-lg">Als Mann anmelden</h3>
+                  <h3 className="font-semibold text-lg">Als Kunde anmelden</h3>
                   <p className="text-sm text-muted-foreground">
-                    Du kannst Trans-Profile durchstöbern und Nachrichten senden
+                    Durchstöbere Escort-Profile und kontaktiere Anbieter
                   </p>
                 </div>
                 {selectedType === 'man' && (

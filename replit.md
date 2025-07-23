@@ -1,8 +1,8 @@
-# TransConnect - Dating Platform for Trans Community
+# TransConnect - Trans* Escort Platform
 
 ## Overview
 
-TransConnect is a modern, mobile-first dating platform specifically designed for the Trans* community. The application features a Tinder-style swipe interface, real-time chat functionality, premium subscriptions, and location-based matching. It's built as a full-stack web application with a focus on creating a safe, inclusive space for authentic connections.
+TransConnect is a modern, mobile-first escort platform specifically designed following the hunqz.com model. Trans* users serve as escorts/service providers whose profiles are displayed publicly in a browsable grid, while men register as customers to contact them. The platform features a one-way visibility system where only trans escorts appear in the browsing interface, real-time chat functionality, and location-based discovery.
 
 ## User Preferences
 
@@ -41,11 +41,12 @@ Preferred communication style: Simple, everyday language.
 - **JWT Tokens**: Secure token-based authentication for API requests
 - **User Profile Management**: Complete profile creation and editing workflow
 
-### Dating Features
-- **Discovery System**: Grid and swipe views for browsing user profiles
-- **Matching Algorithm**: Mutual like system creating matches between users
-- **Location Services**: GPS-based user discovery with distance filtering
-- **Profile System**: Rich profiles with photos, bio, interests, and location data
+### Escort Platform Features
+- **Public Discovery**: Grid and swipe views showing only trans escort profiles
+- **One-Way Visibility**: Trans escorts are publicly visible, men (customers) are hidden
+- **Contact System**: Men can register to message trans escorts directly
+- **Location Services**: GPS-based escort discovery with automatic city detection
+- **Profile System**: Rich escort profiles with photos, bio, services, and location data
 
 ### Real-time Chat
 - **WebSocket Integration**: Live messaging between matched users
