@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
+import { useLocation } from 'wouter';
 import { Heart, Users, ArrowLeft } from 'lucide-react';
 
 export default function UserTypeSelection() {
   const [selectedType, setSelectedType] = useState<'trans' | 'man' | null>(null);
   const { toast } = useToast();
+  const [location, navigate] = useLocation();
 
   const handleTypeSelection = (userType: 'trans' | 'man') => {
     setSelectedType(userType);
@@ -120,7 +122,26 @@ export default function UserTypeSelection() {
           Weiter zur Anmeldung
         </Button>
 
-        <div className="mt-6 text-center">
+        <div className="mt-6 text-center space-y-3">
+          <p className="text-sm text-muted-foreground">
+            Bereits registriert?{' '}
+            <button 
+              onClick={() => window.location.href = '/api/login'}
+              className="text-[#FF007F] hover:underline font-medium"
+            >
+              Hier anmelden
+            </button>
+          </p>
+          
+          <p className="text-xs text-muted-foreground">
+            <button 
+              onClick={() => navigate('/forgot-password')}
+              className="text-[#FF007F] hover:underline"
+            >
+              Passwort vergessen?
+            </button>
+          </p>
+          
           <p className="text-xs text-muted-foreground">
             Durch die Anmeldung stimmst du unseren Nutzungsbedingungen zu
           </p>

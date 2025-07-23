@@ -17,6 +17,9 @@ import Explore from "@/pages/Explore";
 import Settings from "@/pages/Settings";
 import Subscribe from "@/pages/Subscribe";
 import UserTypeSelection from "@/pages/UserTypeSelection";
+import ForgotPassword from "@/pages/ForgotPassword";
+import ResetPassword from "@/pages/ResetPassword";
+import VerifyEmail from "@/pages/VerifyEmail";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -24,6 +27,9 @@ function Router() {
   return (
     <Switch>
       <Route path="/select-type" component={UserTypeSelection} />
+      <Route path="/forgot-password" component={ForgotPassword} />
+      <Route path="/reset-password" component={ResetPassword} />
+      <Route path="/verify-email" component={VerifyEmail} />
       
       {/* Public routes - accessible without authentication */}
       <Route path="/" component={Home} />

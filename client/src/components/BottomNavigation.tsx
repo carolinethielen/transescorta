@@ -1,40 +1,75 @@
 import React from 'react';
 import { useLocation } from 'wouter';
-import { Home, MessageCircle, User, Search, Settings } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useAuth } from '@/hooks/useAuth';
+import { Home, MessageCircle, User, Search, Settings, LogIn, UserPlus } from 'lucide-react';
 import { Link } from 'wouter';
 
-const navItems = [
+const authenticatedNavItems = [
   { path: '/', icon: Home, label: 'Home' },
   { path: '/chat', icon: MessageCircle, label: 'Chat' },
-  { path: '/profile', icon: User, label: 'Profil' },
+  { path: '/my-profile', icon: User, label: 'Profil' },
   { path: '/explore', icon: Search, label: 'Entdecken' },
-  { path: '/settings', icon: Settings, label: 'Settings' },
+  { path: '/settings', icon: Settings, label: 'Mehr' },
 ];
 
 export function BottomNavigation() {
-  const [location] = useLocation();
+  const [location, navigate] = useLocation();
+  const { isAuthenticated, isLoading } = useAuth();
+
+  const handleLogin = () => {
+    window.location.href = '/api/login';
+  };
+
+  const handleRegister = () => {
+    navigate('/select-type');
+  };
 
   return (
     <nav className="fixed bottom-0 left-1/2 transform -translate-x-1/2 max-w-md w-full bg-card border-t border-border z-50">
-      <div className="flex justify-around py-3">
-        {navItems.map(({ path, icon: Icon, label }) => {
-          const isActive = location === path;
-          return (
-            <Link
-              key={path}
-              href={path}
-              className={`flex flex-col items-center space-y-1 px-3 py-1 transition-colors ${
-                isActive 
-                  ? 'text-[#FF007F]' 
-                  : 'text-muted-foreground hover:text-foreground'
-              }`}
-            >
-              <Icon className="w-5 h-5" />
-              <span className="text-xs font-medium">{label}</span>
-            </Link>
-          );
-        })}
-      </div>
+      {isAuthenticated && !isLoading ? (
+        // Authenticated Navigation
+        <div className="flex justify-around py-3">
+          {authenticatedNavItems.map(({ path, icon: Icon, label }) => {
+            const isActive = location === path;
+            return (
+              <Link
+                key={path}
+                href={path}
+                className={`flex flex-col items-center space-y-1 px-3 py-1 transition-colors ${
+                  isActive 
+                    ? 'text-[#FF007F]' 
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                <Icon className="w-5 h-5" />
+                <span className="text-xs font-medium">{label}</span>
+              </Link>
+            );
+          })}
+        </div>
+      ) : !isLoading ? (
+        // Unauthenticated Navigation - Login/Register buttons
+        <div className="flex gap-3 py-3 px-4">
+          <Button
+            onClick={handleLogin}
+            variant="outline"
+            size="lg"
+            className="flex-1 border-[#FF007F] text-[#FF007F] hover:bg-[#FF007F] hover:text-white transition-colors"
+          >
+            <LogIn className="w-4 h-4 mr-2" />
+            Einloggen
+          </Button>
+          <Button
+            onClick={handleRegister}
+            size="lg"
+            className="flex-1 bg-[#FF007F] hover:bg-[#FF007F]/90 text-white transition-colors"
+          >
+            <UserPlus className="w-4 h-4 mr-2" />
+            Registrieren
+          </Button>
+        </div>
+      ) : null}
     </nav>
   );
 }

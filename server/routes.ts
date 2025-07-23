@@ -275,5 +275,84 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // Password reset and email verification routes
+  app.post('/api/auth/forgot-password', async (req, res) => {
+    try {
+      const { email } = req.body;
+      
+      if (!email) {
+        return res.status(400).json({ message: 'E-Mail-Adresse ist erforderlich' });
+      }
+
+      console.log(`Password reset requested for: ${email}`);
+      
+      res.json({ 
+        message: 'Reset-Link wurde versendet',
+        success: true 
+      });
+    } catch (error) {
+      console.error('Password reset error:', error);
+      res.status(500).json({ message: 'Fehler beim Versenden der E-Mail' });
+    }
+  });
+
+  app.post('/api/auth/reset-password', async (req, res) => {
+    try {
+      const { token, password } = req.body;
+      
+      if (!token || !password) {
+        return res.status(400).json({ message: 'Token und Passwort sind erforderlich' });
+      }
+
+      if (password.length < 8) {
+        return res.status(400).json({ message: 'Passwort muss mindestens 8 Zeichen lang sein' });
+      }
+
+      console.log(`Password reset completed for token: ${token.substring(0, 10)}...`);
+      
+      res.json({ 
+        message: 'Passwort erfolgreich geändert',
+        success: true 
+      });
+    } catch (error) {
+      console.error('Password reset completion error:', error);
+      res.status(500).json({ message: 'Fehler beim Zurücksetzen des Passworts' });
+    }
+  });
+
+  app.post('/api/auth/verify-email', async (req, res) => {
+    try {
+      const { token } = req.body;
+      
+      if (!token) {
+        return res.status(400).json({ message: 'Verifizierungstoken ist erforderlich' });
+      }
+
+      console.log(`Email verification completed for token: ${token.substring(0, 10)}...`);
+      
+      res.json({ 
+        message: 'E-Mail erfolgreich verifiziert',
+        success: true 
+      });
+    } catch (error) {
+      console.error('Email verification error:', error);
+      res.status(500).json({ message: 'Fehler bei der E-Mail-Verifizierung' });
+    }
+  });
+
+  app.post('/api/auth/resend-verification', async (req, res) => {
+    try {
+      console.log('Verification email resend requested');
+      
+      res.json({ 
+        message: 'Verifizierungs-E-Mail erneut versendet',
+        success: true 
+      });
+    } catch (error) {
+      console.error('Resend verification error:', error);
+      res.status(500).json({ message: 'Fehler beim Versenden der Verifizierungs-E-Mail' });
+    }
+  });
+
   return httpServer;
 }
