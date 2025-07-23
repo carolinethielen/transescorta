@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Heart, Users, MapPin } from 'lucide-react';
+import { Heart, Users, ArrowLeft } from 'lucide-react';
 
 export default function UserTypeSelection() {
   const [selectedType, setSelectedType] = useState<'trans' | 'man' | null>(null);
@@ -23,13 +23,25 @@ export default function UserTypeSelection() {
     }
 
     // Store user type in localStorage for registration process
-    localStorage.setItem('pendingUserType', selectedType);
+    localStorage.setItem('selectedUserType', selectedType);
     window.location.href = '/api/login';
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#FF007F]/10 to-purple-500/10 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
+        {/* Back Button */}
+        <div className="mb-6">
+          <Button 
+            variant="ghost" 
+            onClick={() => window.location.href = '/'}
+            className="flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Zurück zur Startseite
+          </Button>
+        </div>
+
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-[#FF007F] mb-2 font-['Poppins']">
             TransConnect
@@ -57,7 +69,7 @@ export default function UserTypeSelection() {
                 <div className="flex-1">
                   <h3 className="font-semibold text-lg">Als Trans*-Escort anmelden</h3>
                   <p className="text-sm text-muted-foreground">
-                    Biete deine Services an - dein Profil wird öffentlich gezeigt
+                    Biete deine Services an - dein Profil wird öffentlich im Grid gezeigt
                   </p>
                 </div>
                 {selectedType === 'trans' && (
@@ -86,7 +98,7 @@ export default function UserTypeSelection() {
                 <div className="flex-1">
                   <h3 className="font-semibold text-lg">Als Kunde anmelden</h3>
                   <p className="text-sm text-muted-foreground">
-                    Durchstöbere Escort-Profile und kontaktiere Anbieter
+                    Durchstöbere Profile, chatte mit Escorts - erscheinst nicht im Grid
                   </p>
                 </div>
                 {selectedType === 'man' && (

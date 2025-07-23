@@ -110,10 +110,25 @@ export default function Home() {
     }
   };
 
+  const handleEscortClick = (escortId: string) => {
+    if (!user) {
+      toast({
+        title: "Anmeldung erforderlich",
+        description: "Du musst dich anmelden, um Profile anzusehen",
+        variant: "destructive",
+      });
+      setTimeout(() => {
+        window.location.href = "/select-type";
+      }, 1000);
+      return;
+    }
+    window.location.href = `/profile?id=${escortId}`;
+  };
+
   const EscortCard = ({ escort }: { escort: any }) => (
     <div 
       className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-200 dark:border-gray-700"
-      onClick={() => window.location.href = `/profile?id=${escort.id}`}
+      onClick={() => handleEscortClick(escort.id)}
     >
       <div className="relative">
         <img

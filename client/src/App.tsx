@@ -24,15 +24,14 @@ function Router() {
   return (
     <Switch>
       <Route path="/select-type" component={UserTypeSelection} />
-      {isLoading || !isAuthenticated ? (
+      
+      {/* Public routes - accessible without authentication */}
+      <Route path="/" component={Home} />
+      <Route path="/landing" component={Landing} />
+      
+      {/* Protected routes - require authentication */}
+      {isAuthenticated && !isLoading && (
         <>
-          <Route path="/" component={Home} />
-          <Route path="/profile" component={ProfileDetail} />
-          <Route path="/landing" component={Landing} />
-        </>
-      ) : (
-        <>
-          <Route path="/" component={Home} />
           <Route path="/chat" component={Chat} />
           <Route path="/profile" component={ProfileDetail} />
           <Route path="/my-profile" component={Profile} />
