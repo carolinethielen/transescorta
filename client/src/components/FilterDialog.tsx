@@ -64,9 +64,8 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="flex items-center gap-2">
+        <Button variant="outline" size="sm">
           <Filter className="w-4 h-4" />
-          Filter
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md max-h-[80vh] overflow-y-auto">

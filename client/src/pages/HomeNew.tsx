@@ -119,24 +119,20 @@ export default function Home() {
         <img
           src={escort.profileImageUrl || 'https://images.unsplash.com/photo-1494790108755-2616b612b977?w=400'}
           alt={escort.firstName || 'Escort Profile'}
-          className="w-full aspect-[4/5] object-cover"
+          className="w-full aspect-[3/4] object-cover"
         />
         
-        {/* Status Indicators */}
-        <div className="absolute top-2 left-2 flex flex-col gap-1">
-          {escort.isOnline && (
-            <div className="bg-green-500 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1">
-              <div className="w-1.5 h-1.5 bg-white rounded-full" />
-              Online
-            </div>
-          )}
-          {escort.isPremium && (
-            <div className="bg-yellow-500 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1">
-              <Crown className="w-3 h-3" />
-              VIP
-            </div>
-          )}
-        </div>
+        {/* Online Status - Subtle green dot */}
+        {escort.isOnline && (
+          <div className="absolute top-2 right-2 w-3 h-3 bg-green-500 border-2 border-white rounded-full shadow-sm"></div>
+        )}
+        
+        {/* Premium Badge - Subtle */}
+        {escort.isPremium && (
+          <div className="absolute top-2 left-2 bg-yellow-500/90 text-white px-1.5 py-0.5 rounded text-xs font-medium flex items-center gap-1">
+            <Crown className="w-2.5 h-2.5" />
+          </div>
+        )}
 
         {/* Distance */}
         {escort.distance > 0 && (
@@ -157,15 +153,9 @@ export default function Home() {
           </span>
         </div>
         
-        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
+        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
           <MapPin className="w-3 h-3 mr-1" />
           {escort.location}
-        </div>
-
-        <div className="text-right">
-          <span className="font-semibold text-[#FF007F]">
-            {escort.hourlyRate ? `ab ${escort.hourlyRate}€` : 'Preis n.V.'}
-          </span>
         </div>
       </div>
     </div>

@@ -153,13 +153,31 @@ export default function ProfileDetail() {
 
           {/* Detailed Information */}
           <div className="lg:col-span-2 space-y-6">
-            {/* About */}
+            {/* About Me */}
             <Card>
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold mb-4">Über mich</h3>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
-                  {profile.bio}
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                  {profile.aboutMe || profile.bio}
                 </p>
+                
+                {profile.whatILike && (
+                  <div className="mb-4">
+                    <h4 className="font-medium mb-2">Was ich mag:</h4>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm">
+                      {profile.whatILike}
+                    </p>
+                  </div>
+                )}
+                
+                {profile.whatIExpect && (
+                  <div>
+                    <h4 className="font-medium mb-2">Was ich erwarte:</h4>
+                    <p className="text-gray-700 dark:text-gray-300 text-sm">
+                      {profile.whatIExpect}
+                    </p>
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -177,57 +195,91 @@ export default function ProfileDetail() {
               </CardContent>
             </Card>
 
-            {/* Details */}
+            {/* Allgemein Section */}
             <Card>
               <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Details</h3>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="flex items-center gap-3">
-                    <Ruler className="w-5 h-5 text-gray-400" />
-                    <div>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Größe</span>
-                      <p className="font-medium">{profile.height || 'Nicht angegeben'}cm</p>
-                    </div>
+                <h3 className="text-lg font-semibold mb-4">Allgemein</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Alter</span>
+                    <span className="font-medium">{profile.age}</span>
                   </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <Weight className="w-5 h-5 text-gray-400" />
-                    <div>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Gewicht</span>
-                      <p className="font-medium">{profile.weight || 'Nicht angegeben'}kg</p>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Größe</span>
+                    <span className="font-medium">{profile.height || 'Nicht angegeben'}cm</span>
                   </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <Target className="w-5 h-5 text-gray-400" />
-                    <div>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Position</span>
-                      <p className="font-medium capitalize">{profile.position || 'Nicht angegeben'}</p>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Gewicht</span>
+                    <span className="font-medium">{profile.weight || 'Nicht angegeben'}kg</span>
                   </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <User className="w-5 h-5 text-gray-400" />
-                    <div>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Körpertyp</span>
-                      <p className="font-medium">{profile.bodyType || 'Nicht angegeben'}</p>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Statur</span>
+                    <span className="font-medium">{profile.bodyType || 'Schlank'}</span>
                   </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <Globe className="w-5 h-5 text-gray-400" />
-                    <div>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Ethnizität</span>
-                      <p className="font-medium">{profile.ethnicity || 'Nicht angegeben'}</p>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Typ</span>
+                    <span className="font-medium">{profile.ethnicity || 'Europäisch'}</span>
                   </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <Clock className="w-5 h-5 text-gray-400" />
-                    <div>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">Schwanzgröße</span>
-                      <p className="font-medium">{profile.cockSize || 'Nicht angegeben'}cm</p>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Haarlänge</span>
+                    <span className="font-medium">Lang</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Haarfarbe</span>
+                    <span className="font-medium">Schwarz</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Bart</span>
+                    <span className="font-medium">Kein Bart</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Augenfarbe</span>
+                    <span className="font-medium">Braun</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Körperbehaarung</span>
+                    <span className="font-medium">Unbehaart</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Ich bin</span>
+                    <span className="font-medium text-red-500">Eine Trans Frau, andersw Ort ansässig</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Raucher</span>
+                    <span className="font-medium">{profile.smoking ? 'Ja' : 'Nein'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Tattoos</span>
+                    <span className="font-medium">{profile.tattoos || 'Wenige'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Piercings</span>
+                    <span className="font-medium">{profile.piercings || 'Wenige'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Sprachen</span>
+                    <span className="font-medium">{profile.languages?.join(', ') || 'Deutsch, Englisch'}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Dienstleistungen Section */}
+            <Card>
+              <CardContent className="p-6">
+                <h3 className="text-lg font-semibold mb-4">Dienstleistungen</h3>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Ich biete</span>
+                    <span className="font-medium">{profile.services?.join(', ') || 'Escort, Massage'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Preis pro Stunde</span>
+                    <span className="font-medium">{profile.rates?.['1h'] || profile.hourlyRate}€</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">Preis pro Nacht</span>
+                    <span className="font-medium">{profile.rates?.['overnight'] || '2000'}€</span>
                   </div>
                 </div>
               </CardContent>
@@ -237,15 +289,44 @@ export default function ProfileDetail() {
             <Card>
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold mb-4">Preise</h3>
-                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-700 dark:text-gray-300">Stundensatz</span>
-                    <span className="text-2xl font-bold text-[#FF007F]">
-                      {profile.hourlyRate ? `${profile.hourlyRate}€` : 'Preis auf Anfrage'}
-                    </span>
-                  </div>
+                <div className="space-y-3">
+                  {profile.rates ? (
+                    <>
+                      {profile.rates['1h'] && (
+                        <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
+                          <span className="text-gray-700 dark:text-gray-300">1 Stunde</span>
+                          <span className="font-bold text-[#FF007F]">{profile.rates['1h']}€</span>
+                        </div>
+                      )}
+                      {profile.rates['2h'] && (
+                        <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
+                          <span className="text-gray-700 dark:text-gray-300">2 Stunden</span>
+                          <span className="font-bold text-[#FF007F]">{profile.rates['2h']}€</span>
+                        </div>
+                      )}
+                      {profile.rates['overnight'] && (
+                        <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
+                          <span className="text-gray-700 dark:text-gray-300">Übernachtung</span>
+                          <span className="font-bold text-[#FF007F]">{profile.rates['overnight']}€</span>
+                        </div>
+                      )}
+                      {profile.rates['weekend'] && (
+                        <div className="flex justify-between items-center py-2">
+                          <span className="text-gray-700 dark:text-gray-300">Wochenende</span>
+                          <span className="font-bold text-[#FF007F]">{profile.rates['weekend']}€</span>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-gray-700 dark:text-gray-300">Stundensatz</span>
+                      <span className="font-bold text-[#FF007F]">
+                        {profile.hourlyRate ? `${profile.hourlyRate}€` : 'Preis auf Anfrage'}
+                      </span>
+                    </div>
+                  )}
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
                   Alle Preise sind Richtwerte. Finale Preise werden individuell vereinbart.
                 </p>
               </CardContent>
