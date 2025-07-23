@@ -32,16 +32,21 @@ export default function Home() {
   const { theme, toggleTheme } = useTheme();
   const { user } = useAuth();
   const { toast } = useToast();
-  const { coordinates, isLoading: locationLoading } = useGeolocation();
+  const { coordinates, currentCity, isLoading: locationLoading } = useGeolocation();
   const queryClient = useQueryClient();
   const [location, navigate] = useLocation();
 
-  // Auto-set user coordinates when GPS location is available
+  // Auto-set user coordinates and location when GPS location is available
   useEffect(() => {
     if (coordinates && !userCoordinates) {
       setUserCoordinates({ lat: coordinates.latitude, lon: coordinates.longitude });
+      
+      // Update location to show detected city if using "Mein Standort"
+      if (selectedLocation === 'Mein Standort' && currentCity) {
+        setSelectedLocation(currentCity);
+      }
     }
-  }, [coordinates, userCoordinates]);
+  }, [coordinates, currentCity, userCoordinates, selectedLocation]);
 
   // Fetch escorts based on authentication status
   const { data: rawUsers = [], isLoading, error } = useQuery({
@@ -142,7 +147,7 @@ export default function Home() {
       className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer border border-gray-200 dark:border-gray-700"
       onClick={() => handleEscortClick(escort.id)}
     >
-      <div className="relative aspect-[3/5]">
+      <div className="relative aspect-[4/5]">
         <img
           src={escort.profileImageUrl || 'https://images.unsplash.com/photo-1494790108755-2616b612b977?w=600'}
           alt={escort.firstName || 'Escort Profile'}
@@ -254,7 +259,7 @@ export default function Home() {
           {premiumEscorts.length > 0 && (
             <section className="mb-8">
               <SectionHeader title="Premium Escorts" icon={Crown} count={premiumEscorts.length} />
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
                 {premiumEscorts.map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}
@@ -266,7 +271,7 @@ export default function Home() {
           {newEscorts.length > 0 && (
             <section className="mb-8">
               <SectionHeader title="Neue Escorts" icon={Star} count={newEscorts.slice(0, 10).length} />
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
                 {newEscorts.slice(0, 10).map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}
@@ -282,7 +287,7 @@ export default function Home() {
                 icon={MapPin} 
                 count={nearbyEscorts.length} 
               />
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
                 {nearbyEscorts.map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}
