@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
-import AuthModal from '@/components/AuthModal';
+import AuthModalNew from '@/components/AuthModalNew';
 import { Home, MessageCircle, User, Search, Settings, LogIn, UserPlus, ImageIcon } from 'lucide-react';
 import { Link } from 'wouter';
 
@@ -90,7 +90,7 @@ export function BottomNavigation() {
       ) : null}
       
       {/* Auth Modal */}
-      <AuthModal
+      <AuthModalNew
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         defaultTab={authTab}

@@ -8,7 +8,7 @@ import { LocationSelector } from '@/components/LocationSelector';
 import { FilterDialog } from '@/components/FilterDialog';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/hooks/useAuth';
-import AuthModal from '@/components/AuthModal';
+import AuthModalNew from '@/components/AuthModalNew';
 import { useToast } from '@/hooks/use-toast';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { MapPin, Moon, Sun, MessageCircle, Crown, Star } from 'lucide-react';
@@ -294,7 +294,7 @@ export default function Home() {
         </div>
       </main>
       {/* Auth Modal */}
-      <AuthModal
+      <AuthModalNew
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         defaultTab={authTab}

@@ -1,34 +1,47 @@
 import React, { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
+import { queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
-import { apiRequest } from '@/lib/queryClient';
-import { Heart, LogIn, UserPlus, Eye, EyeOff } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Heart, Eye, EyeOff } from 'lucide-react';
 
 const loginSchema = z.object({
   email: z.string().email('Ungültige E-Mail-Adresse'),
-  password: z.string().min(1, 'Passwort ist erforderlich'),
+  password: z.string().min(6, 'Passwort muss mindestens 6 Zeichen lang sein'),
 });
 
 const registerSchema = z.object({
   email: z.string().email('Ungültige E-Mail-Adresse'),
-  password: z.string().min(8, 'Passwort muss mindestens 8 Zeichen lang sein'),
+  password: z.string().min(6, 'Passwort muss mindestens 6 Zeichen lang sein'),
   confirmPassword: z.string(),
   firstName: z.string().min(1, 'Vorname ist erforderlich'),
   lastName: z.string().optional(),
-  userType: z.enum(['trans', 'man'], { required_error: 'Benutzertyp ist erforderlich' }),
+  userType: z.enum(['trans', 'man'], {
+    required_error: 'Bitte wähle deinen Kontotyp',
+  }),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwörter stimmen nicht überein",
-  path: ["confirmPassword"],
+  message: 'Passwörter stimmen nicht überein',
+  path: ['confirmPassword'],
 });
 
 type LoginForm = z.infer<typeof loginSchema>;
@@ -40,12 +53,10 @@ interface AuthModalProps {
   defaultTab?: 'login' | 'register';
 }
 
-export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) {
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
+export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: AuthModalProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [activeTab, setActiveTab] = useState(defaultTab);
+  const { toast } = useToast();
 
   const loginForm = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -67,28 +78,24 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: Aut
     },
   });
 
+  // Direct fetch implementation
   const loginMutation = useMutation({
     mutationFn: async (data: LoginForm) => {
-      try {
-        const response = await window.fetch('/api/auth/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-          credentials: 'include',
-        });
-        
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || 'Login failed');
-        }
-        
-        return response.json();
-      } catch (error) {
-        console.error('Login fetch error:', error);
-        throw error;
+      const response = await window.fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+        credentials: 'include',
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Login failed');
       }
+      
+      return response.json();
     },
     onSuccess: (data: any) => {
       toast({
@@ -111,31 +118,26 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: Aut
     mutationFn: async (data: RegisterForm) => {
       const { confirmPassword, ...registerData } = data;
       
-      try {
-        const response = await window.fetch('/api/auth/register', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(registerData),
-          credentials: 'include',
-        });
-        
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || 'Registration failed');
-        }
-        
-        return response.json();
-      } catch (error) {
-        console.error('Registration fetch error:', error);
-        throw error;
+      const response = await window.fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(registerData),
+        credentials: 'include',
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Registration failed');
       }
+      
+      return response.json();
     },
     onSuccess: (data: any) => {
       toast({
         title: "Registrierung erfolgreich!",
-        description: data.message || "Bitte bestätige deine E-Mail-Adresse.",
+        description: data.message || "Willkommen bei TransConnect!",
       });
       queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
       onClose();
@@ -166,15 +168,10 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: Aut
               <Heart className="w-8 h-8 text-white" />
             </div>
           </div>
-          <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-            TransConnect
-          </DialogTitle>
-          <DialogDescription>
-            Melde dich an oder erstelle ein Konto
-          </DialogDescription>
+          <DialogTitle className="text-2xl font-bold">TransConnect</DialogTitle>
         </DialogHeader>
 
-        <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'login' | 'register')}>
+        <Tabs defaultValue={defaultTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="login">Anmelden</TabsTrigger>
             <TabsTrigger value="register">Registrieren</TabsTrigger>
@@ -188,12 +185,12 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: Aut
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>E-Mail-Adresse</FormLabel>
+                      <FormLabel>E-Mail</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="email" 
-                          placeholder="max@example.com" 
-                          {...field} 
+                        <Input
+                          type="email"
+                          placeholder="deine@email.com"
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />
@@ -209,10 +206,10 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: Aut
                       <FormLabel>Passwort</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Input 
-                            type={showPassword ? "text" : "password"}
+                          <Input
+                            type={showPassword ? 'text' : 'password'}
                             placeholder="Dein Passwort"
-                            {...field} 
+                            {...field}
                           />
                           <Button
                             type="button"
@@ -234,22 +231,12 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: Aut
                   )}
                 />
 
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-[#FF007F] hover:bg-[#FF007F]/90"
                   disabled={loginMutation.isPending}
                 >
-                  {loginMutation.isPending ? (
-                    <>
-                      <LogIn className="w-4 h-4 mr-2 animate-spin" />
-                      Melde an...
-                    </>
-                  ) : (
-                    <>
-                      <LogIn className="w-4 h-4 mr-2" />
-                      Anmelden
-                    </>
-                  )}
+                  {loginMutation.isPending ? 'Anmelden...' : 'Anmelden'}
                 </Button>
               </form>
             </Form>
@@ -263,42 +250,38 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: Aut
                   name="userType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Ich bin...</FormLabel>
-                      <FormControl>
-                        <RadioGroup
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          className="flex flex-row space-x-6"
-                        >
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="trans" id="trans" />
-                            <Label htmlFor="trans">Trans* Escort</Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="man" id="man" />
-                            <Label htmlFor="man">Kunde</Label>
-                          </div>
-                        </RadioGroup>
-                      </FormControl>
+                      <FormLabel>Ich bin</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Bitte auswählen" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="trans">Trans Escort</SelectItem>
+                          <SelectItem value="man">Kunde (Mann)</SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={registerForm.control}
                     name="firstName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Vorname *</FormLabel>
+                        <FormLabel>Vorname</FormLabel>
                         <FormControl>
-                          <Input placeholder="Max" {...field} />
+                          <Input placeholder="Vorname" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
+
                   <FormField
                     control={registerForm.control}
                     name="lastName"
@@ -306,7 +289,7 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: Aut
                       <FormItem>
                         <FormLabel>Nachname</FormLabel>
                         <FormControl>
-                          <Input placeholder="Mustermann" {...field} />
+                          <Input placeholder="Nachname" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -319,12 +302,12 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: Aut
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>E-Mail-Adresse *</FormLabel>
+                      <FormLabel>E-Mail</FormLabel>
                       <FormControl>
-                        <Input 
-                          type="email" 
-                          placeholder="max@example.com" 
-                          {...field} 
+                        <Input
+                          type="email"
+                          placeholder="deine@email.com"
+                          {...field}
                         />
                       </FormControl>
                       <FormMessage />
@@ -337,13 +320,13 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: Aut
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Passwort *</FormLabel>
+                      <FormLabel>Passwort</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Input 
-                            type={showPassword ? "text" : "password"}
-                            placeholder="Mindestens 8 Zeichen"
-                            {...field} 
+                          <Input
+                            type={showPassword ? 'text' : 'password'}
+                            placeholder="Mindestens 6 Zeichen"
+                            {...field}
                           />
                           <Button
                             type="button"
@@ -370,13 +353,13 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: Aut
                   name="confirmPassword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Passwort bestätigen *</FormLabel>
+                      <FormLabel>Passwort bestätigen</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Input 
-                            type={showConfirmPassword ? "text" : "password"}
+                          <Input
+                            type={showConfirmPassword ? 'text' : 'password'}
                             placeholder="Passwort wiederholen"
-                            {...field} 
+                            {...field}
                           />
                           <Button
                             type="button"
@@ -398,22 +381,12 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: Aut
                   )}
                 />
 
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-[#FF007F] hover:bg-[#FF007F]/90"
                   disabled={registerMutation.isPending}
                 >
-                  {registerMutation.isPending ? (
-                    <>
-                      <UserPlus className="w-4 h-4 mr-2 animate-spin" />
-                      Registriere...
-                    </>
-                  ) : (
-                    <>
-                      <UserPlus className="w-4 h-4 mr-2" />
-                      Registrieren
-                    </>
-                  )}
+                  {registerMutation.isPending ? 'Registrieren...' : 'Registrieren'}
                 </Button>
               </form>
             </Form>
