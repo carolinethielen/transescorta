@@ -48,6 +48,88 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
+  // Initialize demo data
+  async initializeDemoData(): Promise<void> {
+    const demoTransUsers = [
+      {
+        id: 'demo_trans_1',
+        email: 'lena@example.com',
+        firstName: 'Lena',
+        lastName: 'Schmidt',
+        bio: 'Hallo! Ich bin Lena, 28 Jahre alt und biete diskrete Services in Berlin. Professionell und sinnlich. Nur ernsthafte Anfragen! ✨',
+        age: 28,
+        height: 175,
+        weight: 65,
+        cockSize: 18,
+        position: 'versatile' as const,
+        bodyType: 'Schlank',
+        ethnicity: 'Europäisch',
+        services: ['GF6', 'Anal aktiv', 'Anal passiv', 'Oral ohne', 'Küssen'],
+        hourlyRate: 200,
+        location: 'Berlin',
+        latitude: 52.5200,
+        longitude: 13.4050,
+        interests: ['Kunst', 'Musik'],
+        userType: 'trans' as const,
+        profileImageUrl: 'https://images.unsplash.com/photo-1494790108755-2616b612b977?w=400',
+        isOnline: true,
+        isPremium: true,
+      },
+      {
+        id: 'demo_trans_2',
+        email: 'sofia@example.com',
+        firstName: 'Sofia',
+        lastName: 'Müller',
+        bio: 'Sofia hier! 25 Jahre, Hamburg. Luxus-Escort mit viel Erfahrung. Diskret und professionell. 💋',
+        age: 25,
+        height: 168,
+        weight: 58,
+        cockSize: 16,
+        position: 'bottom' as const,
+        bodyType: 'Zierlich',
+        ethnicity: 'Lateinamerikanisch',
+        services: ['GF6', 'Anal passiv', 'Oral ohne', 'Küssen', 'Massage'],
+        hourlyRate: 180,
+        location: 'Hamburg',
+        latitude: 53.5511,
+        longitude: 9.9937,
+        interests: ['Mode', 'Wellness'],
+        userType: 'trans' as const,
+        profileImageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400',
+        isOnline: false,
+        isPremium: true,
+      },
+      {
+        id: 'demo_trans_3',
+        email: 'maya@example.com',
+        firstName: 'Maya',
+        lastName: 'Weber',
+        bio: 'Maya, 30 Jahre, München. Exklusive Services für anspruchsvolle Herren. Sehr diskret! 🌹',
+        age: 30,
+        height: 172,
+        weight: 62,
+        cockSize: 20,
+        position: 'top' as const,
+        bodyType: 'Sportlich',
+        ethnicity: 'Asiatisch',
+        services: ['GF6', 'Anal aktiv', 'Oral ohne', 'Küssen', 'Dominanz'],
+        hourlyRate: 250,
+        location: 'München',
+        latitude: 48.1351,
+        longitude: 11.5820,
+        interests: ['Fitness', 'Kochen'],
+        userType: 'trans' as const,
+        profileImageUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400',
+        isOnline: true,
+        isPremium: false,
+      },
+    ];
+
+    for (const user of demoTransUsers) {
+      await this.upsertUser(user);
+    }
+  }
+
   // User operations
   async getUser(id: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));

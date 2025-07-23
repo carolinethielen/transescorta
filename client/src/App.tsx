@@ -9,7 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 
 import NotFound from "@/pages/not-found";
 import Landing from "@/pages/Landing";
-import Home from "@/pages/Home";
+import Home from "@/pages/HomeNew";
 import Chat from "@/pages/Chat";
 import Profile from "@/pages/Profile";
 import Explore from "@/pages/Explore";

@@ -65,7 +65,15 @@ app.use((req, res, next) => {
     port,
     host: "0.0.0.0",
     reusePort: true,
-  }, () => {
+  }, async () => {
     log(`serving on port ${port}`);
+    // Initialize demo data on startup
+    try {
+      const { storage } = await import("./storage");
+      await storage.initializeDemoData();
+      log('Demo data initialized');
+    } catch (error) {
+      console.error('Failed to initialize demo data:', error);
+    }
   });
 })();

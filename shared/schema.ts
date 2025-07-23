@@ -35,6 +35,14 @@ export const users = pgTable("users", {
   isPremium: boolean("is_premium").default(false),
   age: integer("age"),
   bio: text("bio"),
+  height: integer("height"), // in cm
+  weight: integer("weight"), // in kg
+  cockSize: integer("cock_size"), // in cm
+  position: varchar("position").$type<'top' | 'bottom' | 'versatile'>(),
+  bodyType: varchar("body_type"),
+  ethnicity: varchar("ethnicity"),
+  services: jsonb("services").$type<string[]>().default([]),
+  hourlyRate: integer("hourly_rate"), // in EUR
   location: varchar("location"),
   latitude: real("latitude"),
   longitude: real("longitude"),
@@ -92,11 +100,23 @@ export const updateProfileSchema = createInsertSchema(users).pick({
   lastName: true,
   age: true,
   bio: true,
+  height: true,
+  weight: true,
+  cockSize: true,
+  position: true,
+  bodyType: true,
+  ethnicity: true,
+  services: true,
+  hourlyRate: true,
   location: true,
   interests: true,
 }).extend({
   age: z.number().min(18).max(100),
   bio: z.string().max(500),
+  height: z.number().min(150).max(220).optional(),
+  weight: z.number().min(40).max(150).optional(),
+  cockSize: z.number().min(10).max(30).optional(),
+  hourlyRate: z.number().min(50).max(1000).optional(),
 });
 
 export const createMatchSchema = createInsertSchema(matches).pick({
