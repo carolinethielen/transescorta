@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
+import AuthModal from '@/components/AuthModal';
 import { Home, MessageCircle, User, Search, Settings, LogIn, UserPlus, ImageIcon } from 'lucide-react';
 import { Link } from 'wouter';
 
@@ -25,13 +26,17 @@ const getNavItems = (userType?: string) => {
 export function BottomNavigation() {
   const [location, navigate] = useLocation();
   const { user, isAuthenticated, isLoading } = useAuth();
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
 
   const handleLogin = () => {
-    window.location.href = '/api/login';
+    setAuthTab('login');
+    setShowAuthModal(true);
   };
 
   const handleRegister = () => {
-    navigate('/select-type');
+    setAuthTab('register');
+    setShowAuthModal(true);
   };
 
   return (
@@ -79,6 +84,13 @@ export function BottomNavigation() {
           </Button>
         </div>
       ) : null}
+      
+      {/* Auth Modal */}
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        defaultTab={authTab}
+      />
     </nav>
   );
 }
