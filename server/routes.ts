@@ -205,9 +205,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/chat/messages', isAuthenticated, async (req: any, res) => {
     try {
-      const senderId = req.user.claims.sub;
+      const senderId = req.user.id;
       const messageData = sendMessageSchema.parse(req.body);
       const message = await storage.sendMessage(senderId, messageData);
+      
+      // Broadcast to WebSocket clients
+      const otherUserId = messageData.receiverId;
+      const connectedSockets = [...connectedClients.entries()];
+      connectedSockets.forEach(([socket, userId]) => {
+        if (userId === otherUserId && socket.readyState === WebSocket.OPEN) {
+          socket.send(JSON.stringify({
+            type: 'new_message',
+            message: message,
+            senderId: senderId
+          }));
+        }
+      });
+      
       res.json(message);
     } catch (error) {
       if (error instanceof z.ZodError) {

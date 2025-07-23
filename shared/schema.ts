@@ -82,6 +82,8 @@ export const messages = pgTable("messages", {
   senderId: varchar("sender_id").notNull().references(() => users.id),
   receiverId: varchar("receiver_id").notNull().references(() => users.id),
   content: text("content").notNull(),
+  messageType: varchar("message_type").default('text').$type<'text' | 'image'>(),
+  imageUrl: varchar("image_url"), // For photo messages
   isRead: boolean("is_read").default(false),
   createdAt: timestamp("created_at").defaultNow(),
 });
@@ -151,13 +153,17 @@ export const updateProfileSchema = createInsertSchema(users).pick({
   hourlyRate: true,
   location: true,
   interests: true,
+  profileImageUrl: true,
+  profileImages: true,
 }).extend({
   age: z.number().min(18).max(100),
-  bio: z.string().max(500),
+  bio: z.string().max(500).optional(),
   height: z.number().min(150).max(220).optional(),
   weight: z.number().min(40).max(150).optional(),
   cockSize: z.number().min(10).max(30).optional(),
   hourlyRate: z.number().min(50).max(1000).optional(),
+  profileImageUrl: z.string().url().optional(),
+  profileImages: z.array(z.string().url()).optional(),
 });
 
 export const createMatchSchema = createInsertSchema(matches).pick({
@@ -168,8 +174,12 @@ export const createMatchSchema = createInsertSchema(matches).pick({
 export const sendMessageSchema = createInsertSchema(messages).pick({
   receiverId: true,
   content: true,
+  messageType: true,
+  imageUrl: true,
 }).extend({
-  content: z.string().min(1).max(1000),
+  content: z.string().min(1).max(1000).optional(),
+  messageType: z.enum(['text', 'image']).default('text'),
+  imageUrl: z.string().url().optional(),
 });
 
 // Private albums table for escort photo galleries

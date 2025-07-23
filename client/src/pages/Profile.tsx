@@ -13,11 +13,14 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { updateProfileSchema, type User, type Match } from '@shared/schema';
 import { MapPin, Edit, Crown, Heart, MessageCircle, Star } from 'lucide-react';
+import { PlaceholderImage } from '@/components/PlaceholderImage';
+import { useLocation } from 'wouter';
 
 export default function Profile() {
   const { user, isLoading: authLoading } = useAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [, navigate] = useLocation();
 
   // Fetch user matches for stats
   const { data: matches = [] } = useQuery<(Match & { user: User })[]>({
@@ -97,6 +100,7 @@ export default function Profile() {
             variant="secondary"
             size="sm"
             className="absolute top-4 right-4 rounded-full"
+            onClick={() => navigate('/profile/edit')}
           >
             <Edit className="w-4 h-4" />
           </Button>
@@ -110,8 +114,8 @@ export default function Profile() {
                 className="w-24 h-24 rounded-full border-4 border-background object-cover"
               />
             ) : (
-              <div className="w-24 h-24 rounded-full border-4 border-background bg-muted flex items-center justify-center text-4xl">
-                👤
+              <div className="w-24 h-24 rounded-full border-4 border-background">
+                <PlaceholderImage size="lg" userType={user?.userType || 'trans'} />
               </div>
             )}
           </div>

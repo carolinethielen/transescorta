@@ -13,7 +13,9 @@ import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Home from "@/pages/HomeNew";
 import Chat from "@/pages/Chat";
+import ChatEnhanced from "@/pages/ChatEnhanced";
 import Profile from "@/pages/Profile";
+import ProfileEdit from "@/pages/ProfileEdit";
 import ProfileDetail from "@/pages/ProfileDetail";
 import Explore from "@/pages/Explore";
 import Settings from "@/pages/Settings";
@@ -44,8 +46,9 @@ function Router() {
       {/* Protected routes - require authentication */}
       {isAuthenticated && !isLoading && (
         <>
-          <Route path="/chat" component={Chat} />
+          <Route path="/chat" component={ChatEnhanced} />
           <Route path="/my-profile" component={Profile} />
+          <Route path="/profile/edit" component={ProfileEdit} />
           <Route path="/settings" component={Settings} />
           {/* Albums only for trans escorts */}
           <Route path="/albums" component={PrivateAlbums} />

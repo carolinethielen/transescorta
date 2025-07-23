@@ -10,6 +10,7 @@ import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/hooks/useAuth';
 import AuthModalNew from '@/components/AuthModalNew';
 import TestRegistration from '@/components/TestRegistration';
+import { PlaceholderImage } from '@/components/PlaceholderImage';
 import { useToast } from '@/hooks/use-toast';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { MapPin, Moon, Sun, MessageCircle, Crown, Star } from 'lucide-react';
@@ -139,15 +140,28 @@ export default function Home() {
       className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer border border-gray-200 dark:border-gray-700"
       onClick={() => handleEscortClick(escort.id)}
     >
-      <div className="relative aspect-[4/5]">
-        <img
-          src={escort.profileImageUrl || 'https://images.unsplash.com/photo-1494790108755-2616b612b977?w=600'}
-          alt={escort.firstName || 'Escort Profile'}
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            e.currentTarget.src = 'https://images.unsplash.com/photo-1494790108755-2616b612b977?w=600';
-          }}
-        />
+      <div className="relative aspect-[4/5] overflow-hidden">
+        {escort.profileImageUrl ? (
+          <img
+            src={escort.profileImageUrl}
+            alt={escort.firstName || 'Escort Profile'}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              // If image fails to load, show placeholder instead
+              const parent = e.currentTarget.parentNode as HTMLElement;
+              if (parent) {
+                parent.innerHTML = '';
+                const placeholderDiv = document.createElement('div');
+                placeholderDiv.className = 'w-full h-full flex items-center justify-center';
+                parent.appendChild(placeholderDiv);
+              }
+            }}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-pink-200 via-purple-200 to-blue-200 dark:from-pink-800 dark:via-purple-800 dark:to-blue-800">
+            <PlaceholderImage size="xl" userType="trans" className="w-24 h-24" />
+          </div>
+        )}
         
         {/* Online Status - Top Left */}
         {escort.isOnline && (
