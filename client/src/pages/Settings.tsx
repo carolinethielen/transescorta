@@ -139,8 +139,20 @@ export default function Settings() {
                     <p className="text-sm text-muted-foreground">Erweiterte Funktionen freischalten</p>
                   </div>
                 </div>
-                <Button size="sm" className="bg-[#FF007F] hover:bg-[#FF007F]/90">
-                  Upgrade
+                <Button 
+                  size="sm" 
+                  className="bg-[#FF007F] hover:bg-[#FF007F]/90"
+                  onClick={() => {
+                    // Simple demo upgrade without payment
+                    fetch('/api/upgrade-premium', { 
+                      method: 'POST',
+                      credentials: 'include'
+                    }).then(() => {
+                      window.location.reload();
+                    });
+                  }}
+                >
+                  Upgrade (Demo)
                 </Button>
               </div>
             </CardContent>

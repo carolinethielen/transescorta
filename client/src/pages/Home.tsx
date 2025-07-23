@@ -27,7 +27,7 @@ export default function Home() {
   });
 
   // Convert database users to frontend-compatible users
-  const users: User[] = rawUsers.map((user: any) => ({
+  const users: User[] = (rawUsers as any[]).map((user: any) => ({
     ...user,
     firstName: user.firstName || undefined,
     lastName: user.lastName || undefined,
@@ -185,7 +185,7 @@ export default function Home() {
                   {users[currentSwipeIndex] && (
                     <SwipeCard
                       key={users[currentSwipeIndex].id}
-                      user={users[currentSwipeIndex] as User}
+                      user={users[currentSwipeIndex]}
                       onSwipe={handleSwipe}
                     />
                   )}

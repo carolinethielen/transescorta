@@ -1,16 +1,10 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
-import Stripe from "stripe";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { sendMessageSchema, createMatchSchema, updateProfileSchema } from "@shared/schema";
 import { z } from "zod";
-
-// Initialize Stripe
-const stripe = process.env.STRIPE_SECRET_KEY 
-  ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2025-06-30.basil" })
-  : null;
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
@@ -172,58 +166,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Premium/Stripe routes
-  if (stripe) {
-    app.post('/api/get-or-create-subscription', isAuthenticated, async (req: any, res) => {
-      try {
-        const user = req.user;
-        const userId = user.claims.sub;
-        const userEmail = user.claims.email;
-
-        if (user.stripeSubscriptionId) {
-          const subscription = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
-          
-          res.json({
-            subscriptionId: subscription.id,
-            clientSecret: (subscription.latest_invoice as any)?.payment_intent?.client_secret,
-          });
-          return;
-        }
-
-        if (!userEmail) {
-          throw new Error('No user email on file');
-        }
-
-        const customer = await stripe.customers.create({
-          email: userEmail,
-          name: user.claims.first_name || 'TransConnect User',
-        });
-
-        if (!process.env.STRIPE_PRICE_ID) {
-          throw new Error('STRIPE_PRICE_ID not configured');
-        }
-
-        const subscription = await stripe.subscriptions.create({
-          customer: customer.id,
-          items: [{
-            price: process.env.STRIPE_PRICE_ID,
-          }],
-          payment_behavior: 'default_incomplete',
-          expand: ['latest_invoice.payment_intent'],
-        });
-
-        await storage.updateUserStripeInfo(userId, customer.id, subscription.id);
-
-        res.json({
-          subscriptionId: subscription.id,
-          clientSecret: (subscription.latest_invoice as any)?.payment_intent?.client_secret,
-        });
-      } catch (error: any) {
-        console.error("Stripe subscription error:", error);
-        res.status(400).json({ error: { message: error.message } });
-      }
-    });
-  }
+  // Premium upgrade route (simplified without payment)
+  app.post('/api/upgrade-premium', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const user = await storage.updateUserStripeInfo(userId, 'demo_customer', 'demo_subscription');
+      res.json({ success: true, user });
+    } catch (error) {
+      console.error("Error upgrading to premium:", error);
+      res.status(500).json({ message: "Failed to upgrade to premium" });
+    }
+  });
 
   // Create HTTP server
   const httpServer = createServer(app);
