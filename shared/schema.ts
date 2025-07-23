@@ -103,7 +103,7 @@ export const chatRooms = pgTable("chat_rooms", {
 export const registerUserSchema = createInsertSchema(users, {
   email: z.string().email("Ungültige E-Mail-Adresse"),
   passwordHash: z.string().min(8, "Passwort muss mindestens 8 Zeichen lang sein"),
-  firstName: z.string().min(1, "Vorname ist erforderlich"),
+  firstName: z.string().min(1, "Benutzername ist erforderlich"),
   lastName: z.string().optional(),
   userType: z.enum(['trans', 'man'], { required_error: "Benutzertyp ist erforderlich" }),
 }).omit({ id: true, createdAt: true, updatedAt: true, isEmailVerified: true, lastSeen: true });

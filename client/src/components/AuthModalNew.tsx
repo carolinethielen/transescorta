@@ -34,7 +34,7 @@ const registerSchema = z.object({
   email: z.string().email('Ungültige E-Mail-Adresse'),
   password: z.string().min(6, 'Passwort muss mindestens 6 Zeichen lang sein'),
   confirmPassword: z.string(),
-  firstName: z.string().min(1, 'Vorname ist erforderlich'),
+  firstName: z.string().min(1, 'Benutzername ist erforderlich'),
   lastName: z.string().optional(),
   userType: z.enum(['trans', 'man'], {
     required_error: 'Bitte wähle deinen Kontotyp',
@@ -74,7 +74,7 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
       confirmPassword: '',
       firstName: '',
       lastName: '',
-      userType: 'man',
+      userType: undefined as any,
     },
   });
 
@@ -217,7 +217,7 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>E-Mail</FormLabel>
+                      <FormLabel>E-Mail *</FormLabel>
                       <FormControl>
                         <Input
                           type="email"
@@ -235,7 +235,7 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Passwort</FormLabel>
+                      <FormLabel>Passwort *</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
@@ -282,59 +282,64 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
                   name="userType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Ich bin</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Bitte auswählen" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="trans">Trans Escort</SelectItem>
-                          <SelectItem value="man">Kunde (Mann)</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      <FormLabel>Ich bin *</FormLabel>
+                      <FormControl>
+                        <div className="grid grid-cols-2 gap-4">
+                          <div
+                            className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                              field.value === 'trans'
+                                ? 'border-[#FF007F] bg-[#FF007F]/10'
+                                : 'border-gray-200 hover:border-gray-300'
+                            }`}
+                            onClick={() => field.onChange('trans')}
+                          >
+                            <div className="text-center">
+                              <div className="text-lg font-semibold text-[#FF007F]">💄</div>
+                              <div className="font-medium">Trans Escort</div>
+                              <div className="text-sm text-gray-500">Ich biete Services an</div>
+                            </div>
+                          </div>
+                          <div
+                            className={`p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                              field.value === 'man'
+                                ? 'border-[#FF007F] bg-[#FF007F]/10'
+                                : 'border-gray-200 hover:border-gray-300'
+                            }`}
+                            onClick={() => field.onChange('man')}
+                          >
+                            <div className="text-center">
+                              <div className="text-lg font-semibold text-[#FF007F]">👤</div>
+                              <div className="font-medium">Kunde</div>
+                              <div className="text-sm text-gray-500">Ich suche Services</div>
+                            </div>
+                          </div>
+                        </div>
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={registerForm.control}
-                    name="firstName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Vorname</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Vorname" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={registerForm.control}
-                    name="lastName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nachname</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Nachname" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                <FormField
+                  control={registerForm.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Benutzername *</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Dein Benutzername" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 <FormField
                   control={registerForm.control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>E-Mail</FormLabel>
+                      <FormLabel>E-Mail *</FormLabel>
                       <FormControl>
                         <Input
                           type="email"
@@ -352,7 +357,7 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Passwort</FormLabel>
+                      <FormLabel>Passwort *</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
@@ -385,7 +390,7 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
                   name="confirmPassword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Passwort bestätigen</FormLabel>
+                      <FormLabel>Passwort bestätigen *</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input

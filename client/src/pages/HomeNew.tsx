@@ -9,7 +9,7 @@ import { FilterDialog } from '@/components/FilterDialog';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/hooks/useAuth';
 import AuthModalNew from '@/components/AuthModalNew';
-import TestRegistration from '@/components/TestRegistration';
+
 import { PlaceholderImage } from '@/components/PlaceholderImage';
 import { useToast } from '@/hooks/use-toast';
 import { useGeolocation } from '@/hooks/useGeolocation';
@@ -316,7 +316,7 @@ export default function Home() {
       />
       
       {/* Test Registration Component */}
-      <TestRegistration />
+
     </div>
   );
 }

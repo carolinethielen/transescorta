@@ -18,7 +18,7 @@ const registerSchema = z.object({
   email: z.string().email('Ungültige E-Mail-Adresse'),
   password: z.string().min(8, 'Passwort muss mindestens 8 Zeichen lang sein'),
   confirmPassword: z.string(),
-  firstName: z.string().min(1, 'Vorname ist erforderlich'),
+  firstName: z.string().min(1, 'Benutzername ist erforderlich'),
   lastName: z.string().optional(),
   userType: z.enum(['trans', 'man'], { required_error: 'Benutzertyp ist erforderlich' }),
 }).refine((data) => data.password === data.confirmPassword, {
