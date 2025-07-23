@@ -11,7 +11,7 @@ import { isUnauthorizedError } from '@/lib/authUtils';
 import { apiRequest } from '@/lib/queryClient';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { updateProfileSchema } from '@shared/schema';
+import { updateProfileSchema, type User, type Match } from '@shared/schema';
 import { MapPin, Edit, Crown, Heart, MessageCircle, Star } from 'lucide-react';
 
 export default function Profile() {
@@ -20,7 +20,7 @@ export default function Profile() {
   const queryClient = useQueryClient();
 
   // Fetch user matches for stats
-  const { data: matches = [] } = useQuery({
+  const { data: matches = [] } = useQuery<(Match & { user: User })[]>({
     queryKey: ['/api/matches'],
     retry: false,
   });

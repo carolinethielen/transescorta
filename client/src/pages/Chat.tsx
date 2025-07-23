@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { isUnauthorizedError } from '@/lib/authUtils';
 import { apiRequest } from '@/lib/queryClient';
 import { Send, Phone, Video, ArrowLeft } from 'lucide-react';
+import { type User, type Message, type ChatRoom } from '@shared/schema';
 
 export default function Chat() {
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
@@ -21,13 +22,13 @@ export default function Chat() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Fetch chat rooms
-  const { data: chatRooms = [], isLoading: roomsLoading } = useQuery({
+  const { data: chatRooms = [], isLoading: roomsLoading } = useQuery<(ChatRoom & { otherUser: User; lastMessage: Message | null; unreadCount: number })[]>({
     queryKey: ['/api/chat/rooms'],
     retry: false,
   });
 
   // Fetch messages for selected chat
-  const { data: messages = [], isLoading: messagesLoading } = useQuery({
+  const { data: messages = [], isLoading: messagesLoading } = useQuery<Message[]>({
     queryKey: ['/api/chat', selectedChat, 'messages'],
     enabled: !!selectedChat,
     retry: false,
@@ -258,7 +259,7 @@ export default function Chat() {
                     key={message.id}
                     message={message}
                     currentUserId={user?.id || ''}
-                    senderImage={selectedChatRoom?.otherUser.profileImageUrl}
+                    senderImage={selectedChatRoom?.otherUser.profileImageUrl || undefined}
                   />
                 ))}
                 <div ref={messagesEndRef} />

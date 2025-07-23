@@ -1,18 +1,7 @@
 import React from 'react';
-import { MapPin, Crown } from 'lucide-react';
+import { MapPin, Crown, User as UserIcon } from 'lucide-react';
 import { Card } from '@/components/ui/card';
-
-interface User {
-  id: string;
-  firstName?: string;
-  lastName?: string;
-  age?: number;
-  profileImageUrl?: string;
-  location?: string;
-  interests?: string[];
-  isPremium?: boolean;
-  isOnline?: boolean;
-}
+import { type User } from '@shared/schema';
 
 interface ProfileCardProps {
   user: User;
@@ -50,7 +39,7 @@ export function ProfileCard({ user, onClick }: ProfileCardProps) {
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-            <User className="w-16 h-16" />
+            <UserIcon className="w-16 h-16" />
           </div>
         )}
       </div>

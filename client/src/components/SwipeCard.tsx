@@ -1,18 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { MapPin, Crown } from 'lucide-react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
-
-interface User {
-  id: string;
-  firstName?: string;
-  lastName?: string;
-  age?: number;
-  profileImageUrl?: string;
-  location?: string;
-  interests?: string[];
-  isPremium?: boolean;
-  isOnline?: boolean;
-}
+import { type User } from '@shared/schema';
 
 interface SwipeCardProps {
   user: User;

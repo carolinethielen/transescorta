@@ -9,7 +9,7 @@ import { z } from "zod";
 
 // Initialize Stripe
 const stripe = process.env.STRIPE_SECRET_KEY 
-  ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2023-10-16" })
+  ? new Stripe(process.env.STRIPE_SECRET_KEY, { apiVersion: "2025-06-30.basil" })
   : null;
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -239,8 +239,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         const message = JSON.parse(data.toString());
         
-        if (message.type === 'auth') {
-          userId = message.userId;
+        if (message.type === 'auth' && message.userId) {
+          userId = message.userId as string;
           connectedUsers.set(userId, ws);
           await storage.updateUserOnlineStatus(userId, true);
           

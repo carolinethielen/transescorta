@@ -4,8 +4,9 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/contexts/ThemeContext';
+import { type User } from '@shared/schema';
 import { 
-  User, Key, Bell, EyeOff, UserX, Shield, Crown, 
+  User as UserIcon, Key, Bell, EyeOff, UserX, Shield, Crown, 
   HelpCircle, Mail, LogOut, ChevronRight 
 } from 'lucide-react';
 
@@ -31,7 +32,7 @@ export default function Settings() {
             <div className="divide-y divide-border">
               <button className="w-full p-4 text-left flex items-center justify-between hover:bg-muted/50 transition-colors">
                 <div className="flex items-center space-x-3">
-                  <User className="w-5 h-5 text-muted-foreground" />
+                  <UserIcon className="w-5 h-5 text-muted-foreground" />
                   <span>Profil bearbeiten</span>
                 </div>
                 <ChevronRight className="w-4 h-4 text-muted-foreground" />

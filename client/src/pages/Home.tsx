@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { isUnauthorizedError } from '@/lib/authUtils';
 import { apiRequest } from '@/lib/queryClient';
 import { MapPin, Moon, Sun, Grid3X3, Heart, X, MessageCircle } from 'lucide-react';
+import { type User } from '@shared/schema';
 
 export default function Home() {
   const [viewMode, setViewMode] = useState<'grid' | 'swipe'>('grid');
@@ -20,10 +21,20 @@ export default function Home() {
   const queryClient = useQueryClient();
 
   // Fetch recommended users
-  const { data: users = [], isLoading, error } = useQuery({
+  const { data: rawUsers = [], isLoading, error } = useQuery({
     queryKey: ['/api/users/recommended'],
     retry: false,
   });
+
+  // Convert database users to frontend-compatible users
+  const users: User[] = rawUsers.map((user: any) => ({
+    ...user,
+    firstName: user.firstName || undefined,
+    lastName: user.lastName || undefined,
+    profileImageUrl: user.profileImageUrl || undefined,
+    location: user.location || undefined,
+    interests: user.interests || [],
+  }));
 
   // Handle unauthorized error
   useEffect(() => {
@@ -80,7 +91,7 @@ export default function Home() {
     }
   };
 
-  const handleCardClick = (clickedUser: any) => {
+  const handleCardClick = (clickedUser: User) => {
     // Navigate to user profile or show details
     console.log('Clicked user:', clickedUser);
   };
@@ -174,7 +185,7 @@ export default function Home() {
                   {users[currentSwipeIndex] && (
                     <SwipeCard
                       key={users[currentSwipeIndex].id}
-                      user={users[currentSwipeIndex]}
+                      user={users[currentSwipeIndex] as User}
                       onSwipe={handleSwipe}
                     />
                   )}
