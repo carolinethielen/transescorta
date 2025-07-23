@@ -12,11 +12,10 @@ import Landing from "@/pages/Landing";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Home from "@/pages/HomeNew";
-import Chat from "@/pages/Chat";
-import ChatEnhanced from "@/pages/ChatEnhanced";
+import ChatMain from "@/pages/ChatMain";
 import Profile from "@/pages/Profile";
 import ProfileEdit from "@/pages/ProfileEdit";
-import ProfileDetail from "@/pages/ProfileDetail";
+import ProfileDetailFixed from "@/pages/ProfileDetailFixed";
 import Explore from "@/pages/Explore";
 import Settings from "@/pages/Settings";
 import Subscribe from "@/pages/Subscribe";
@@ -46,7 +45,7 @@ function Router() {
       {/* Protected routes - require authentication */}
       {isAuthenticated && !isLoading && (
         <>
-          <Route path="/chat" component={ChatEnhanced} />
+          <Route path="/chat" component={ChatMain} />
           <Route path="/my-profile" component={Profile} />
           <Route path="/profile/edit" component={ProfileEdit} />
           <Route path="/settings" component={Settings} />
@@ -58,7 +57,7 @@ function Router() {
       )}
       
       {/* Profile viewing - accessible but may require auth for contact */}
-      <Route path="/profile" component={ProfileDetail} />
+      <Route path="/profile" component={ProfileDetailFixed} />
       <Route path="/explore" component={Explore} />
       <Route component={NotFound} />
     </Switch>
