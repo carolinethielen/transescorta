@@ -48,9 +48,10 @@ export default function ChatMain() {
         })
         .catch((error) => {
           console.error('Failed to create chat room:', error);
+          console.log('Error details:', error);
           toast({
             title: "Fehler",
-            description: "Chat konnte nicht gestartet werden.",
+            description: `Chat konnte nicht gestartet werden: ${error.message || 'Unbekannter Fehler'}`,
             variant: "destructive",
           });
         });
@@ -201,12 +202,26 @@ export default function ChatMain() {
   if (!user) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
+        <div className="text-center max-w-md mx-auto p-6">
           <h2 className="text-xl font-semibold mb-2">Anmeldung erforderlich</h2>
-          <p className="text-muted-foreground mb-4">Du musst angemeldet sein, um den Chat zu nutzen.</p>
-          <Link href="/login">
-            <Button>Jetzt anmelden</Button>
-          </Link>
+          <p className="text-muted-foreground mb-6">Du musst angemeldet sein, um den Chat zu nutzen.</p>
+          
+          <div className="space-y-4">
+            <div className="p-4 bg-muted rounded-lg text-sm">
+              <p className="font-medium mb-2">Demo-Account verwenden:</p>
+              <p>E-Mail: lena@example.com</p>
+              <p>Passwort: demo123</p>
+            </div>
+            
+            <div className="flex gap-2">
+              <Link href="/login" className="flex-1">
+                <Button className="w-full">Anmelden</Button>
+              </Link>
+              <Link href="/register" className="flex-1">
+                <Button variant="outline" className="w-full">Registrieren</Button>
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     );
