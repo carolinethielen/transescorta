@@ -12,6 +12,7 @@ import Landing from "@/pages/Landing";
 import Home from "@/pages/HomeNew";
 import Chat from "@/pages/Chat";
 import Profile from "@/pages/Profile";
+import ProfileDetail from "@/pages/ProfileDetail";
 import Explore from "@/pages/Explore";
 import Settings from "@/pages/Settings";
 import Subscribe from "@/pages/Subscribe";
@@ -26,13 +27,15 @@ function Router() {
       {isLoading || !isAuthenticated ? (
         <>
           <Route path="/" component={Home} />
+          <Route path="/profile" component={ProfileDetail} />
           <Route path="/landing" component={Landing} />
         </>
       ) : (
         <>
           <Route path="/" component={Home} />
           <Route path="/chat" component={Chat} />
-          <Route path="/profile" component={Profile} />
+          <Route path="/profile" component={ProfileDetail} />
+          <Route path="/my-profile" component={Profile} />
           <Route path="/explore" component={Explore} />
           <Route path="/settings" component={Settings} />
           <Route path="/subscribe" component={Subscribe} />
