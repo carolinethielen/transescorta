@@ -4,11 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LocationSelector } from '@/components/LocationSelector';
+import { FilterDialog } from '@/components/FilterDialog';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useGeolocation } from '@/hooks/useGeolocation';
-import { MapPin, Moon, Sun, MessageCircle, Crown, Star, Heart, Filter } from 'lucide-react';
+import { MapPin, Moon, Sun, MessageCircle, Crown, Star } from 'lucide-react';
 import { type User } from '@shared/schema';
 
 // Helper function to calculate distance between two coordinates
@@ -26,6 +27,7 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
 export default function Home() {
   const [selectedLocation, setSelectedLocation] = useState('Mein Standort');
   const [userCoordinates, setUserCoordinates] = useState<{ lat: number; lon: number } | null>(null);
+  const [filters, setFilters] = useState<any>(null);
   const { theme, toggleTheme } = useTheme();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -62,12 +64,28 @@ export default function Home() {
     };
   });
 
+  // Apply filters if any
+  const filteredEscorts = filters ? escorts.filter(escort => {
+    if (filters.ageRange && (escort.age < filters.ageRange[0] || escort.age > filters.ageRange[1])) return false;
+    if (filters.priceRange && escort.hourlyRate && (escort.hourlyRate < filters.priceRange[0] || escort.hourlyRate > filters.priceRange[1])) return false;
+    if (filters.position && escort.position !== filters.position) return false;
+    if (filters.bodyType && escort.bodyType !== filters.bodyType) return false;
+    if (filters.ethnicity && escort.ethnicity !== filters.ethnicity) return false;
+    if (filters.onlineOnly && !escort.isOnline) return false;
+    if (filters.premiumOnly && !escort.isPremium) return false;
+    if (filters.services && filters.services.length > 0) {
+      const hasService = filters.services.some((service: string) => escort.services?.includes(service));
+      if (!hasService) return false;
+    }
+    return true;
+  }) : escorts;
+
   // Organize escorts like hunqz.com: Premium first, then new, then by distance
-  const premiumEscorts = escorts.filter(escort => escort.isPremium);
-  const newEscorts = escorts.filter(escort => !escort.isPremium).sort((a, b) => 
+  const premiumEscorts = filteredEscorts.filter(escort => escort.isPremium);
+  const newEscorts = filteredEscorts.filter(escort => !escort.isPremium).sort((a, b) => 
     new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
   );
-  const nearbyEscorts = [...escorts].sort((a, b) => a.distance - b.distance);
+  const nearbyEscorts = [...filteredEscorts].sort((a, b) => a.distance - b.distance);
 
   const handleContactEscort = (escort: any) => {
     if (!user) {
@@ -93,90 +111,64 @@ export default function Home() {
   };
 
   const EscortCard = ({ escort }: { escort: any }) => (
-    <Card 
-      className="overflow-hidden hover:shadow-md transition-all duration-200 cursor-pointer group bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700"
+    <div 
+      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow cursor-pointer border border-gray-200 dark:border-gray-700"
       onClick={() => window.location.href = `/profile?id=${escort.id}`}
     >
       <div className="relative">
         <img
           src={escort.profileImageUrl || 'https://images.unsplash.com/photo-1494790108755-2616b612b977?w=400'}
           alt={escort.firstName || 'Escort Profile'}
-          className="w-full h-56 object-cover"
+          className="w-full aspect-[4/5] object-cover"
         />
         
-        {/* Online Status */}
-        {escort.isOnline && (
-          <div className="absolute top-3 left-3 flex items-center gap-1 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">
-            <div className="w-2 h-2 bg-white rounded-full" />
-            Online
-          </div>
-        )}
-        
-        {/* Premium Badge */}
-        {escort.isPremium && (
-          <div className="absolute top-3 right-3 bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center gap-1">
-            <Crown className="w-3 h-3" />
-            Premium
-          </div>
-        )}
-        
+        {/* Status Indicators */}
+        <div className="absolute top-2 left-2 flex flex-col gap-1">
+          {escort.isOnline && (
+            <div className="bg-green-500 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1">
+              <div className="w-1.5 h-1.5 bg-white rounded-full" />
+              Online
+            </div>
+          )}
+          {escort.isPremium && (
+            <div className="bg-yellow-500 text-white px-2 py-1 rounded text-xs font-medium flex items-center gap-1">
+              <Crown className="w-3 h-3" />
+              VIP
+            </div>
+          )}
+        </div>
+
         {/* Distance */}
         {escort.distance > 0 && (
-          <div className="absolute bottom-3 right-3 bg-black/70 text-white px-2 py-1 rounded text-xs">
+          <div className="absolute bottom-2 right-2 bg-black/60 text-white px-2 py-1 rounded text-xs">
             {Math.round(escort.distance)}km
           </div>
         )}
       </div>
       
-      <CardContent className="p-4">
-        {/* Name and Age */}
-        <div className="flex justify-between items-start mb-2">
-          <h3 className="font-semibold text-lg text-gray-900 dark:text-white truncate">
+      {/* Card Content - Minimal like hunqz.com */}
+      <div className="p-3">
+        <div className="flex justify-between items-center mb-1">
+          <h3 className="font-semibold text-base text-gray-900 dark:text-white truncate">
             {escort.firstName}
           </h3>
-          <span className="text-sm text-gray-600 dark:text-gray-400 ml-2">
+          <span className="text-sm text-gray-500 dark:text-gray-400">
             {escort.age}
           </span>
         </div>
         
-        {/* Location */}
-        <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 flex items-center gap-1">
-          <MapPin className="w-3 h-3" />
+        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-2">
+          <MapPin className="w-3 h-3 mr-1" />
           {escort.location}
-        </p>
-        
-        {/* Services */}
-        <div className="flex flex-wrap gap-1 mb-3">
-          {escort.services?.slice(0, 2).map((service: string, index: number) => (
-            <Badge key={index} variant="secondary" className="text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
-              {service}
-            </Badge>
-          ))}
-          {escort.services?.length > 2 && (
-            <Badge variant="secondary" className="text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300">
-              +{escort.services.length - 2}
-            </Badge>
-          )}
         </div>
-        
-        {/* Price and Contact */}
-        <div className="flex justify-between items-center">
-          <span className="font-bold text-[#FF007F] text-lg">
-            {escort.hourlyRate ? `${escort.hourlyRate}€` : 'n.V.'}
+
+        <div className="text-right">
+          <span className="font-semibold text-[#FF007F]">
+            {escort.hourlyRate ? `ab ${escort.hourlyRate}€` : 'Preis n.V.'}
           </span>
-          <Button
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleContactEscort(escort);
-            }}
-            className="bg-[#FF007F] hover:bg-[#FF007F]/90 text-white px-4"
-          >
-            Kontakt
-          </Button>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 
   const SectionHeader = ({ title, icon: Icon, count }: { title: string; icon: any; count: number }) => (
@@ -213,10 +205,7 @@ export default function Home() {
               />
               
               {/* Filter Button */}
-              <Button variant="outline" size="sm" className="hidden md:flex">
-                <Filter className="w-4 h-4 mr-2" />
-                Filter
-              </Button>
+              <FilterDialog onFiltersChange={setFilters} />
               
               {/* Theme Toggle */}
               <Button
@@ -245,7 +234,7 @@ export default function Home() {
           {premiumEscorts.length > 0 && (
             <section className="mb-8">
               <SectionHeader title="Premium Escorts" icon={Crown} count={premiumEscorts.length} />
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
                 {premiumEscorts.map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}
@@ -257,7 +246,7 @@ export default function Home() {
           {newEscorts.length > 0 && (
             <section className="mb-8">
               <SectionHeader title="Neue Escorts" icon={Star} count={newEscorts.slice(0, 10).length} />
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
                 {newEscorts.slice(0, 10).map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}
@@ -273,7 +262,7 @@ export default function Home() {
                 icon={MapPin} 
                 count={nearbyEscorts.length} 
               />
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
                 {nearbyEscorts.map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}
