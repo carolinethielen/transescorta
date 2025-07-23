@@ -69,7 +69,20 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: Aut
 
   const loginMutation = useMutation({
     mutationFn: async (data: LoginForm) => {
-      return apiRequest('/api/auth/login', 'POST', data);
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Login failed');
+      }
+      
+      return response.json();
     },
     onSuccess: (data: any) => {
       toast({
@@ -91,7 +104,20 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: Aut
   const registerMutation = useMutation({
     mutationFn: async (data: RegisterForm) => {
       const { confirmPassword, ...registerData } = data;
-      return apiRequest('/api/auth/register', 'POST', registerData);
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(registerData),
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Registration failed');
+      }
+      
+      return response.json();
     },
     onSuccess: (data: any) => {
       toast({

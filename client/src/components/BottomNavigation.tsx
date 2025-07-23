@@ -7,20 +7,24 @@ import { Home, MessageCircle, User, Search, Settings, LogIn, UserPlus, ImageIcon
 import { Link } from 'wouter';
 
 const getNavItems = (userType?: string) => {
-  const baseItems = [
-    { path: '/', icon: Home, label: 'Home' },
-    { path: '/chat', icon: MessageCircle, label: 'Chat' },
-    { path: '/my-profile', icon: User, label: 'Profil' },
-  ];
-  
-  // Add Albums tab for trans users only (escorts)
   if (userType === 'trans') {
-    baseItems.push({ path: '/albums', icon: ImageIcon, label: 'Alben' });
+    // Trans Escort Navigation
+    return [
+      { path: '/', icon: Home, label: 'Home' },
+      { path: '/chat', icon: MessageCircle, label: 'Chat' },
+      { path: '/my-profile', icon: User, label: 'Profil' },
+      { path: '/albums', icon: ImageIcon, label: 'Alben' },
+      { path: '/settings', icon: Settings, label: 'Mehr' },
+    ];
+  } else {
+    // Customer Navigation (no albums, no premium subscription needed)
+    return [
+      { path: '/', icon: Home, label: 'Home' },
+      { path: '/chat', icon: MessageCircle, label: 'Chat' },
+      { path: '/my-profile', icon: User, label: 'Profil' },
+      { path: '/settings', icon: Settings, label: 'Mehr' },
+    ];
   }
-  
-  baseItems.push({ path: '/settings', icon: Settings, label: 'Mehr' });
-  
-  return baseItems;
 };
 
 export function BottomNavigation() {

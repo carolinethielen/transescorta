@@ -46,8 +46,10 @@ function Router() {
         <>
           <Route path="/chat" component={Chat} />
           <Route path="/my-profile" component={Profile} />
-          <Route path="/albums" component={PrivateAlbums} />
           <Route path="/settings" component={Settings} />
+          {/* Albums only for trans escorts */}
+          <Route path="/albums" component={PrivateAlbums} />
+          {/* Premium subscription only for trans escorts */}
           <Route path="/subscribe" component={Subscribe} />
         </>
       )}
