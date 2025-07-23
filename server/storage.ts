@@ -626,6 +626,20 @@ export class DatabaseStorage implements IStorage {
       );
   }
 
+  async getUnreadMessageCount(userId: string): Promise<number> {
+    const result = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(messages)
+      .where(
+        and(
+          eq(messages.receiverId, userId),
+          eq(messages.isRead, false)
+        )
+      );
+    
+    return result[0]?.count || 0;
+  }
+
   // Chat room operations
   async getChatRooms(userId: string): Promise<(ChatRoom & { otherUser: User; lastMessage: Message | null; unreadCount: number })[]> {
     const rooms = await db
