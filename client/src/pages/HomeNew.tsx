@@ -139,7 +139,7 @@ export default function Home() {
 
   const EscortCard = ({ escort }: { escort: any }) => (
     <div 
-      className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer border border-gray-200 dark:border-gray-700 hover:scale-[1.02]"
+      className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer border border-gray-200 dark:border-gray-700"
       onClick={() => handleEscortClick(escort.id)}
     >
       <div className="relative aspect-[3/4]">
@@ -152,74 +152,41 @@ export default function Home() {
           }}
         />
         
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-        
-        {/* Status Badges */}
-        <div className="absolute top-3 left-3 flex flex-col gap-2">
-          {escort.isOnline && (
-            <div className="flex items-center gap-1 bg-green-500/90 backdrop-blur-sm text-white px-2.5 py-1.5 rounded-full text-xs font-medium shadow-lg">
-              <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-              Online
-            </div>
-          )}
-          
-          {escort.isPremium && (
-            <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black px-2.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 shadow-lg">
-              <Crown className="w-3 h-3" />
-              Premium
-            </div>
-          )}
-        </div>
-        
-        {/* Price Badge */}
-        {escort.hourlyRate && (
-          <div className="absolute top-3 right-3 bg-[#FF007F]/90 backdrop-blur-sm text-white px-3 py-1.5 rounded-full text-sm font-bold shadow-lg">
-            {escort.hourlyRate}€/h
-          </div>
+        {/* Online Status - Top Left */}
+        {escort.isOnline && (
+          <div className="absolute top-2 left-2 w-3 h-3 bg-green-500 border-2 border-white rounded-full shadow-sm animate-pulse"></div>
         )}
         
-        {/* Bottom Info Overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="font-bold text-lg truncate">
-              {escort.firstName}
-            </h3>
-            <span className="text-sm bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full">
-              {escort.age}J
-            </span>
+        {/* Premium Badge - Top Right */}
+        {escort.isPremium && (
+          <div className="absolute top-2 right-2 bg-yellow-500/90 text-white p-1 rounded-full shadow-sm">
+            <Crown className="w-3 h-3" />
           </div>
-          
-          <div className="flex items-center text-sm opacity-90">
-            <MapPin className="w-3.5 h-3.5 mr-1" />
-            {escort.location}
-          </div>
-          
-          {/* Services Preview */}
-          {escort.services && escort.services.length > 0 && (
-            <div className="flex items-center gap-1 mt-2">
-              <div className="flex gap-1">
-                {escort.services.slice(0, 2).map((service: string, index: number) => (
-                  <span key={index} className="text-xs bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full">
-                    {service}
-                  </span>
-                ))}
-                {escort.services.length > 2 && (
-                  <span className="text-xs bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full">
-                    +{escort.services.length - 2}
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
+        )}
 
-        {/* Distance - if available */}
+        {/* Distance - Bottom Right */}
         {escort.distance > 0 && (
-          <div className="absolute bottom-16 right-3 bg-black/50 backdrop-blur-sm text-white px-2 py-1 rounded-full text-xs">
+          <div className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
             {Math.round(escort.distance)}km
           </div>
         )}
+      </div>
+      
+      {/* Card Content - Simple and Clean */}
+      <div className="p-3">
+        <div className="flex justify-between items-center">
+          <h3 className="font-semibold text-lg text-gray-900 dark:text-white truncate">
+            {escort.firstName}
+          </h3>
+          <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+            {escort.age}
+          </span>
+        </div>
+        
+        <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mt-1">
+          <MapPin className="w-3 h-3 mr-1" />
+          {escort.location}
+        </div>
       </div>
     </div>
   );
@@ -287,7 +254,7 @@ export default function Home() {
           {premiumEscorts.length > 0 && (
             <section className="mb-8">
               <SectionHeader title="Premium Escorts" icon={Crown} count={premiumEscorts.length} />
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                 {premiumEscorts.map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}
@@ -299,7 +266,7 @@ export default function Home() {
           {newEscorts.length > 0 && (
             <section className="mb-8">
               <SectionHeader title="Neue Escorts" icon={Star} count={newEscorts.slice(0, 10).length} />
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                 {newEscorts.slice(0, 10).map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}
@@ -315,7 +282,7 @@ export default function Home() {
                 icon={MapPin} 
                 count={nearbyEscorts.length} 
               />
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                 {nearbyEscorts.map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}

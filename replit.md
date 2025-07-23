@@ -16,11 +16,11 @@ Preferred communication style: Simple, everyday language.
 - **Visual Feedback**: Active filters highlight the button with brand color and truncated content display
 
 ### Improved Home Page Grid
-- **Larger Images**: Escort profile images now use 3:4 aspect ratio for better visual impact
-- **Enhanced Responsiveness**: Grid adapts from 2 columns on mobile to 7 columns on ultrawide screens
-- **Overlay Information**: Profile details displayed as overlay on images with gradient background
-- **Service Preview**: Shows first 2 services with overflow counter for additional services
-- **Modern Design**: Rounded corners, hover effects, and improved spacing for professional appearance
+- **Larger Tiles**: Escort cards now much larger with better spacing (gap-6) for improved visibility
+- **Clean Design**: Removed cluttered overlays, showing only essential info: distance, online status, premium badge, age
+- **Optimized Layout**: Grid scales from 2 columns on mobile to max 5 columns on desktop for larger tile size
+- **Simple Information**: Clean card layout with name, age, and location below image
+- **Minimal Badges**: Simple green dot for online, crown for premium, distance in bottom right corner
 
 ## System Architecture
 
