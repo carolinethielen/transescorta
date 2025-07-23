@@ -39,7 +39,13 @@ export default function Settings() {
 
   // Settings items based on user type
   const getSettingsItems = () => {
-    const baseSettings = [
+    const baseSettings: Array<{
+      title: string;
+      description: string;
+      icon: any;
+      onClick: () => void;
+      highlight?: boolean;
+    }> = [
       {
         title: "Profil bearbeiten",
         description: "Deine persönlichen Informationen verwalten",

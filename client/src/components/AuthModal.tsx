@@ -75,10 +75,11 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: Aut
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
+        credentials: 'include',
       });
       
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || 'Login failed');
       }
       
@@ -110,10 +111,11 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: Aut
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(registerData),
+        credentials: 'include',
       });
       
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || 'Registration failed');
       }
       
