@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -33,6 +34,7 @@ export default function Home() {
   const { toast } = useToast();
   const { coordinates, isLoading: locationLoading } = useGeolocation();
   const queryClient = useQueryClient();
+  const [location, navigate] = useLocation();
 
   // Auto-set user coordinates when GPS location is available
   useEffect(() => {
@@ -131,7 +133,8 @@ export default function Home() {
       }, 1000);
       return;
     }
-    window.location.href = `/profile?id=${escortId}`;
+    // Use wouter navigation for instant loading without page reload
+    navigate(`/profile?id=${escortId}`);
   };
 
   const EscortCard = ({ escort }: { escort: any }) => (

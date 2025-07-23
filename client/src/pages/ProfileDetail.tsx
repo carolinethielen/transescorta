@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
@@ -18,24 +18,45 @@ import {
   Ruler,
   Weight,
   Target,
-  Globe
+  Globe,
+  ChevronLeft,
+  ChevronRight,
+  Image as ImageIcon
 } from 'lucide-react';
 
 export default function ProfileDetail() {
   const [location, navigate] = useLocation();
   const { user } = useAuth();
   const { toast } = useToast();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   // Extract user ID from URL
   const profileId = new URLSearchParams(window.location.search).get('id');
-  console.log('ProfileDetail - Profile ID:', profileId);
   
   const { data: profile, isLoading, error } = useQuery({
     queryKey: [`/api/users/${profileId}`],
     enabled: !!profileId,
   });
 
-  console.log('ProfileDetail - Query result:', { profile, isLoading, error });
+  // Prepare image gallery - use profileImages array or fallback to single profileImageUrl
+  const profileImages = profile?.profileImages && profile.profileImages.length > 0 
+    ? profile.profileImages 
+    : profile?.profileImageUrl 
+    ? [profile.profileImageUrl]
+    : ['https://images.unsplash.com/photo-1494790108755-2616b612b977?w=400'];
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % profileImages.length);
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + profileImages.length) % profileImages.length);
+  };
+
+  // Reset image index when profile changes
+  useEffect(() => {
+    setCurrentImageIndex(0);
+  }, [profileId]);
 
   const handleContactEscort = () => {
     if (!user) {
@@ -76,282 +97,225 @@ export default function ProfileDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="container mx-auto px-4 py-3">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" onClick={handleBack}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Zurück
-            </Button>
-            <h1 className="text-xl font-semibold">Profil Details</h1>
-          </div>
-        </div>
-      </header>
+      <div className="flex items-center justify-between p-4 border-b border-border bg-background sticky top-0 z-10">
+        <Button 
+          variant="ghost" 
+          size="sm"
+          onClick={handleBack}
+          className="flex items-center gap-2"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Zurück
+        </Button>
+        <h1 className="text-lg font-semibold">Profil</h1>
+        <div className="w-16" /> {/* Spacer for centering */}
+      </div>
 
-      <div className="container mx-auto px-4 py-6">
-        <div className="grid lg:grid-cols-3 gap-6">
-          {/* Profile Image and Basic Info */}
-          <div className="lg:col-span-1">
-            <Card>
-              <div className="relative">
-                <img
-                  src={profile.profileImageUrl || 'https://images.unsplash.com/photo-1494790108755-2616b612b977?w=600'}
-                  alt={profile.firstName}
-                  className="w-full h-96 object-cover rounded-t-lg"
-                />
-                
-                {/* Status Badges */}
-                <div className="absolute top-4 left-4 flex flex-col gap-2">
-                  {profile.isOnline && (
-                    <div className="flex items-center gap-1 bg-green-500 text-white px-2 py-1 rounded-full text-sm font-medium">
-                      <div className="w-2 h-2 bg-white rounded-full" />
-                      Online
-                    </div>
-                  )}
+      <div className="max-w-2xl mx-auto p-4 space-y-6">
+        {/* Multi-Image Gallery */}
+        <Card>
+          <CardContent className="p-0">
+            <div className="relative h-96 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
+              <img
+                src={profileImages[currentImageIndex]}
+                alt={`${profile.firstName} ${profile.lastName} - Bild ${currentImageIndex + 1}`}
+                className="w-full h-full object-cover transition-opacity duration-300"
+                onError={(e) => {
+                  e.currentTarget.src = 'https://images.unsplash.com/photo-1494790108755-2616b612b977?w=400';
+                }}
+              />
+              
+              {/* Image Navigation */}
+              {profileImages.length > 1 && (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2"
+                    onClick={prevImage}
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2"
+                    onClick={nextImage}
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
                   
-                  {profile.isPremium && (
-                    <div className="bg-yellow-500 text-white px-2 py-1 rounded-full text-sm font-medium flex items-center gap-1">
-                      <Crown className="w-3 h-3" />
-                      Premium
-                    </div>
-                  )}
+                  {/* Image Counter */}
+                  <div className="absolute bottom-4 right-4 bg-black/50 text-white px-2 py-1 rounded-full text-sm flex items-center gap-1">
+                    <ImageIcon className="w-3 h-3" />
+                    {currentImageIndex + 1}/{profileImages.length}
+                  </div>
+                  
+                  {/* Image Dots */}
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2">
+                    {profileImages.map((_, index) => (
+                      <button
+                        key={index}
+                        className={`w-2 h-2 rounded-full transition-colors ${
+                          index === currentImageIndex ? 'bg-white' : 'bg-white/50'
+                        }`}
+                        onClick={() => setCurrentImageIndex(index)}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+              
+              {/* Status Badges */}
+              {profile.isPremium && (
+                <div className="absolute top-4 right-4">
+                  <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black flex items-center gap-1">
+                    <Crown className="w-3 h-3" />
+                    Premium
+                  </Badge>
+                </div>
+              )}
+              {profile.isOnline && (
+                <div className="absolute top-4 left-4">
+                  <Badge className="bg-green-500 text-white flex items-center gap-1">
+                    <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
+                    Online
+                  </Badge>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Profile Information */}
+        <Card>
+          <CardContent className="p-6">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold mb-2">{profile.firstName} {profile.lastName}</h2>
+              <div className="flex items-center justify-center gap-4 text-muted-foreground mb-4">
+                <div className="flex items-center gap-1">
+                  <User className="w-4 h-4" />
+                  {profile.age} Jahre
+                </div>
+                <div className="flex items-center gap-1">
+                  <MapPin className="w-4 h-4" />
+                  {profile.location}
                 </div>
               </div>
               
-              <CardContent className="p-6">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-1">
-                    {profile.firstName}
-                  </h2>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
-                    {profile.age} Jahre
-                  </p>
-                  
-                  <div className="flex items-center justify-center gap-1 text-gray-600 dark:text-gray-400 mb-6">
-                    <MapPin className="w-4 h-4" />
-                    {profile.location}
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <Button
-                      onClick={handleContactEscort}
-                      className="w-full bg-[#FF007F] hover:bg-[#FF007F]/90 text-white"
-                      size="lg"
-                    >
-                      <MessageCircle className="w-4 h-4 mr-2" />
-                      Jetzt kontaktieren
-                    </Button>
-                    
-                    <Button variant="outline" className="w-full" size="lg">
-                      <Heart className="w-4 h-4 mr-2" />
-                      Zu Favoriten
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Detailed Information */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* About Me */}
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Über mich</h3>
-                <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-                  {profile.aboutMe || profile.bio}
-                </p>
+              <div className="space-y-3">
+                <Button
+                  onClick={handleContactEscort}
+                  className="w-full bg-[#FF007F] hover:bg-[#FF007F]/90 text-white"
+                  size="lg"
+                >
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  Jetzt kontaktieren
+                </Button>
                 
-                {profile.whatILike && (
-                  <div className="mb-4">
-                    <h4 className="font-medium mb-2">Was ich mag:</h4>
-                    <p className="text-gray-700 dark:text-gray-300 text-sm">
-                      {profile.whatILike}
-                    </p>
-                  </div>
-                )}
-                
-                {profile.whatIExpect && (
-                  <div>
-                    <h4 className="font-medium mb-2">Was ich erwarte:</h4>
-                    <p className="text-gray-700 dark:text-gray-300 text-sm">
-                      {profile.whatIExpect}
-                    </p>
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                <Button variant="outline" className="w-full" size="lg">
+                  <Heart className="w-4 h-4 mr-2" />
+                  Zu Favoriten
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-            {/* Services */}
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Services</h3>
-                <div className="flex flex-wrap gap-2">
-                  {profile.services?.map((service: string, index: number) => (
-                    <Badge key={index} variant="secondary" className="bg-[#FF007F]/10 text-[#FF007F] border-[#FF007F]/20">
-                      {service}
-                    </Badge>
-                  ))}
+        {/* About Section */}
+        {profile.bio && (
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Über mich</h3>
+              <p className="text-muted-foreground leading-relaxed">{profile.bio}</p>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Services */}
+        {profile.services && profile.services.length > 0 && (
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Services</h3>
+              <div className="flex flex-wrap gap-2">
+                {profile.services.map((service: string, index: number) => (
+                  <Badge key={index} variant="secondary" className="bg-[#FF007F]/10 text-[#FF007F] border-[#FF007F]/20">
+                    {service}
+                  </Badge>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Physical Details */}
+        <Card>
+          <CardContent className="p-6">
+            <h3 className="text-lg font-semibold mb-4">Details</h3>
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              {profile.height && (
+                <div className="flex items-center gap-2">
+                  <Ruler className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Größe:</span>
+                  <span>{profile.height} cm</span>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Allgemein Section */}
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Allgemein</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Alter</span>
-                    <span className="font-medium">{profile.age}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Größe</span>
-                    <span className="font-medium">{profile.height || 'Nicht angegeben'}cm</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Gewicht</span>
-                    <span className="font-medium">{profile.weight || 'Nicht angegeben'}kg</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Statur</span>
-                    <span className="font-medium">{profile.bodyType || 'Schlank'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Typ</span>
-                    <span className="font-medium">{profile.ethnicity || 'Europäisch'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Haarlänge</span>
-                    <span className="font-medium">Lang</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Haarfarbe</span>
-                    <span className="font-medium">Schwarz</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Bart</span>
-                    <span className="font-medium">Kein Bart</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Augenfarbe</span>
-                    <span className="font-medium">Braun</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Körperbehaarung</span>
-                    <span className="font-medium">Unbehaart</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Ich bin</span>
-                    <span className="font-medium text-red-500">Eine Trans Frau, andersw Ort ansässig</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Raucher</span>
-                    <span className="font-medium">{profile.smoking ? 'Ja' : 'Nein'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Tattoos</span>
-                    <span className="font-medium">{profile.tattoos || 'Wenige'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Piercings</span>
-                    <span className="font-medium">{profile.piercings || 'Wenige'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Sprachen</span>
-                    <span className="font-medium">{profile.languages?.join(', ') || 'Deutsch, Englisch'}</span>
-                  </div>
+              )}
+              {profile.weight && (
+                <div className="flex items-center gap-2">
+                  <Weight className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Gewicht:</span>
+                  <span>{profile.weight} kg</span>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Dienstleistungen Section */}
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Dienstleistungen</h3>
-                <div className="space-y-3">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Ich biete</span>
-                    <span className="font-medium">{profile.services?.join(', ') || 'Escort, Massage'}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Preis pro Stunde</span>
-                    <span className="font-medium">{profile.rates?.['1h'] || profile.hourlyRate}€</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">Preis pro Nacht</span>
-                    <span className="font-medium">{profile.rates?.['overnight'] || '2000'}€</span>
-                  </div>
+              )}
+              {profile.bodyType && (
+                <div className="flex items-center gap-2">
+                  <User className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Körpertyp:</span>
+                  <span>{profile.bodyType}</span>
                 </div>
-              </CardContent>
-            </Card>
-
-            {/* Pricing */}
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold mb-4">Preise</h3>
-                <div className="space-y-3">
-                  {profile.rates ? (
-                    <>
-                      {profile.rates['1h'] && (
-                        <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
-                          <span className="text-gray-700 dark:text-gray-300">1 Stunde</span>
-                          <span className="font-bold text-[#FF007F]">{profile.rates['1h']}€</span>
-                        </div>
-                      )}
-                      {profile.rates['2h'] && (
-                        <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
-                          <span className="text-gray-700 dark:text-gray-300">2 Stunden</span>
-                          <span className="font-bold text-[#FF007F]">{profile.rates['2h']}€</span>
-                        </div>
-                      )}
-                      {profile.rates['overnight'] && (
-                        <div className="flex justify-between items-center py-2 border-b border-gray-200 dark:border-gray-700">
-                          <span className="text-gray-700 dark:text-gray-300">Übernachtung</span>
-                          <span className="font-bold text-[#FF007F]">{profile.rates['overnight']}€</span>
-                        </div>
-                      )}
-                      {profile.rates['weekend'] && (
-                        <div className="flex justify-between items-center py-2">
-                          <span className="text-gray-700 dark:text-gray-300">Wochenende</span>
-                          <span className="font-bold text-[#FF007F]">{profile.rates['weekend']}€</span>
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <div className="flex justify-between items-center py-2">
-                      <span className="text-gray-700 dark:text-gray-300">Stundensatz</span>
-                      <span className="font-bold text-[#FF007F]">
-                        {profile.hourlyRate ? `${profile.hourlyRate}€` : 'Preis auf Anfrage'}
-                      </span>
-                    </div>
-                  )}
+              )}
+              {profile.ethnicity && (
+                <div className="flex items-center gap-2">
+                  <Globe className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Herkunft:</span>
+                  <span>{profile.ethnicity}</span>
                 </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-4">
-                  Alle Preise sind Richtwerte. Finale Preise werden individuell vereinbart.
-                </p>
-              </CardContent>
-            </Card>
+              )}
+              {profile.position && (
+                <div className="flex items-center gap-2">
+                  <Target className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Position:</span>
+                  <span className="capitalize">{profile.position}</span>
+                </div>
+              )}
+              {profile.hourlyRate && (
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-muted-foreground">Preis:</span>
+                  <span className="font-semibold text-[#FF007F]">{profile.hourlyRate}€/h</span>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
-            {/* Interests */}
-            {profile.interests && profile.interests.length > 0 && (
-              <Card>
-                <CardContent className="p-6">
-                  <h3 className="text-lg font-semibold mb-4">Interessen</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {profile.interests.map((interest: string, index: number) => (
-                      <Badge key={index} variant="outline">
-                        {interest}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </div>
+        {/* Interests */}
+        {profile.interests && profile.interests.length > 0 && (
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="text-lg font-semibold mb-4">Interessen</h3>
+              <div className="flex flex-wrap gap-2">
+                {profile.interests.map((interest: string, index: number) => (
+                  <Badge key={index} variant="outline" className="text-sm">
+                    {interest}
+                  </Badge>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );

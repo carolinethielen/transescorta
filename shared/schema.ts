@@ -47,6 +47,7 @@ export const users = pgTable("users", {
   latitude: real("latitude"),
   longitude: real("longitude"),
   interests: jsonb("interests").$type<string[]>().default([]),
+  profileImages: jsonb("profile_images").$type<string[]>().default([]), // Array of multiple profile images
   userType: varchar("user_type").$type<'trans' | 'man'>().default('trans'),
   isOnline: boolean("is_online").default(false),
   lastSeen: timestamp("last_seen"),
