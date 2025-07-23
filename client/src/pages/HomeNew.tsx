@@ -142,7 +142,7 @@ export default function Home() {
       className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer border border-gray-200 dark:border-gray-700"
       onClick={() => handleEscortClick(escort.id)}
     >
-      <div className="relative aspect-[3/4]">
+      <div className="relative aspect-[3/5]">
         <img
           src={escort.profileImageUrl || 'https://images.unsplash.com/photo-1494790108755-2616b612b977?w=600'}
           alt={escort.firstName || 'Escort Profile'}
@@ -254,7 +254,7 @@ export default function Home() {
           {premiumEscorts.length > 0 && (
             <section className="mb-8">
               <SectionHeader title="Premium Escorts" icon={Crown} count={premiumEscorts.length} />
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {premiumEscorts.map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}
@@ -266,7 +266,7 @@ export default function Home() {
           {newEscorts.length > 0 && (
             <section className="mb-8">
               <SectionHeader title="Neue Escorts" icon={Star} count={newEscorts.slice(0, 10).length} />
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {newEscorts.slice(0, 10).map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}
@@ -282,7 +282,7 @@ export default function Home() {
                 icon={MapPin} 
                 count={nearbyEscorts.length} 
               />
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                 {nearbyEscorts.map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}
