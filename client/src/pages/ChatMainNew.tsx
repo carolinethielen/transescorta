@@ -261,7 +261,7 @@ export default function ChatMainNew() {
                   <button
                     key={room.id}
                     onClick={() => setSelectedChatUserId(room.otherUser.id)}
-                    className="w-full p-3 rounded-lg text-left hover:bg-muted/50 transition-colors"
+                    className="w-full p-3 rounded-lg text-left hover:bg-muted/50 transition-colors active:bg-muted/70"
                   >
                     <div className="flex items-center space-x-3">
                       <div className="relative">
@@ -272,15 +272,20 @@ export default function ChatMainNew() {
                           </AvatarFallback>
                         </Avatar>
                         {room.otherUser.isOnline && (
-                          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-background rounded-full" />
+                          <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-background rounded-full" />
                         )}
                       </div>
                       
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between mb-1">
-                          <h3 className="font-medium truncate">
-                            {room.otherUser.firstName} {room.otherUser.lastName}
-                          </h3>
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-medium truncate">
+                              {room.otherUser.firstName} {room.otherUser.lastName}
+                            </h3>
+                            {room.otherUser.isOnline && (
+                              <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />
+                            )}
+                          </div>
                           {room.lastMessage && room.lastMessage.createdAt && (
                             <span className="text-xs text-muted-foreground">
                               {new Date(room.lastMessage.createdAt).toLocaleTimeString('de-DE', {
@@ -314,7 +319,7 @@ export default function ChatMainNew() {
 
   // Show full-screen chat when a contact is selected (WhatsApp-style)
   return (
-    <div className="flex flex-col h-screen bg-background">
+    <div className="flex flex-col h-screen bg-background relative">
       {/* Chat Header - No call/video/menu buttons */}
       <div className="p-4 border-b bg-card">
         <div className="flex items-center space-x-3">
@@ -333,12 +338,22 @@ export default function ChatMainNew() {
             </AvatarFallback>
           </Avatar>
           <div className="flex-1">
-            <h3 className="font-medium">
-              {chatPartner?.firstName} {chatPartner?.lastName}
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              {chatPartner?.isOnline ? 'Online' : 'Zuletzt gesehen'}
-            </p>
+            <button 
+              onClick={() => navigate(`/profile?id=${chatPartner?.id}`)}
+              className="text-left hover:opacity-80 transition-opacity"
+            >
+              <div className="flex items-center gap-2">
+                <h3 className="font-medium">
+                  {chatPartner?.firstName} {chatPartner?.lastName}
+                </h3>
+                {chatPartner?.isOnline && (
+                  <div className="w-2 h-2 bg-green-500 rounded-full" />
+                )}
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {chatPartner?.isOnline ? 'Online' : 'Zuletzt gesehen'}
+              </p>
+            </button>
           </div>
         </div>
       </div>
@@ -346,7 +361,7 @@ export default function ChatMainNew() {
       {/* Messages Area - Takes up remaining space above input */}
       <div className="flex-1 overflow-hidden">
         <ScrollArea className="h-full">
-          <div className="p-4 pb-20">
+          <div className="p-4 pb-4">
             {messagesLoading ? (
               <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
@@ -412,9 +427,9 @@ export default function ChatMainNew() {
         </ScrollArea>
       </div>
 
-      {/* Message Input - Fixed at bottom above navigation (responsive) */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 border-t bg-card mb-16 md:mb-0">
-        <div className="flex items-center space-x-2 max-w-full">
+      {/* Message Input - Sticky at bottom above navigation */}
+      <div className="sticky bottom-0 p-4 border-t bg-card/95 backdrop-blur-sm z-40" style={{ marginBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
+        <div className="flex items-center space-x-2">
           <Input
             value={messageText}
             onChange={(e) => setMessageText(e.target.value)}
