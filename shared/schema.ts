@@ -39,6 +39,7 @@ export const users = pgTable("users", {
   latitude: real("latitude"),
   longitude: real("longitude"),
   interests: jsonb("interests").$type<string[]>().default([]),
+  userType: varchar("user_type").$type<'trans' | 'man'>().default('trans'),
   isOnline: boolean("is_online").default(false),
   lastSeen: timestamp("last_seen"),
   createdAt: timestamp("created_at").defaultNow(),

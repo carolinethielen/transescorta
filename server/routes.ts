@@ -86,6 +86,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Public route to get trans users for homepage (before login)
+  app.get('/api/users/public', async (req, res) => {
+    try {
+      const limit = parseInt(req.query.limit as string) || 20;
+      const transUsers = await storage.getPublicTransUsers(limit);
+      res.json(transUsers);
+    } catch (error) {
+      console.error("Error getting public trans users:", error);
+      res.status(500).json({ message: "Failed to get public users" });
+    }
+  });
+
   // Match routes
   app.post('/api/matches', isAuthenticated, async (req: any, res) => {
     try {
@@ -175,6 +187,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error upgrading to premium:", error);
       res.status(500).json({ message: "Failed to upgrade to premium" });
+    }
+  });
+
+  // Update user type route
+  app.post('/api/users/update-type', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const { userType } = req.body;
+      
+      if (!userType || !['trans', 'man'].includes(userType)) {
+        return res.status(400).json({ message: "Invalid user type" });
+      }
+      
+      const user = await storage.updateUserType(userId, userType);
+      res.json({ success: true, user });
+    } catch (error) {
+      console.error("Error updating user type:", error);
+      res.status(500).json({ message: "Failed to update user type" });
     }
   });
 

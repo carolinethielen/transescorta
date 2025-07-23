@@ -15,14 +15,19 @@ import Profile from "@/pages/Profile";
 import Explore from "@/pages/Explore";
 import Settings from "@/pages/Settings";
 import Subscribe from "@/pages/Subscribe";
+import UserTypeSelection from "@/pages/UserTypeSelection";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
 
   return (
     <Switch>
+      <Route path="/select-type" component={UserTypeSelection} />
       {isLoading || !isAuthenticated ? (
-        <Route path="/" component={Landing} />
+        <>
+          <Route path="/" component={Home} />
+          <Route path="/landing" component={Landing} />
+        </>
       ) : (
         <>
           <Route path="/" component={Home} />

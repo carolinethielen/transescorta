@@ -18,7 +18,7 @@ export default function Landing() {
           <Button 
             size="lg"
             className="bg-[#FF007F] hover:bg-[#FF007F]/90 text-white px-8 py-3"
-            onClick={() => window.location.href = '/api/login'}
+            onClick={() => window.location.href = '/select-type'}
           >
             Jetzt anmelden
           </Button>

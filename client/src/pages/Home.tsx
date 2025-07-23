@@ -7,6 +7,7 @@ import { SwipeCard } from '@/components/SwipeCard';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { useLocation } from '@/hooks/useLocation';
 import { isUnauthorizedError } from '@/lib/authUtils';
 import { apiRequest } from '@/lib/queryClient';
 import { MapPin, Moon, Sun, Grid3X3, Heart, X, MessageCircle } from 'lucide-react';
@@ -18,11 +19,12 @@ export default function Home() {
   const { theme, toggleTheme } = useTheme();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { location } = useLocation();
   const queryClient = useQueryClient();
 
-  // Fetch recommended users
+  // Fetch users based on authentication status
   const { data: rawUsers = [], isLoading, error } = useQuery({
-    queryKey: ['/api/users/recommended'],
+    queryKey: user ? ['/api/users/recommended'] : ['/api/users/public'],
     retry: false,
   });
 
@@ -36,9 +38,9 @@ export default function Home() {
     interests: user.interests || [],
   }));
 
-  // Handle unauthorized error
+  // Handle unauthorized error only for authenticated routes
   useEffect(() => {
-    if (error && isUnauthorizedError(error as Error)) {
+    if (error && isUnauthorizedError(error as Error) && user) {
       toast({
         title: "Unauthorized",
         description: "Du bist nicht mehr angemeldet. Leite weiter...",
@@ -48,7 +50,7 @@ export default function Home() {
         window.location.href = "/api/login";
       }, 500);
     }
-  }, [error, toast]);
+  }, [error, toast, user]);
 
   // Create match mutation
   const createMatchMutation = useMutation({
@@ -80,6 +82,19 @@ export default function Home() {
   });
 
   const handleSwipe = (userId: string, direction: 'left' | 'right') => {
+    // Check if user is authenticated
+    if (!user) {
+      toast({
+        title: "Anmeldung erforderlich",
+        description: "Du musst dich anmelden, um zu liken",
+        variant: "destructive",
+      });
+      setTimeout(() => {
+        window.location.href = "/api/login";
+      }, 1000);
+      return;
+    }
+    
     const isLike = direction === 'right';
     createMatchMutation.mutate({ targetUserId: userId, isLike });
     
@@ -92,8 +107,20 @@ export default function Home() {
   };
 
   const handleCardClick = (clickedUser: User) => {
-    // Navigate to user profile or show details
-    console.log('Clicked user:', clickedUser);
+    // Check if user is authenticated for messaging
+    if (!user) {
+      toast({
+        title: "Anmeldung erforderlich",
+        description: "Du musst dich anmelden, um Profile zu kontaktieren",
+        variant: "destructive",
+      });
+      setTimeout(() => {
+        window.location.href = "/api/login";
+      }, 1000);
+      return;
+    }
+    // Navigate to chat with this user
+    window.location.href = `/chat?user=${clickedUser.id}`;
   };
 
   if (isLoading) {
@@ -113,7 +140,7 @@ export default function Home() {
           {/* Location Badge */}
           <div className="flex items-center bg-muted px-3 py-1 rounded-full text-sm">
             <MapPin className="w-4 h-4 text-[#FF007F] mr-1" />
-            <span>{user?.location || 'Berlin'}</span>
+            <span>{location?.city || user?.location || 'Berlin'}</span>
           </div>
           
           {/* Theme Toggle */}

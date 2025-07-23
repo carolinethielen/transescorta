@@ -153,6 +153,10 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getRecommendedUsers(userId: string, limit: number): Promise<User[]> {
+    // Get current user to determine matching logic
+    const currentUser = await this.getUser(userId);
+    if (!currentUser) return [];
+    
     // Get users excluding already matched ones
     const alreadyMatched = await db
       .select({ targetUserId: matches.targetUserId })
@@ -161,19 +165,42 @@ export class DatabaseStorage implements IStorage {
     
     const matchedIds = alreadyMatched.map(m => m.targetUserId);
     
+    let whereCondition;
+    if (currentUser.userType === 'man') {
+      // Men can only see trans users
+      whereCondition = and(
+        sql`${users.id} != ${userId}`,
+        eq(users.userType, 'trans'),
+        matchedIds.length > 0 ? sql`${users.id} NOT IN ${matchedIds}` : sql`1=1`
+      );
+    } else {
+      // Trans users can see other trans users and men
+      whereCondition = and(
+        sql`${users.id} != ${userId}`,
+        matchedIds.length > 0 ? sql`${users.id} NOT IN ${matchedIds}` : sql`1=1`
+      );
+    }
+    
     const recommended = await db
       .select()
       .from(users)
-      .where(
-        and(
-          sql`${users.id} != ${userId}`,
-          matchedIds.length > 0 ? sql`${users.id} NOT IN ${matchedIds}` : sql`1=1`
-        )
-      )
+      .where(whereCondition)
       .orderBy(desc(users.isPremium), desc(users.isOnline), desc(users.lastSeen))
       .limit(limit);
     
     return recommended;
+  }
+
+  // Method to get all trans users for public viewing (before login)
+  async getPublicTransUsers(limit: number): Promise<User[]> {
+    const transUsers = await db
+      .select()
+      .from(users)
+      .where(eq(users.userType, 'trans'))
+      .orderBy(desc(users.isPremium), desc(users.isOnline), desc(users.lastSeen))
+      .limit(limit);
+    
+    return transUsers;
   }
 
   // Match operations
@@ -382,6 +409,36 @@ export class DatabaseStorage implements IStorage {
       .returning();
 
     return newRoom;
+  }
+
+  async updateUserStripeInfo(userId: string, customerId: string, subscriptionId: string): Promise<User> {
+    const updateData: any = {
+      stripeCustomerId: customerId,
+      stripeSubscriptionId: subscriptionId,
+      isPremium: true,
+      updatedAt: new Date(),
+    };
+
+    const [updatedUser] = await db
+      .update(users)
+      .set(updateData)
+      .where(eq(users.id, userId))
+      .returning();
+
+    return updatedUser;
+  }
+
+  async updateUserType(userId: string, userType: 'trans' | 'man'): Promise<User> {
+    const [updatedUser] = await db
+      .update(users)
+      .set({
+        userType,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId))
+      .returning();
+
+    return updatedUser;
   }
 }
 
