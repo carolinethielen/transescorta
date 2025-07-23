@@ -28,11 +28,14 @@ export default function ProfileDetail() {
   
   // Extract user ID from URL
   const profileId = new URLSearchParams(window.location.search).get('id');
+  console.log('ProfileDetail - Profile ID:', profileId);
   
-  const { data: profile, isLoading } = useQuery({
-    queryKey: ['/api/users', profileId],
+  const { data: profile, isLoading, error } = useQuery({
+    queryKey: [`/api/users/${profileId}`],
     enabled: !!profileId,
   });
+
+  console.log('ProfileDetail - Query result:', { profile, isLoading, error });
 
   const handleContactEscort = () => {
     if (!user) {

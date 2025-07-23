@@ -211,6 +211,16 @@ export default function Home() {
               
               {/* Filter Button */}
               <FilterDialog onFiltersChange={setFilters} />
+              {filters && Object.keys(filters).some(key => 
+                key === 'onlineOnly' && filters[key] || 
+                key === 'premiumOnly' && filters[key] ||
+                key === 'services' && filters[key]?.length > 0 ||
+                key === 'ageRange' && (filters[key][0] !== 18 || filters[key][1] !== 50)
+              ) && (
+                <Badge variant="secondary" className="ml-2">
+                  Filter aktiv
+                </Badge>
+              )}
               
               {/* Theme Toggle */}
               <Button
