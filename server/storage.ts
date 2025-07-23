@@ -99,7 +99,7 @@ export class DatabaseStorage implements IStorage {
         longitude: 13.4050,
         interests: ['Kunst', 'Musik'],
         userType: 'trans' as const,
-        profileImageUrl: 'https://images.unsplash.com/photo-1494790108755-2616b612b977?w=400',
+        profileImageUrl: 'https://i.postimg.cc/MZsQW6gn/photo-1612461988667-14697dc88205.avif',
         isOnline: true,
         isPremium: true,
       },
@@ -125,7 +125,7 @@ export class DatabaseStorage implements IStorage {
         longitude: 9.9937,
         interests: ['Mode', 'Wellness'],
         userType: 'trans' as const,
-        profileImageUrl: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400',
+        profileImageUrl: 'https://i.postimg.cc/9FnZBmB6/photo-1716004657433-08aed0c63f50.avif',
         isOnline: false,
         isPremium: true,
       },
@@ -151,7 +151,7 @@ export class DatabaseStorage implements IStorage {
         longitude: 11.5820,
         interests: ['Fitness', 'Kochen'],
         userType: 'trans' as const,
-        profileImageUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400',
+        profileImageUrl: 'https://i.postimg.cc/cCDY20G8/photo-1698251127457-38da75299c05.avif',
         isOnline: true,
         isPremium: false,
         languages: ['Deutsch', 'Englisch', 'Spanisch'],
@@ -195,7 +195,7 @@ export class DatabaseStorage implements IStorage {
         longitude: 6.9603,
         interests: ['Reisen', 'Tanz'],
         userType: 'trans' as const,
-        profileImageUrl: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=400',
+        profileImageUrl: 'https://i.postimg.cc/FzF3T184/photo-1575186083127-03641b958f61.avif',
         isOnline: false,
         isPremium: false,
         languages: ['Deutsch', 'Englisch'],
@@ -238,7 +238,7 @@ export class DatabaseStorage implements IStorage {
         longitude: 8.6821,
         interests: ['Kultur', 'Kulinarik'],
         userType: 'trans' as const,
-        profileImageUrl: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400',
+        profileImageUrl: 'https://i.postimg.cc/P50bdXpW/photo-1583900985737-6d0495555783.avif',
         isOnline: true,
         isPremium: true,
         languages: ['Deutsch', 'Italienisch', 'Englisch'],
@@ -624,20 +624,6 @@ export class DatabaseStorage implements IStorage {
           eq(messages.isRead, false)
         )
       );
-  }
-
-  async getUnreadMessageCount(userId: string): Promise<number> {
-    const result = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(messages)
-      .where(
-        and(
-          eq(messages.receiverId, userId),
-          eq(messages.isRead, false)
-        )
-      );
-    
-    return result[0]?.count || 0;
   }
 
   // Chat room operations
