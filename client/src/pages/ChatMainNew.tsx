@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { ArrowLeft, Send, MessageCircle, Phone, Video, MoreVertical, User2 } from 'lucide-react';
+import { ArrowLeft, Send, MessageCircle, User2 } from 'lucide-react';
 import type { Message, User, ChatRoom } from '@shared/schema';
 
 // Audio notification for new messages
@@ -22,7 +22,7 @@ const playNotificationSound = () => {
   } catch {}
 };
 
-export default function ChatMain() {
+export default function ChatMainNew() {
   const [, navigate] = useLocation();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -48,7 +48,6 @@ export default function ChatMain() {
         })
         .catch((error) => {
           console.error('Failed to create chat room:', error);
-          console.log('Error details:', error);
           toast({
             title: "Fehler",
             description: `Chat konnte nicht gestartet werden: ${error.message || 'Unbekannter Fehler'}`,
@@ -59,7 +58,7 @@ export default function ChatMain() {
   }, [user, queryClient, toast]);
 
   // Fetch chat rooms list
-  const { data: chatRooms = [], isLoading: roomsLoading, error: roomsError } = useQuery<
+  const { data: chatRooms = [], isLoading: roomsLoading } = useQuery<
     (ChatRoom & { otherUser: User; lastMessage: Message | null; unreadCount: number })[]
   >({
     queryKey: ['/api/chat/rooms'],
@@ -140,36 +139,29 @@ export default function ChatMain() {
         setWs(null);
       };
 
-      socket.onerror = (error) => {
-        console.error('WebSocket error:', error);
-        setWs(null);
-      };
-
       return () => {
         socket.close();
       };
     } catch (error) {
-      console.error('WebSocket connection failed:', error);
+      console.error('WebSocket connection error:', error);
     }
   }, [user, queryClient]);
 
-  // Auto scroll to bottom when new messages arrive
+  // Auto-scroll to bottom
   const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    }
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
-  // Handle sending messages
-  const handleSendMessage = async () => {
+  // Send message handler
+  const handleSendMessage = () => {
     if (!messageText.trim() || !selectedChatUserId || sendMessageMutation.isPending) return;
-
+    
     try {
-      await sendMessageMutation.mutateAsync({
+      sendMessageMutation.mutate({
         receiverId: selectedChatUserId,
         content: messageText.trim(),
       });
@@ -227,7 +219,7 @@ export default function ChatMain() {
     );
   }
 
-  // Show chat list if no chat is selected
+  // Show chat list if no chat is selected (WhatsApp-style)
   if (!selectedChatUserId) {
     return (
       <div className="flex flex-col h-screen bg-background">
@@ -280,26 +272,34 @@ export default function ChatMain() {
                           </AvatarFallback>
                         </Avatar>
                         {room.otherUser.isOnline && (
-                          <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-background rounded-full" />
+                          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-background rounded-full" />
                         )}
                       </div>
                       
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
+                        <div className="flex items-center justify-between mb-1">
                           <h3 className="font-medium truncate">
-                            {room.otherUser.firstName}
+                            {room.otherUser.firstName} {room.otherUser.lastName}
                           </h3>
+                          {room.lastMessage && room.lastMessage.createdAt && (
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(room.lastMessage.createdAt).toLocaleTimeString('de-DE', {
+                                hour: '2-digit',
+                                minute: '2-digit',
+                              })}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm text-muted-foreground truncate">
+                            {room.lastMessage?.content || 'Keine Nachrichten'}
+                          </p>
                           {room.unreadCount > 0 && (
-                            <Badge variant="destructive" className="text-xs">
+                            <Badge className="bg-[#FF007F] text-white text-xs min-w-[20px] h-5 rounded-full px-1.5">
                               {room.unreadCount}
                             </Badge>
                           )}
                         </div>
-                        {room.lastMessage && (
-                          <p className="text-sm text-muted-foreground truncate mt-1">
-                            {room.lastMessage.content}
-                          </p>
-                        )}
                       </div>
                     </div>
                   </button>
@@ -312,153 +312,126 @@ export default function ChatMain() {
     );
   }
 
-      {/* Chat Area */}
-      <div className="flex-1 flex flex-col">
-        {selectedChatUserId && chatPartner ? (
-          <>
-            {/* Chat Header */}
-            <div className="p-4 border-b bg-card">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <Avatar className="w-10 h-10">
-                    <AvatarImage src={chatPartner.profileImageUrl || undefined} />
-                    <AvatarFallback>
-                      {chatPartner.firstName?.charAt(0) || '?'}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h2 className="font-semibold">{chatPartner.firstName}</h2>
-                    <p className="text-sm text-muted-foreground">
-                      {chatPartner.isOnline ? 'Online' : 'Zuletzt gesehen vor kurzem'}
-                    </p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center space-x-2">
-                  <Button variant="ghost" size="sm">
-                    <Phone className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <Video className="w-4 h-4" />
-                  </Button>
-                  <Button variant="ghost" size="sm">
-                    <MoreVertical className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
+  // Show full-screen chat when a contact is selected (WhatsApp-style)
+  return (
+    <div className="flex flex-col h-screen bg-background">
+      {/* Chat Header - No call/video/menu buttons */}
+      <div className="p-4 border-b bg-card">
+        <div className="flex items-center space-x-3">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={() => setSelectedChatUserId(null)}
+            className="p-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+          </Button>
+          <Avatar className="w-10 h-10">
+            <AvatarImage src={chatPartner?.profileImageUrl || undefined} />
+            <AvatarFallback>
+              {chatPartner?.firstName?.charAt(0) || '?'}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex-1">
+            <h3 className="font-medium">
+              {chatPartner?.firstName} {chatPartner?.lastName}
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {chatPartner?.isOnline ? 'Online' : 'Zuletzt gesehen'}
+            </p>
+          </div>
+        </div>
+      </div>
 
-            {/* Messages Area */}
-            <ScrollArea className="flex-1 p-4">
-              {messagesLoading ? (
-                <div className="space-y-4">
-                  {[1, 2, 3].map((i) => (
-                    <div key={i} className="flex items-start space-x-2 animate-pulse">
-                      <div className="w-8 h-8 bg-muted rounded-full" />
-                      <div className="flex-1">
-                        <div className="h-4 bg-muted rounded mb-2" />
-                        <div className="h-16 bg-muted rounded" />
+      {/* Messages Area - Takes up remaining space above input */}
+      <div className="flex-1 overflow-hidden">
+        <ScrollArea className="h-full">
+          <div className="p-4 pb-20">
+            {messagesLoading ? (
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="flex items-start gap-3 animate-pulse">
+                    <div className="w-8 h-8 bg-muted rounded-full" />
+                    <div className="flex-1">
+                      <div className="h-10 bg-muted rounded-lg mb-2" />
+                      <div className="h-3 bg-muted rounded w-1/4" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : messages.length === 0 ? (
+              <div className="text-center py-8">
+                <p className="text-muted-foreground">Noch keine Nachrichten</p>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Schreibe die erste Nachricht!
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {messages.map((message, index) => {
+                  const isFromMe = message.senderId === user.id;
+                  const showAvatar = !isFromMe && (index === 0 || messages[index - 1]?.senderId !== message.senderId);
+                  
+                  return (
+                    <div
+                      key={message.id}
+                      className={`flex items-start gap-3 ${isFromMe ? 'flex-row-reverse' : ''}`}
+                    >
+                      {showAvatar && (
+                        <Avatar className="w-8 h-8">
+                          <AvatarImage src={isFromMe ? (user.profileImageUrl || undefined) : (chatPartner?.profileImageUrl || undefined)} />
+                          <AvatarFallback>
+                            {isFromMe ? user.firstName?.charAt(0) : chatPartner?.firstName?.charAt(0)}
+                          </AvatarFallback>
+                        </Avatar>
+                      )}
+                      <div className={`flex-1 ${showAvatar ? '' : 'ml-11'} ${isFromMe ? 'mr-11' : ''}`}>
+                        <div
+                          className={`inline-block p-3 rounded-lg max-w-xs lg:max-w-md ${
+                            isFromMe
+                              ? 'bg-[#FF007F] text-white ml-auto'
+                              : 'bg-muted'
+                          }`}
+                        >
+                          {message.content}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {message.createdAt ? new Date(message.createdAt).toLocaleTimeString('de-DE', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          }) : ''}
+                        </p>
                       </div>
                     </div>
-                  ))}
-                </div>
-              ) : messages.length === 0 ? (
-                <div className="text-center py-12">
-                  <MessageCircle className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-muted-foreground mb-2">
-                    Keine Nachrichten
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Schreibe die erste Nachricht an {chatPartner.firstName}!
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {messages.map((message, index) => {
-                    const isFromMe = message.senderId === user.id;
-                    const showAvatar = index === 0 || messages[index - 1]?.senderId !== message.senderId;
-                    
-                    return (
-                      <div
-                        key={message.id}
-                        className={`flex items-start gap-3 ${isFromMe ? 'flex-row-reverse' : ''}`}
-                      >
-                        {showAvatar && (
-                          <Avatar className="w-8 h-8">
-                            <AvatarImage src={isFromMe ? (user.profileImageUrl || undefined) : (chatPartner.profileImageUrl || undefined)} />
-                            <AvatarFallback>
-                              {isFromMe ? user.firstName?.charAt(0) : chatPartner.firstName?.charAt(0)}
-                            </AvatarFallback>
-                          </Avatar>
-                        )}
-                        {!showAvatar && <div className="w-8" />}
-                        
-                        <div className={`max-w-xs lg:max-w-md ${isFromMe ? 'text-right' : ''}`}>
-                          <div
-                            className={`rounded-lg px-4 py-2 text-sm ${
-                              isFromMe
-                                ? 'bg-[#FF007F] text-white'
-                                : 'bg-muted text-foreground'
-                            }`}
-                          >
-                            {message.content}
-                          </div>
-                          <p className="text-xs text-muted-foreground mt-1">
-                            {message.createdAt ? new Date(message.createdAt).toLocaleTimeString('de-DE', {
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            }) : ''}
-                          </p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                  <div ref={messagesEndRef} />
-                </div>
-              )}
-            </ScrollArea>
-
-            {/* Message Input */}
-            <div className="p-4 border-t bg-card">
-              <div className="flex items-center space-x-2">
-                <Input
-                  value={messageText}
-                  onChange={(e) => setMessageText(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder={`Nachricht an ${chatPartner.firstName}...`}
-                  className="flex-1"
-                  disabled={sendMessageMutation.isPending}
-                />
-                <Button
-                  onClick={handleSendMessage}
-                  disabled={!messageText.trim() || sendMessageMutation.isPending}
-                  size="sm"
-                  className="bg-[#FF007F] hover:bg-[#FF007F]/90"
-                >
-                  <Send className="w-4 h-4" />
-                </Button>
+                  );
+                })}
+                <div ref={messagesEndRef} />
               </div>
-              
-              {!ws && (
-                <div className="mt-2 text-xs text-amber-600">
-                  Verbindung wird hergestellt...
-                </div>
-              )}
-            </div>
-          </>
-        ) : (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center">
-              <MessageCircle className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium text-muted-foreground mb-2">
-                Wähle eine Unterhaltung
-              </h3>
-              <p className="text-muted-foreground">
-                Wähle eine Person aus der Liste, um zu chatten
-              </p>
-            </div>
+            )}
           </div>
-        )}
+        </ScrollArea>
+      </div>
+
+      {/* Message Input - Fixed at bottom above navigation (responsive) */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 border-t bg-card mb-16 md:mb-0">
+        <div className="flex items-center space-x-2 max-w-full">
+          <Input
+            value={messageText}
+            onChange={(e) => setMessageText(e.target.value)}
+            onKeyPress={handleKeyPress}
+            placeholder="Nachricht schreiben..."
+            className="flex-1"
+            disabled={sendMessageMutation.isPending}
+          />
+          <Button
+            onClick={handleSendMessage}
+            disabled={!messageText.trim() || sendMessageMutation.isPending}
+            size="sm"
+            className="bg-[#FF007F] hover:bg-[#FF007F]/90"
+          >
+            <Send className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );

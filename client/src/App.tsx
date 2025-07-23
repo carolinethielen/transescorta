@@ -12,7 +12,7 @@ import Landing from "@/pages/Landing";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Home from "@/pages/HomeNew";
-import ChatMain from "@/pages/ChatMain";
+import ChatMainNew from "@/pages/ChatMainNew";
 import Profile from "@/pages/Profile";
 import ProfileEdit from "@/pages/ProfileEdit";
 import ProfileDetailFixed from "@/pages/ProfileDetailFixed";
@@ -45,7 +45,7 @@ function Router() {
       {/* Protected routes - require authentication */}
       {isAuthenticated && !isLoading && (
         <>
-          <Route path="/chat" component={ChatMain} />
+          <Route path="/chat" component={ChatMainNew} />
           <Route path="/my-profile" component={Profile} />
           <Route path="/profile/edit" component={ProfileEdit} />
           <Route path="/settings" component={Settings} />
