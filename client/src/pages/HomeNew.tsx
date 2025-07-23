@@ -47,8 +47,17 @@ export default function Home() {
     retry: false,
   });
 
+  // Also fetch public escorts to always show demo data
+  const { data: publicUsers = [] } = useQuery({
+    queryKey: ['/api/users/public'],
+    retry: false,
+  });
+
+  // Use public escorts if recommended is empty or failed
+  const displayUsers = rawUsers.length > 0 ? rawUsers : publicUsers;
+
   // Convert and organize escorts by categories
-  const escorts = (rawUsers as any[]).map((escort: any) => {
+  const escorts = (displayUsers as any[]).map((escort: any) => {
     const distance = escort.latitude && escort.longitude && userCoordinates
       ? calculateDistance(userCoordinates.lat, userCoordinates.lon, escort.latitude, escort.longitude)
       : 0;

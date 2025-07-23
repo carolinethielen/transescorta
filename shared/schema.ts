@@ -131,6 +131,32 @@ export const sendMessageSchema = createInsertSchema(messages).pick({
   content: z.string().min(1).max(1000),
 });
 
+// Private albums table for escort photo galleries
+export const privateAlbums = pgTable("private_albums", {
+  id: varchar("id").primaryKey().notNull(),
+  ownerId: varchar("owner_id").notNull().references(() => users.id),
+  title: varchar("title").notNull(),
+  description: text("description"),
+  imageUrls: jsonb("image_urls").$type<string[]>().default([]),
+  isPublic: boolean("is_public").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Album access permissions - who can view which private albums
+export const albumAccess = pgTable("album_access", {
+  id: varchar("id").primaryKey().notNull(),
+  albumId: varchar("album_id").notNull().references(() => privateAlbums.id),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  grantedBy: varchar("granted_by").notNull().references(() => users.id),
+  grantedAt: timestamp("granted_at").defaultNow(),
+});
+
+export type PrivateAlbum = typeof privateAlbums.$inferSelect;
+export type InsertPrivateAlbum = typeof privateAlbums.$inferInsert;
+export type AlbumAccess = typeof albumAccess.$inferSelect;
+export type InsertAlbumAccess = typeof albumAccess.$inferInsert;
+
 export type UpdateProfile = z.infer<typeof updateProfileSchema>;
 export type CreateMatch = z.infer<typeof createMatchSchema>;
 export type SendMessage = z.infer<typeof sendMessageSchema>;

@@ -118,7 +118,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
                 <SelectValue placeholder="Position wählen..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Alle</SelectItem>
+                <SelectItem value="all">Alle</SelectItem>
                 {positions.map((position) => (
                   <SelectItem key={position} value={position}>
                     {position.charAt(0).toUpperCase() + position.slice(1)}
@@ -136,7 +136,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
                 <SelectValue placeholder="Körpertyp wählen..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Alle</SelectItem>
+                <SelectItem value="all">Alle</SelectItem>
                 {bodyTypes.map((type) => (
                   <SelectItem key={type} value={type}>
                     {type}
@@ -154,7 +154,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
                 <SelectValue placeholder="Ethnizität wählen..." />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Alle</SelectItem>
+                <SelectItem value="all">Alle</SelectItem>
                 {ethnicities.map((ethnicity) => (
                   <SelectItem key={ethnicity} value={ethnicity}>
                     {ethnicity}

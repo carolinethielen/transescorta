@@ -2,20 +2,29 @@ import React from 'react';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
-import { Home, MessageCircle, User, Search, Settings, LogIn, UserPlus } from 'lucide-react';
+import { Home, MessageCircle, User, Search, Settings, LogIn, UserPlus, ImageIcon } from 'lucide-react';
 import { Link } from 'wouter';
 
-const authenticatedNavItems = [
-  { path: '/', icon: Home, label: 'Home' },
-  { path: '/chat', icon: MessageCircle, label: 'Chat' },
-  { path: '/my-profile', icon: User, label: 'Profil' },
-  { path: '/explore', icon: Search, label: 'Entdecken' },
-  { path: '/settings', icon: Settings, label: 'Mehr' },
-];
+const getNavItems = (userType?: string) => {
+  const baseItems = [
+    { path: '/', icon: Home, label: 'Home' },
+    { path: '/chat', icon: MessageCircle, label: 'Chat' },
+    { path: '/my-profile', icon: User, label: 'Profil' },
+  ];
+  
+  // Add Albums tab for trans users only (escorts)
+  if (userType === 'trans') {
+    baseItems.push({ path: '/albums', icon: ImageIcon, label: 'Alben' });
+  }
+  
+  baseItems.push({ path: '/settings', icon: Settings, label: 'Mehr' });
+  
+  return baseItems;
+};
 
 export function BottomNavigation() {
   const [location, navigate] = useLocation();
-  const { isAuthenticated, isLoading } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
 
   const handleLogin = () => {
     window.location.href = '/api/login';
@@ -30,7 +39,7 @@ export function BottomNavigation() {
       {isAuthenticated && !isLoading ? (
         // Authenticated Navigation
         <div className="flex justify-around py-3">
-          {authenticatedNavItems.map(({ path, icon: Icon, label }) => {
+          {getNavItems(user?.userType || undefined).map(({ path, icon: Icon, label }) => {
             const isActive = location === path;
             return (
               <Link

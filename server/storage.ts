@@ -3,6 +3,8 @@ import {
   matches,
   messages,
   chatRooms,
+  privateAlbums,
+  albumAccess,
   type User,
   type UpsertUser,
   type Match,
@@ -11,6 +13,10 @@ import {
   type InsertMessage,
   type ChatRoom,
   type InsertChatRoom,
+  type PrivateAlbum,
+  type InsertPrivateAlbum,
+  type AlbumAccess,
+  type InsertAlbumAccess,
   type UpdateProfile,
   type CreateMatch,
   type SendMessage,
@@ -22,6 +28,7 @@ import { nanoid } from "nanoid";
 export interface IStorage {
   // User operations (required for Replit Auth)
   getUser(id: string): Promise<User | undefined>;
+  getUserById(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
   updateUserStripeInfo(userId: string, customerId: string, subscriptionId: string): Promise<User>;
   updateUserProfile(userId: string, profile: UpdateProfile): Promise<User>;
@@ -31,6 +38,13 @@ export interface IStorage {
   // Discovery operations
   getNearbyUsers(userId: string, latitude: number, longitude: number, radius: number, limit: number): Promise<User[]>;
   getRecommendedUsers(userId: string, limit: number): Promise<User[]>;
+  getPublicTransUsers(limit: number): Promise<User[]>;
+  
+  // Album operations
+  createPrivateAlbum(ownerId: string, albumData: any): Promise<any>;
+  getUserAlbums(userId: string): Promise<any[]>;
+  grantAlbumAccess(albumId: string, userId: string, grantedBy: string): Promise<void>;
+  getUserAccessibleAlbums(userId: string): Promise<any[]>;
   
   // Match operations
   createMatch(userId: string, match: CreateMatch): Promise<Match>;
@@ -238,6 +252,10 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  async getUserById(id: string): Promise<User | undefined> {
+    return this.getUser(id);
+  }
+
   async upsertUser(userData: UpsertUser): Promise<User> {
     const [user] = await db
       .insert(users)
@@ -251,15 +269,6 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return user;
-  }
-
-  async getUserById(userId: string): Promise<User | null> {
-    const [user] = await db
-      .select()
-      .from(users)
-      .where(eq(users.id, userId))
-      .limit(1);
-    return user || null;
   }
 
   async updateUserStripeInfo(userId: string, customerId: string, subscriptionId: string): Promise<User> {
@@ -393,6 +402,7 @@ export class DatabaseStorage implements IStorage {
       .orderBy(desc(users.isPremium), desc(users.isOnline), desc(users.lastSeen))
       .limit(limit);
     
+    console.log(`Found ${transUsers.length} public trans escorts`);
     return transUsers;
   }
 
@@ -617,6 +627,58 @@ export class DatabaseStorage implements IStorage {
       .returning();
 
     return updatedUser;
+  }
+
+  // Album operations
+  async createPrivateAlbum(ownerId: string, albumData: any): Promise<PrivateAlbum> {
+    const albumId = nanoid();
+    
+    const [album] = await db
+      .insert(privateAlbums)
+      .values({
+        id: albumId,
+        ownerId,
+        ...albumData,
+      })
+      .returning();
+    
+    return album;
+  }
+
+  async getUserAlbums(userId: string): Promise<PrivateAlbum[]> {
+    const albums = await db
+      .select()
+      .from(privateAlbums)
+      .where(eq(privateAlbums.ownerId, userId))
+      .orderBy(desc(privateAlbums.createdAt));
+    
+    return albums;
+  }
+
+  async grantAlbumAccess(albumId: string, userId: string, grantedBy: string): Promise<void> {
+    const accessId = nanoid();
+    
+    await db
+      .insert(albumAccess)
+      .values({
+        id: accessId,
+        albumId,
+        userId,
+        grantedBy,
+      });
+  }
+
+  async getUserAccessibleAlbums(userId: string): Promise<PrivateAlbum[]> {
+    // Get albums where user has been granted access
+    const accessibleAlbums = await db
+      .select({
+        album: privateAlbums,
+      })
+      .from(albumAccess)
+      .innerJoin(privateAlbums, eq(albumAccess.albumId, privateAlbums.id))
+      .where(eq(albumAccess.userId, userId));
+    
+    return accessibleAlbums.map(item => item.album);
   }
 }
 

@@ -20,6 +20,7 @@ import UserTypeSelection from "@/pages/UserTypeSelection";
 import ForgotPassword from "@/pages/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword";
 import VerifyEmail from "@/pages/VerifyEmail";
+import PrivateAlbums from "@/pages/PrivateAlbums";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -42,6 +43,7 @@ function Router() {
           <Route path="/profile" component={ProfileDetail} />
           <Route path="/my-profile" component={Profile} />
           <Route path="/explore" component={Explore} />
+          <Route path="/albums" component={PrivateAlbums} />
           <Route path="/settings" component={Settings} />
           <Route path="/subscribe" component={Subscribe} />
         </>

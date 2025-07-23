@@ -9,6 +9,20 @@ import { z } from "zod";
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
+  
+  // Public routes (must come before authentication middleware)
+  app.get('/api/users/public', async (req, res) => {
+    try {
+      const limit = parseInt(req.query.limit as string) || 20;
+      console.log("Getting public trans escorts...");
+      const transEscorts = await storage.getPublicTransUsers(limit);
+      console.log(`Returning ${transEscorts.length} public escorts`);
+      res.json(transEscorts);
+    } catch (error) {
+      console.error("Error getting public trans escorts:", error);
+      res.status(500).json({ message: "Failed to get public escorts" });
+    }
+  });
 
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
@@ -94,8 +108,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/users/recommended', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      const currentUser = await storage.getUserById(userId);
+      const currentUser = await storage.getUser(userId);
       const { limit = 20 } = req.query;
+      
+      console.log(`Getting recommended users for ${userId}, userType: ${currentUser?.userType}`);
       
       // If user is a man (customer), only show trans escorts
       // If user is trans (escort), they can see everyone for networking
@@ -106,6 +122,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         users = await storage.getRecommendedUsers(userId, parseInt(limit as string));
       }
       
+      console.log(`Returning ${users.length} recommended users`);
       res.json(users);
     } catch (error) {
       console.error("Error fetching recommended users:", error);
@@ -113,17 +130,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Public route - ONLY trans escorts are shown (like hunqz.com model)
-  app.get('/api/users/public', async (req, res) => {
-    try {
-      const limit = parseInt(req.query.limit as string) || 20;
-      const transEscorts = await storage.getPublicTransUsers(limit);
-      res.json(transEscorts);
-    } catch (error) {
-      console.error("Error getting public trans escorts:", error);
-      res.status(500).json({ message: "Failed to get public escorts" });
-    }
-  });
+
 
   // Match routes
   app.post('/api/matches', isAuthenticated, async (req: any, res) => {
@@ -232,6 +239,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error updating user type:", error);
       res.status(500).json({ message: "Failed to update user type" });
+    }
+  });
+
+  // Album routes
+  app.get('/api/albums/my', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const albums = await storage.getUserAlbums(userId);
+      res.json(albums);
+    } catch (error) {
+      console.error("Error fetching user albums:", error);
+      res.status(500).json({ message: "Failed to fetch albums" });
+    }
+  });
+
+  app.post('/api/albums', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      
+      // Validate that only trans users can create albums
+      const user = await storage.getUser(userId);
+      if (!user || user.userType !== 'trans') {
+        return res.status(403).json({ message: "Only trans users can create private albums" });
+      }
+
+      const album = await storage.createPrivateAlbum(userId, req.body);
+      res.json(album);
+    } catch (error) {
+      console.error("Error creating album:", error);
+      res.status(500).json({ message: "Failed to create album" });
+    }
+  });
+
+  app.post('/api/albums/:albumId/access', isAuthenticated, async (req: any, res) => {
+    try {
+      const granterId = req.user.claims.sub;
+      const { albumId } = req.params;
+      const { userId } = req.body;
+
+      await storage.grantAlbumAccess(albumId, userId, granterId);
+      res.json({ message: "Access granted successfully" });
+    } catch (error) {
+      console.error("Error granting album access:", error);
+      res.status(500).json({ message: "Failed to grant access" });
+    }
+  });
+
+  app.get('/api/albums/accessible', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const albums = await storage.getUserAccessibleAlbums(userId);
+      res.json(albums);
+    } catch (error) {
+      console.error("Error fetching accessible albums:", error);
+      res.status(500).json({ message: "Failed to fetch accessible albums" });
     }
   });
 
