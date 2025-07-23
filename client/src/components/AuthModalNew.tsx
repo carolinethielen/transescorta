@@ -81,21 +81,34 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
   // Direct fetch implementation
   const loginMutation = useMutation({
     mutationFn: async (data: LoginForm) => {
-      const response = await window.fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-        credentials: 'include',
-      });
+      console.log('Login data:', data);
+      console.log('Making fetch request to /api/auth/login');
       
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Login failed');
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+          credentials: 'include',
+        });
+        
+        console.log('Login response status:', response.status);
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          console.error('Login error:', errorData);
+          throw new Error(errorData.message || 'Login failed');
+        }
+        
+        const result = await response.json();
+        console.log('Login successful:', result);
+        return result;
+      } catch (error) {
+        console.error('Fetch error during login:', error);
+        throw error;
       }
-      
-      return response.json();
     },
     onSuccess: (data: any) => {
       toast({
@@ -118,21 +131,34 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
     mutationFn: async (data: RegisterForm) => {
       const { confirmPassword, ...registerData } = data;
       
-      const response = await window.fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(registerData),
-        credentials: 'include',
-      });
+      console.log('Registration data:', registerData);
+      console.log('Making fetch request to /api/auth/register');
       
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Registration failed');
+      try {
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(registerData),
+          credentials: 'include',
+        });
+        
+        console.log('Response status:', response.status);
+        
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          console.error('Registration error:', errorData);
+          throw new Error(errorData.message || 'Registration failed');
+        }
+        
+        const result = await response.json();
+        console.log('Registration successful:', result);
+        return result;
+      } catch (error) {
+        console.error('Fetch error during registration:', error);
+        throw error;
       }
-      
-      return response.json();
     },
     onSuccess: (data: any) => {
       toast({
