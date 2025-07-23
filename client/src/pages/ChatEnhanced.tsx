@@ -205,13 +205,13 @@ export default function ChatEnhanced() {
                 {chatPartner.profileImageUrl ? (
                   <img
                     src={chatPartner.profileImageUrl}
-                    alt={chatPartner.firstName}
+                    alt={chatPartner.firstName || ''}
                     className="w-10 h-10 rounded-full object-cover border-2 border-gray-200"
                   />
                 ) : (
                   <PlaceholderImage 
                     size="md" 
-                    userType={chatPartner.userType || 'trans'} 
+                    userType={chatPartner.userType ?? 'trans'} 
                     className="w-10 h-10"
                   />
                 )}
@@ -245,9 +245,9 @@ export default function ChatEnhanced() {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden relative">
         <ScrollArea className="h-full" ref={scrollAreaRef}>
-          <div className="p-4 space-y-2">
+          <div className="p-4 space-y-2 pb-4">
             {isMessagesLoading ? (
               <div className="flex justify-center py-8">
                 <div className="animate-spin w-6 h-6 border-2 border-[#FF007F] border-t-transparent rounded-full" />
@@ -260,22 +260,28 @@ export default function ChatEnhanced() {
                 return (
                   <ChatBubble
                     key={message.id}
-                    message={message}
+                    message={{
+                      ...message,
+                      messageType: message.messageType ?? 'text',
+                      imageUrl: message.imageUrl ?? undefined,
+                      isRead: message.isRead ?? false,
+                      createdAt: message.createdAt?.toISOString() ?? new Date().toISOString(),
+                    }}
                     currentUserId={user?.id || ''}
                     senderImage={
                       message.senderId === user?.id 
-                        ? user?.profileImageUrl 
-                        : chatPartner?.profileImageUrl
+                        ? user?.profileImageUrl ?? undefined
+                        : chatPartner?.profileImageUrl ?? undefined
                     }
                     senderName={
                       message.senderId === user?.id 
-                        ? user?.firstName 
-                        : chatPartner?.firstName
+                        ? user?.firstName ?? undefined
+                        : chatPartner?.firstName ?? undefined
                     }
                     senderUserType={
                       message.senderId === user?.id 
-                        ? user?.userType 
-                        : chatPartner?.userType
+                        ? user?.userType ?? 'trans'
+                        : chatPartner?.userType ?? 'trans'
                     }
                     showAvatar={true}
                     isLastInGroup={isLastInGroup}
@@ -301,20 +307,22 @@ export default function ChatEnhanced() {
       </div>
 
       {/* Enhanced Chat Input with Photo Support */}
-      <ChatInput
-        onSendMessage={sendMessage}
-        disabled={sendMessageMutation.isPending}
-        placeholder={`Nachricht an ${chatPartner?.firstName || 'Unbekannt'}...`}
-      />
-      
-      {/* WebSocket Connection Status */}
-      {!ws && (
-        <div className="bg-yellow-50 border-t border-yellow-200 px-4 py-2">
-          <p className="text-sm text-yellow-800 text-center">
-            Verbindung wird hergestellt...
-          </p>
-        </div>
-      )}
+      <div className="flex-shrink-0">
+        <ChatInput
+          onSendMessage={sendMessage}
+          disabled={sendMessageMutation.isPending}
+          placeholder={`Nachricht an ${chatPartner?.firstName || 'Unbekannt'}...`}
+        />
+        
+        {/* WebSocket Connection Status */}
+        {!ws && (
+          <div className="bg-yellow-50 border-t border-yellow-200 px-4 py-2">
+            <p className="text-sm text-yellow-800 text-center">
+              Verbindung wird hergestellt...
+            </p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

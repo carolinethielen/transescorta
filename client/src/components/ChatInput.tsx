@@ -91,7 +91,7 @@ export function ChatInput({ onSendMessage, disabled = false, placeholder = "Nach
   };
 
   return (
-    <div className="border-t bg-white dark:bg-gray-900 p-4">
+    <div className="flex-shrink-0 border-t bg-white dark:bg-gray-900 p-4 sticky bottom-0">
       {/* Image Preview */}
       {selectedImage && (
         <div className="mb-3 relative inline-block">

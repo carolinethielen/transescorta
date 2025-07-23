@@ -576,7 +576,10 @@ export class DatabaseStorage implements IStorage {
       .values({
         id: messageId,
         senderId,
-        ...message,
+        receiverId: message.receiverId,
+        content: message.content || "",
+        messageType: message.messageType || 'text',
+        imageUrl: message.imageUrl,
       })
       .returning();
 

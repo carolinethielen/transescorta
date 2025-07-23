@@ -10,6 +10,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupCustomAuth(app);
   
+  // WebSocket connection tracking
+  const connectedClients = new Map<WebSocket, string>();
+  
   // Public routes (must come before authentication middleware)
   app.get('/api/users/public', async (req, res) => {
     try {
@@ -72,7 +75,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put('/api/profile/location', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const { latitude, longitude, location } = req.body;
       const user = await storage.updateUserLocation(userId, latitude, longitude, location);
       res.json(user);
@@ -102,7 +105,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Discovery routes
   app.get('/api/users/nearby', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const { latitude, longitude, radius = 50, limit = 20 } = req.query;
       
       if (!latitude || !longitude) {
@@ -125,7 +128,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/users/recommended', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const currentUser = await storage.getUser(userId);
       const { limit = 20 } = req.query;
       
@@ -153,7 +156,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Match routes
   app.post('/api/matches', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const matchData = createMatchSchema.parse(req.body);
       const match = await storage.createMatch(userId, matchData);
       res.json(match);
@@ -168,7 +171,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/matches', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const matches = await storage.getMatches(userId);
       res.json(matches);
     } catch (error) {
@@ -180,7 +183,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Chat routes
   app.get('/api/chat/rooms', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const rooms = await storage.getChatRooms(userId);
       res.json(rooms);
     } catch (error) {
@@ -191,7 +194,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/chat/:otherUserId/messages', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const { otherUserId } = req.params;
       const { limit = 50 } = req.query;
       
@@ -211,8 +214,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Broadcast to WebSocket clients
       const otherUserId = messageData.receiverId;
-      const connectedSockets = [...connectedClients.entries()];
-      connectedSockets.forEach(([socket, userId]) => {
+      for (const [socket, userId] of connectedClients.entries()) {
         if (userId === otherUserId && socket.readyState === WebSocket.OPEN) {
           socket.send(JSON.stringify({
             type: 'new_message',
@@ -220,7 +222,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             senderId: senderId
           }));
         }
-      });
+      }
       
       res.json(message);
     } catch (error) {
@@ -234,7 +236,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put('/api/chat/:senderId/read', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const { senderId } = req.params;
       await storage.markMessagesAsRead(userId, senderId);
       res.json({ success: true });
@@ -247,7 +249,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Premium upgrade route (simplified without payment)
   app.post('/api/upgrade-premium', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const user = await storage.updateUserStripeInfo(userId, 'demo_customer', 'demo_subscription');
       res.json({ success: true, user });
     } catch (error) {
@@ -259,7 +261,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Update user type route
   app.post('/api/users/update-type', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const { userType } = req.body;
       
       if (!userType || !['trans', 'man'].includes(userType)) {
@@ -277,7 +279,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Album routes
   app.get('/api/albums/my', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const albums = await storage.getUserAlbums(userId);
       res.json(albums);
     } catch (error) {
@@ -288,7 +290,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/albums', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       
       // Validate that only trans users can create albums
       const user = await storage.getUser(userId);
@@ -306,7 +308,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/albums/:albumId/access', isAuthenticated, async (req: any, res) => {
     try {
-      const granterId = req.user.claims.sub;
+      const granterId = req.user.id;
       const { albumId } = req.params;
       const { userId } = req.body;
 
@@ -320,7 +322,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/albums/accessible', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const albums = await storage.getUserAccessibleAlbums(userId);
       res.json(albums);
     } catch (error) {
@@ -355,6 +357,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           const newMessage = await storage.sendMessage(userId, {
             receiverId: message.receiverId,
             content: message.content,
+            messageType: 'text',
           });
 
           // Send to receiver if online
