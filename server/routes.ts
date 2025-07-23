@@ -246,6 +246,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get('/api/chat/unread-count', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const count = await storage.getUnreadMessageCount(userId);
+      res.json(count);
+    } catch (error) {
+      console.error("Error getting unread count:", error);
+      res.status(500).json({ message: "Failed to get unread count" });
+    }
+  });
+
   // Premium upgrade route (simplified without payment)
   app.post('/api/upgrade-premium', isAuthenticated, async (req: any, res) => {
     try {
@@ -334,10 +345,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Create HTTP server
   const httpServer = createServer(app);
 
-  // Setup WebSocket for real-time chat
+  // Setup WebSocket for real-time chat - Fixed to use correct variable
   const wss = new WebSocketServer({ server: httpServer, path: '/ws' });
-  const connectedUsers = new Map<string, WebSocket>();
-
+  
   wss.on('connection', (ws: WebSocket, req) => {
     let userId: string | null = null;
 
@@ -347,26 +357,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         if (message.type === 'auth' && message.userId) {
           userId = message.userId as string;
-          connectedUsers.set(userId, ws);
+          connectedClients.set(ws, userId);
           await storage.updateUserOnlineStatus(userId, true);
           
-          // Broadcast online status to relevant users
+          console.log(`User ${userId} connected via WebSocket`);
           ws.send(JSON.stringify({ type: 'auth_success' }));
         } else if (message.type === 'message' && userId) {
           // Handle real-time message
           const newMessage = await storage.sendMessage(userId, {
             receiverId: message.receiverId,
             content: message.content,
-            messageType: 'text',
+            messageType: message.messageType || 'text',
+            imageUrl: message.imageUrl
           });
 
           // Send to receiver if online
-          const receiverWs = connectedUsers.get(message.receiverId);
-          if (receiverWs && receiverWs.readyState === WebSocket.OPEN) {
-            receiverWs.send(JSON.stringify({
-              type: 'new_message',
-              message: newMessage,
-            }));
+          for (const [socket, socketUserId] of connectedClients.entries()) {
+            if (socketUserId === message.receiverId && socket.readyState === WebSocket.OPEN) {
+              socket.send(JSON.stringify({
+                type: 'new_message',
+                message: newMessage,
+                senderId: userId
+              }));
+            }
           }
 
           // Confirm to sender
@@ -383,8 +396,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     ws.on('close', async () => {
       if (userId) {
-        connectedUsers.delete(userId);
+        connectedClients.delete(ws);
         await storage.updateUserOnlineStatus(userId, false);
+        console.log(`User ${userId} disconnected from WebSocket`);
       }
     });
   });

@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import AuthModalNew from '@/components/AuthModalNew';
 import { Home, MessageCircle, User, Search, Settings, LogIn, UserPlus, ImageIcon } from 'lucide-react';
 import { Link } from 'wouter';
+import { useQuery } from '@tanstack/react-query';
 
 const getNavItems = (userType?: string) => {
   if (userType === 'trans') {
@@ -33,6 +34,14 @@ export function BottomNavigation() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
 
+  // Get unread messages count
+  const { data: unreadCount = 0 } = useQuery<number>({
+    queryKey: ['/api/chat/unread-count'],
+    enabled: isAuthenticated,
+    refetchInterval: 10000, // Check every 10 seconds
+    retry: false,
+  });
+
   const handleLogin = () => {
     setAuthTab('login');
     setShowAuthModal(true);
@@ -54,13 +63,21 @@ export function BottomNavigation() {
               <Link
                 key={path}
                 href={path}
-                className={`flex flex-col items-center space-y-1 px-3 py-1 transition-colors ${
+                className={`flex flex-col items-center space-y-1 px-3 py-1 transition-colors relative ${
                   isActive 
                     ? 'text-[#FF007F]' 
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                <Icon className="w-5 h-5" />
+                <div className="relative">
+                  <Icon className="w-5 h-5" />
+                  {/* Show unread count for chat icon */}
+                  {Icon === MessageCircle && unreadCount > 0 && (
+                    <div className="absolute -top-2 -right-2 bg-[#FF007F] text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </div>
+                  )}
+                </div>
                 <span className="text-xs font-medium">{label}</span>
               </Link>
             );

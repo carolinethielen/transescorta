@@ -62,6 +62,7 @@ export interface IStorage {
   sendMessage(senderId: string, message: SendMessage): Promise<Message>;
   getMessages(userId: string, otherUserId: string, limit: number): Promise<Message[]>;
   markMessagesAsRead(userId: string, senderId: string): Promise<void>;
+  getUnreadMessageCount(userId: string): Promise<number>;
   
   // Chat room operations
   getChatRooms(userId: string): Promise<(ChatRoom & { otherUser: User; lastMessage: Message | null; unreadCount: number })[]>;

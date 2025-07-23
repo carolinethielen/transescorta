@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
@@ -12,6 +12,15 @@ import { isUnauthorizedError } from '@/lib/authUtils';
 import { ArrowLeft, MoreVertical, MessageCircle } from 'lucide-react';
 import type { Message, User } from '@shared/schema';
 
+// Audio notification setup
+const playNotificationSound = () => {
+  try {
+    const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmMcBDuY3PbDeSgFKn7L8diMOQgXZLjr55NBDR5Mp+PtwPBWFApEp+DysFQ');
+    audio.volume = 0.3;
+    audio.play().catch(() => {});
+  } catch {}
+};
+
 export default function ChatEnhanced() {
   const [, navigate] = useLocation();
   const { user } = useAuth();
@@ -20,6 +29,7 @@ export default function ChatEnhanced() {
   const [newMessage, setNewMessage] = useState('');
   const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [ws, setWs] = useState<WebSocket | null>(null);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   // Get other user ID from URL params (simplified for demo)
   const otherUserId = new URLSearchParams(window.location.search).get('user') || 'demo-trans-1';
@@ -110,9 +120,38 @@ export default function ChatEnhanced() {
     },
   });
 
+  // Enhanced notification handler
+  const handleNewMessage = useCallback((messageData: any) => {
+    if (messageData.senderId === otherUserId) {
+      setUnreadCount(prev => prev + 1);
+      playNotificationSound();
+      
+      // Show push notification if supported
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification(`Neue Nachricht von ${chatPartner?.firstName || 'Unbekannt'}`, {
+          body: messageData.message.content || 'Bild gesendet',
+          icon: chatPartner?.profileImageUrl || '/favicon.ico',
+          tag: 'chat-message'
+        });
+      }
+      
+      toast({
+        title: `💬 ${chatPartner?.firstName || 'Unbekannt'}`,
+        description: messageData.message.content || 'Bild gesendet',
+      });
+    }
+    
+    queryClient.invalidateQueries({ queryKey: [`/api/chat/${otherUserId}/messages`] });
+  }, [otherUserId, chatPartner?.firstName, chatPartner?.profileImageUrl, queryClient, toast]);
+
   // Setup WebSocket connection for real-time updates
   useEffect(() => {
     if (!user?.id) return;
+
+    // Request notification permission
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
 
     const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
     const wsUrl = `${protocol}//${window.location.host}/ws`;
@@ -132,16 +171,9 @@ export default function ChatEnhanced() {
         const data = JSON.parse(event.data);
         
         if (data.type === 'new_message') {
-          // Refresh messages when new message received
+          handleNewMessage(data);
+        } else if (data.type === 'message_sent') {
           queryClient.invalidateQueries({ queryKey: [`/api/chat/${otherUserId}/messages`] });
-          
-          // Show notification if message is from chat partner
-          if (data.senderId === otherUserId) {
-            toast({
-              title: `Neue Nachricht von ${chatPartner?.firstName || 'Unbekannt'}`,
-              description: data.message.content || 'Bild gesendet',
-            });
-          }
         }
       } catch (error) {
         console.error('WebSocket message error:', error);
@@ -153,10 +185,14 @@ export default function ChatEnhanced() {
       setWs(null);
     };
 
+    socket.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
     return () => {
       socket.close();
     };
-  }, [user?.id, otherUserId, chatPartner?.firstName, queryClient, toast]);
+  }, [user?.id, otherUserId, handleNewMessage, queryClient]);
 
   // Auto-scroll to bottom when messages load
   useEffect(() => {
@@ -188,6 +224,13 @@ export default function ChatEnhanced() {
       </div>
     );
   }
+
+  // Mark messages as read when entering chat
+  useEffect(() => {
+    if (messages.length > 0) {
+      setUnreadCount(0);
+    }
+  }, [messages.length]);
 
   return (
     <div className="h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
@@ -239,15 +282,22 @@ export default function ChatEnhanced() {
           )}
         </div>
         
-        <Button variant="ghost" size="sm">
-          <MoreVertical className="w-4 h-4" />
-        </Button>
+        <div className="flex items-center gap-2">
+          {unreadCount > 0 && (
+            <div className="bg-[#FF007F] text-white text-xs rounded-full w-6 h-6 flex items-center justify-center">
+              {unreadCount > 99 ? '99+' : unreadCount}
+            </div>
+          )}
+          <Button variant="ghost" size="sm">
+            <MoreVertical className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
 
-      {/* Messages Area */}
+      {/* Messages Area - Fixed height with bottom padding for input */}
       <div className="flex-1 overflow-hidden relative">
         <ScrollArea className="h-full" ref={scrollAreaRef}>
-          <div className="p-4 space-y-2 pb-4">
+          <div className="p-4 space-y-2 pb-20">
             {isMessagesLoading ? (
               <div className="flex justify-center py-8">
                 <div className="animate-spin w-6 h-6 border-2 border-[#FF007F] border-t-transparent rounded-full" />
@@ -306,22 +356,13 @@ export default function ChatEnhanced() {
         </ScrollArea>
       </div>
 
-      {/* Enhanced Chat Input with Photo Support */}
-      <div className="flex-shrink-0">
+      {/* Fixed Chat Input at Bottom */}
+      <div className="absolute bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t p-4 shadow-lg">
         <ChatInput
           onSendMessage={sendMessage}
           disabled={sendMessageMutation.isPending}
-          placeholder={`Nachricht an ${chatPartner?.firstName || 'Unbekannt'}...`}
+          placeholder="Nachricht schreiben..."
         />
-        
-        {/* WebSocket Connection Status */}
-        {!ws && (
-          <div className="bg-yellow-50 border-t border-yellow-200 px-4 py-2">
-            <p className="text-sm text-yellow-800 text-center">
-              Verbindung wird hergestellt...
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );
