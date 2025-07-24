@@ -198,17 +198,6 @@ export default function Home() {
         <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mt-1">
           <MapPin className="w-3 h-3 mr-1" />
           {escort.location}
-          {/* Show distance if user has GPS location */}
-          {userCoordinates && escort.latitude && escort.longitude && (
-            <span className="ml-2 text-[#FF007F] font-medium text-xs">
-              • {formatDistance(calcDist(
-                userCoordinates.lat, 
-                userCoordinates.lon, 
-                escort.latitude, 
-                escort.longitude
-              ))}
-            </span>
-          )}
         </div>
       </div>
     </div>

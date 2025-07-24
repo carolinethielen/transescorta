@@ -177,27 +177,7 @@ export default function Profile() {
             </div>
           )}
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 mt-6 pt-4 border-t">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-[#FF007F]">
-                {matches.length}
-              </div>
-              <div className="text-sm text-muted-foreground">Matches</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-[#FF007F]">
-                {mutualMatches.length}
-              </div>
-              <div className="text-sm text-muted-foreground">Gegenseitig</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-[#FF007F]">
-                {user?.profileImages?.length || 0}
-              </div>
-              <div className="text-sm text-muted-foreground">Fotos</div>
-            </div>
-          </div>
+
 
           {/* Action Buttons */}
           <div className="flex gap-3 mt-6">

@@ -181,7 +181,8 @@ export default function ProfileEditUnified() {
         title: "Profil gespeichert",
         description: "Dein Profil wurde erfolgreich aktualisiert!",
       });
-      navigate('/profile');
+      // Stay on edit page to avoid navigation issues
+      // navigate('/profile');
     },
     onError: (error: Error) => {
       toast({
@@ -193,21 +194,36 @@ export default function ProfileEditUnified() {
   });
 
   const handleImageUpload = (imageUrl: string, isMain: boolean = true) => {
-    // Handle image upload logic here
-    console.log('Image uploaded:', imageUrl, isMain);
+    if (isMain) {
+      form.setValue('profileImageUrl', imageUrl);
+    } else {
+      const currentImages = form.getValues('profileImages') || [];
+      form.setValue('profileImages', [...currentImages, imageUrl]);
+    }
   };
 
   const handleImageDelete = (imageUrl: string) => {
-    // Handle image deletion logic here
-    console.log('Image deleted:', imageUrl);
+    const currentMain = form.getValues('profileImageUrl');
+    const currentImages = form.getValues('profileImages') || [];
+    
+    if (currentMain === imageUrl) {
+      form.setValue('profileImageUrl', '');
+    } else {
+      form.setValue('profileImages', currentImages.filter(img => img !== imageUrl));
+    }
   };
 
   const onSubmit = (data: UpdateProfile) => {
-    updateProfileMutation.mutate({ 
-      ...data, 
+    const submitData = {
+      ...data,
       services: selectedServices,
-      interests: selectedInterests
-    });
+      interests: selectedInterests,
+      profileImageUrl: form.getValues('profileImageUrl'),
+      profileImages: form.getValues('profileImages')
+    };
+    
+    console.log('Submitting profile data:', submitData);
+    updateProfileMutation.mutate(submitData);
   };
 
   if (isLoading) {
@@ -225,7 +241,7 @@ export default function ProfileEditUnified() {
       <div className="max-w-2xl mx-auto p-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
-          <Button variant="ghost" onClick={() => navigate('/profile')}>
+          <Button variant="ghost" onClick={() => navigate('/my-profile')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Zurück
           </Button>
