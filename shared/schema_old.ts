@@ -101,28 +101,7 @@ export const chatRooms = pgTable("chat_rooms", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-// Private albums for trans users
-export const privateAlbums = pgTable("private_albums", {
-  id: varchar("id").primaryKey().notNull(),
-  ownerId: varchar("owner_id").notNull().references(() => users.id),
-  title: varchar("title").notNull(),
-  description: text("description"),
-  imageUrls: jsonb("image_urls").$type<string[]>().default([]),
-  isPublic: boolean("is_public").default(false),
-  createdAt: timestamp("created_at").defaultNow(),
-  updatedAt: timestamp("updated_at").defaultNow(),
-});
-
-// Album access grants (24h temporary access)
-export const albumAccess = pgTable("album_access", {
-  id: varchar("id").primaryKey().notNull(),
-  albumId: varchar("album_id").notNull().references(() => privateAlbums.id),
-  userId: varchar("user_id").notNull().references(() => users.id),
-  grantedBy: varchar("granted_by").notNull().references(() => users.id),
-  expiresAt: timestamp("expires_at").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-});
-
+// Schema types
 // Zod schemas for validation
 export const registerUserSchema = createInsertSchema(users, {
   email: z.string().email("Ungültige E-Mail-Adresse"),
@@ -144,10 +123,6 @@ export const forgotPasswordSchema = z.object({
 export const resetPasswordSchema = z.object({
   token: z.string().min(1, "Token ist erforderlich"),
   password: z.string().min(8, "Passwort muss mindestens 8 Zeichen lang sein"),
-});
-
-export const verifyEmailSchema = z.object({
-  token: z.string().min(1, "Verifizierungstoken ist erforderlich"),
 });
 
 // Profile update schema for both user types
@@ -177,11 +152,6 @@ export const sendMessageSchema = createInsertSchema(messages, {
   receiverId: z.string().min(1, "Empfänger-ID ist erforderlich"),
 }).omit({ id: true, senderId: true, createdAt: true, isRead: true });
 
-export const createMatchSchema = createInsertSchema(matches, {
-  targetUserId: z.string().min(1, "Target user ID ist erforderlich"),
-  isLike: z.boolean(),
-}).omit({ id: true, userId: true, createdAt: true, isMutual: true });
-
 // Type definitions
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
@@ -192,6 +162,95 @@ export type SendMessage = z.infer<typeof sendMessageSchema>;
 export type Match = typeof matches.$inferSelect;
 export type Message = typeof messages.$inferSelect;
 export type ChatRoom = typeof chatRooms.$inferSelect;
+
+export const verifyEmailSchema = z.object({
+  token: z.string().min(1, "Verifizierungstoken ist erforderlich"),
+});
+
+export type UpsertUser = typeof users.$inferInsert;
+export type User = typeof users.$inferSelect;
+export type RegisterUser = z.infer<typeof registerUserSchema>;
+export type LoginUser = z.infer<typeof loginUserSchema>;
+export type InsertMatch = typeof matches.$inferInsert;
+export type Match = typeof matches.$inferSelect;
+export type InsertMessage = typeof messages.$inferInsert;
+export type Message = typeof messages.$inferSelect;
+export type InsertChatRoom = typeof chatRooms.$inferInsert;
+export type ChatRoom = typeof chatRooms.$inferSelect;
+
+// Validation schemas
+export const updateProfileSchema = createInsertSchema(users).pick({
+  firstName: true,
+  lastName: true,
+  age: true,
+  bio: true,
+  height: true,
+  weight: true,
+  cockSize: true,
+  position: true,
+  bodyType: true,
+  ethnicity: true,
+  services: true,
+  hourlyRate: true,
+  location: true,
+  interests: true,
+  profileImageUrl: true,
+  profileImages: true,
+}).extend({
+  age: z.number().min(18).max(100),
+  bio: z.string().max(500).optional(),
+  height: z.number().min(150).max(220).optional(),
+  weight: z.number().min(40).max(150).optional(),
+  cockSize: z.number().min(10).max(30).optional(),
+  hourlyRate: z.number().min(50).max(1000).optional(),
+  profileImageUrl: z.string().url().optional(),
+  profileImages: z.array(z.string().url()).optional(),
+});
+
+export const createMatchSchema = createInsertSchema(matches).pick({
+  targetUserId: true,
+  isLike: true,
+});
+
+export const sendMessageSchema = createInsertSchema(messages).pick({
+  receiverId: true,
+  content: true,
+  messageType: true,
+  imageUrl: true,
+  privateAlbumId: true,
+}).extend({
+  content: z.string().min(1).max(1000).optional(),
+  messageType: z.enum(['text', 'image', 'private_album']).default('text'),
+  imageUrl: z.string().url().optional(),
+  privateAlbumId: z.string().optional(),
+});
+
+// Private albums table for escort photo galleries
+export const privateAlbums = pgTable("private_albums", {
+  id: varchar("id").primaryKey().notNull(),
+  ownerId: varchar("owner_id").notNull().references(() => users.id),
+  title: varchar("title").notNull(),
+  description: text("description"),
+  imageUrls: jsonb("image_urls").$type<string[]>().default([]),
+  isPublic: boolean("is_public").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Album access permissions - who can view which private albums
+export const albumAccess = pgTable("album_access", {
+  id: varchar("id").primaryKey().notNull(),
+  albumId: varchar("album_id").notNull().references(() => privateAlbums.id),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  grantedBy: varchar("granted_by").notNull().references(() => users.id),
+  grantedAt: timestamp("granted_at").defaultNow(),
+});
+
 export type PrivateAlbum = typeof privateAlbums.$inferSelect;
+export type InsertPrivateAlbum = typeof privateAlbums.$inferInsert;
 export type AlbumAccess = typeof albumAccess.$inferSelect;
+export type InsertAlbumAccess = typeof albumAccess.$inferInsert;
+
+export type UpdateProfile = z.infer<typeof updateProfileSchema>;
 export type CreateMatch = z.infer<typeof createMatchSchema>;
+export type SendMessage = z.infer<typeof sendMessageSchema>;

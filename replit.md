@@ -10,6 +10,14 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (January 2025)
 
+### Profile System Overhaul (January 2025)
+- **Unified Profile Editing**: Completely redesigned profile editing system with ProfileEditUnified component
+- **Physical Details Enhancement**: Added "Schwanzgröße" (penis size) and "Beschneidung" (circumcision) fields for trans escorts
+- **GPS Location Detection**: Automatic city detection using browser GPS with manual override capability
+- **Distance Calculation**: Real-time distance display on homepage showing kilometer distance to escorts
+- **Schema Updates**: Enhanced user schema with circumcision field and improved location support
+- **Location-Based Features**: GPS coordinates stored with city names for precise distance calculations
+
 ### Custom Authentication System
 - **Email/Password Auth**: Replaced Replit Auth with custom authentication using bcrypt password hashing
 - **Registration System**: Users can register as Trans escorts or male customers with email verification

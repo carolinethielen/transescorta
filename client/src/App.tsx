@@ -14,7 +14,7 @@ import Register from "@/pages/Register";
 import Home from "@/pages/HomeNew";
 import ChatMainNew from "@/pages/ChatMainNew";
 import Profile from "@/pages/Profile";
-import ProfileEdit from "@/pages/ProfileEdit";
+import ProfileEditUnified from "@/pages/ProfileEditUnified";
 import ProfileDetailFixed from "@/pages/ProfileDetailFixed";
 import Explore from "@/pages/Explore";
 import Settings from "@/pages/Settings";
@@ -47,7 +47,7 @@ function Router() {
         <>
           <Route path="/chat" component={ChatMainNew} />
           <Route path="/my-profile" component={Profile} />
-          <Route path="/profile/edit" component={ProfileEdit} />
+          <Route path="/profile/edit" component={ProfileEditUnified} />
           <Route path="/settings" component={Settings} />
           {/* Albums only for trans escorts */}
           <Route path="/albums" component={PrivateAlbums} />
