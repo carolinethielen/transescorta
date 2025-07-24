@@ -121,6 +121,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Public profile route - accessible without authentication
+  app.get('/api/users/:userId/public', async (req: any, res) => {
+    try {
+      const { userId } = req.params;
+      console.log(`Getting public profile for user: ${userId}`);
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        console.log(`Public profile not found for user: ${userId}`);
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      console.log(`Public profile found for user: ${userId}`);
+      res.json(user);
+    } catch (error) {
+      console.error("Error fetching public user profile:", error);
+      res.status(500).json({ message: "Failed to fetch user profile" });
+    }
+  });
+
   // Individual user profile route - MUST be before other /api/users/* routes
   app.get('/api/users/:userId', isAuthenticated, async (req: any, res) => {
     try {

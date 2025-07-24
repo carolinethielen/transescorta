@@ -21,8 +21,12 @@ export default function ProfileDetailFixed() {
   const urlParams = new URLSearchParams(location.split('?')[1] || '');
   const profileId = userId || urlParams.get('id');
 
-  const { data: user, isLoading } = useQuery<User>({
-    queryKey: ['/api/users', profileId],
+  const { data: user, isLoading, error } = useQuery<User>({
+    queryKey: ['/api/users', profileId, 'public'],
+    queryFn: () => fetch(`/api/users/${profileId}/public`).then(res => {
+      if (!res.ok) throw new Error('Profile not found');
+      return res.json();
+    }),
     enabled: !!profileId,
   });
 
@@ -58,6 +62,9 @@ export default function ProfileDetailFixed() {
       <div className="h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-xl font-semibold mb-2">Profil nicht gefunden</h2>
+          <p className="text-sm text-muted-foreground mb-4">
+            Profile ID: {profileId || 'Keine ID gefunden'}
+          </p>
           <Button onClick={() => navigate('/')}>Zurück zur Startseite</Button>
         </div>
       </div>
