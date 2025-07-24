@@ -155,40 +155,25 @@ export default function ProfileEditUnified() {
 
   const updateProfileMutation = useMutation({
     mutationFn: async (data: UpdateProfile & { profileImageUrl?: string; profileImages?: string[] }) => {
-      return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.open('PUT', '/api/auth/profile', true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.withCredentials = true;
-        
-        xhr.onload = function() {
-          if (xhr.status >= 200 && xhr.status < 300) {
-            try {
-              const result = JSON.parse(xhr.responseText);
-              resolve(result);
-            } catch (e) {
-              reject(new Error('Invalid JSON response'));
-            }
-          } else {
-            try {
-              const errorData = JSON.parse(xhr.responseText);
-              reject(new Error(errorData.message || 'Profile update failed'));
-            } catch (e) {
-              reject(new Error(`HTTP ${xhr.status}: ${xhr.statusText}`));
-            }
-          }
-        };
-        
-        xhr.onerror = function() {
-          reject(new Error('Network error'));
-        };
-        
-        xhr.send(JSON.stringify({ 
+      const response = await fetch('/api/auth/profile', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ 
           ...data, 
           services: selectedServices,
           interests: selectedInterests
-        }));
+        }),
       });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ message: 'Network error' }));
+        throw new Error(errorData.message || 'Profile update failed');
+      }
+      
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });

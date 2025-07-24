@@ -1,25 +1,16 @@
 import React from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
-import { isUnauthorizedError } from '@/lib/authUtils';
-import { apiRequest } from '@/lib/queryClient';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { updateProfileSchema, type User, type Match } from '@shared/schema';
-import { MapPin, Edit, Crown, Heart, MessageCircle, Star } from 'lucide-react';
+import { type User, type Match } from '@shared/schema';
+import { MapPin, Edit, Crown, Heart, MessageCircle, Star, Settings } from 'lucide-react';
 import { PlaceholderImage } from '@/components/PlaceholderImage';
 import { useLocation } from 'wouter';
 
 export default function Profile() {
   const { user, isLoading: authLoading } = useAuth();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
   const [, navigate] = useLocation();
 
   // Fetch user matches for stats
@@ -27,54 +18,6 @@ export default function Profile() {
     queryKey: ['/api/matches'],
     retry: false,
   });
-
-  // Update profile mutation
-  const updateProfileMutation = useMutation({
-    mutationFn: async (data: any) => {
-      await apiRequest('PUT', '/api/profile', data);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
-      toast({
-        title: "Erfolg",
-        description: "Profil wurde aktualisiert",
-      });
-    },
-    onError: (error) => {
-      if (isUnauthorizedError(error as Error)) {
-        toast({
-          title: "Unauthorized",
-          description: "Du bist nicht mehr angemeldet. Leite weiter...",
-          variant: "destructive",
-        });
-        setTimeout(() => {
-          window.location.href = "/api/login";
-        }, 500);
-        return;
-      }
-      toast({
-        title: "Fehler",
-        description: "Profil konnte nicht aktualisiert werden",
-        variant: "destructive",
-      });
-    },
-  });
-
-  const form = useForm({
-    resolver: zodResolver(updateProfileSchema),
-    defaultValues: {
-      firstName: user?.firstName || '',
-      lastName: user?.lastName || '',
-      age: user?.age || 18,
-      bio: user?.bio || '',
-      location: user?.location || '',
-      interests: user?.interests || [],
-    },
-  });
-
-  const onSubmit = (data: any) => {
-    updateProfileMutation.mutate(data);
-  };
 
   if (authLoading) {
     return (
@@ -96,13 +39,15 @@ export default function Profile() {
           {/* Cover Photo */}
           <div className="h-48 bg-gradient-to-r from-[#FF007F]/20 to-purple-500/20" />
           
+          {/* Single Edit Button - Top Right */}
           <Button
             variant="secondary"
             size="sm"
             className="absolute top-4 right-4 rounded-full"
             onClick={() => navigate('/profile/edit')}
           >
-            <Edit className="w-4 h-4" />
+            <Edit className="w-4 h-4 mr-2" />
+            Bearbeiten
           </Button>
 
           {/* Profile Picture */}
@@ -125,135 +70,153 @@ export default function Profile() {
           {/* Profile Info */}
           <div className="flex justify-between items-start mb-4">
             <div>
-              <h2 className="text-2xl font-bold">{displayName}{userAge}</h2>
-              <p className="text-muted-foreground">
-                <MapPin className="w-4 h-4 inline mr-1" />
-                {user?.location || 'Standort nicht angegeben'}
-              </p>
-            </div>
-            {user?.isPremium && (
-              <Badge className="bg-[#FF007F]/20 text-[#FF007F] hover:bg-[#FF007F]/30">
-                <Crown className="w-3 h-3 mr-1" />
-                Premium
-              </Badge>
-            )}
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-[#FF007F]">{matches.length}</div>
-              <div className="text-xs text-muted-foreground">Matches</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-[#FF007F]">{mutualMatches.length}</div>
-              <div className="text-xs text-muted-foreground">Chats</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-[#FF007F]">4.8</div>
-              <div className="text-xs text-muted-foreground">Bewertung</div>
-            </div>
-          </div>
-
-          {/* Bio */}
-          <div className="mb-6">
-            <h3 className="font-semibold mb-2">Über mich</h3>
-            <p className="text-sm text-muted-foreground">
-              {user?.bio || 'Noch keine Beschreibung hinzugefügt.'}
-            </p>
-          </div>
-
-          {/* Interests */}
-          <div className="mb-6">
-            <h3 className="font-semibold mb-2">Interessen</h3>
-            <div className="flex flex-wrap gap-2">
-              {user?.interests && user.interests.length > 0 ? (
-                user.interests.map((interest: string, index: number) => (
-                  <Badge key={index} variant="secondary">
-                    {interest}
-                  </Badge>
-                ))
-              ) : (
-                <p className="text-sm text-muted-foreground">Keine Interessen angegeben.</p>
+              <h1 className="text-2xl font-bold flex items-center gap-2">
+                {displayName}{userAge}
+                {user?.isPremium && (
+                  <Crown className="w-5 h-5 text-yellow-500" />
+                )}
+              </h1>
+              {user?.location && (
+                <p className="text-muted-foreground flex items-center gap-1 mt-1">
+                  <MapPin className="w-4 h-4" />
+                  {user.location}
+                </p>
               )}
             </div>
           </div>
 
+          {/* Bio */}
+          {user?.bio && (
+            <div className="mb-6">
+              <h3 className="font-semibold mb-2">Über mich</h3>
+              <p className="text-muted-foreground">{user.bio}</p>
+            </div>
+          )}
+
+          {/* Trans Escort Specific Info */}
+          {user?.userType === 'trans' && (
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              {/* Physical Details */}
+              {(user.height || user.weight || user.cockSize) && (
+                <Card>
+                  <CardContent className="p-4">
+                    <h4 className="font-medium mb-3 flex items-center gap-2">
+                      <Heart className="w-4 h-4 text-[#FF007F]" />
+                      Körperliche Details
+                    </h4>
+                    <div className="space-y-2 text-sm">
+                      {user.height && (
+                        <div>Größe: {user.height} cm</div>
+                      )}
+                      {user.weight && (
+                        <div>Gewicht: {user.weight} kg</div>
+                      )}
+                      {user.cockSize && (
+                        <div>Schwanzgröße: {user.cockSize} cm</div>
+                      )}
+                      {user.circumcision && (
+                        <div>Beschneidung: {user.circumcision}</div>
+                      )}
+                      {user.position && (
+                        <div>Position: {user.position}</div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Services & Pricing */}
+              {(user.services?.length > 0 || user.hourlyRate) && (
+                <Card>
+                  <CardContent className="p-4">
+                    <h4 className="font-medium mb-3 flex items-center gap-2">
+                      <Star className="w-4 h-4 text-[#FF007F]" />
+                      Services & Preise
+                    </h4>
+                    <div className="space-y-2 text-sm">
+                      {user.hourlyRate && (
+                        <div className="font-medium text-[#FF007F]">
+                          {user.hourlyRate}€ / Stunde
+                        </div>
+                      )}
+                      {user.services && user.services.length > 0 && (
+                        <div>
+                          <div className="text-xs text-muted-foreground mb-1">Services:</div>
+                          <div className="flex flex-wrap gap-1">
+                            {user.services.slice(0, 3).map((service: string, idx: number) => (
+                              <Badge key={`${service}-${idx}`} variant="secondary" className="text-xs">
+                                {service}
+                              </Badge>
+                            ))}
+                            {user.services && user.services.length > 3 && (
+                              <Badge variant="secondary" className="text-xs">
+                                +{user.services.length - 3} mehr
+                              </Badge>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
+
+          {/* Interests */}
+          {user?.interests && user.interests.length > 0 && (
+            <div className="mb-6">
+              <h3 className="font-semibold mb-3">Interessen</h3>
+              <div className="flex flex-wrap gap-2">
+                {user.interests.map((interest: string, index: number) => (
+                  <Badge key={index} variant="outline">
+                    {interest}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Stats */}
+          <div className="grid grid-cols-3 gap-4 mt-6 pt-4 border-t">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-[#FF007F]">
+                {matches.length}
+              </div>
+              <div className="text-sm text-muted-foreground">Matches</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-[#FF007F]">
+                {mutualMatches.length}
+              </div>
+              <div className="text-sm text-muted-foreground">Gegenseitig</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-[#FF007F]">
+                {user?.profileImages?.length || 0}
+              </div>
+              <div className="text-sm text-muted-foreground">Fotos</div>
+            </div>
+          </div>
+
           {/* Action Buttons */}
-          <div className="flex space-x-3">
+          <div className="flex gap-3 mt-6">
             <Button 
-              className="flex-1 bg-[#FF007F] hover:bg-[#FF007F]/90"
-              onClick={() => {
-                // Navigate to edit profile
-                console.log('Edit profile');
-              }}
+              onClick={() => navigate('/profile/edit')} 
+              className="flex-1 bg-[#FF007F] hover:bg-[#E6006B]"
             >
+              <Edit className="w-4 h-4 mr-2" />
               Profil bearbeiten
             </Button>
-            <Button variant="outline" size="sm">
-              <Edit className="w-4 h-4" />
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/settings')}
+              className="flex-1"
+            >
+              <Settings className="w-4 h-4 mr-2" />
+              Einstellungen
             </Button>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Profile Edit Form (could be in a modal) */}
-      <Card className="mt-6">
-        <CardContent className="p-6">
-          <h3 className="font-semibold mb-4">Profil bearbeiten</h3>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="text-sm font-medium">Vorname</label>
-                <Input
-                  {...form.register('firstName')}
-                  placeholder="Vorname"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Nachname</label>
-                <Input
-                  {...form.register('lastName')}
-                  placeholder="Nachname"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Alter</label>
-              <Input
-                type="number"
-                {...form.register('age', { valueAsNumber: true })}
-                min={18}
-                max={100}
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Standort</label>
-              <Input
-                {...form.register('location')}
-                placeholder="Berlin, Deutschland"
-              />
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Über mich</label>
-              <Textarea
-                {...form.register('bio')}
-                placeholder="Erzähle etwas über dich..."
-                maxLength={500}
-              />
-            </div>
-
-            <Button 
-              type="submit" 
-              className="w-full bg-[#FF007F] hover:bg-[#FF007F]/90"
-              disabled={updateProfileMutation.isPending}
-            >
-              {updateProfileMutation.isPending ? 'Speichern...' : 'Profil speichern'}
-            </Button>
-          </form>
         </CardContent>
       </Card>
     </div>
