@@ -461,13 +461,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       try {
         const message = JSON.parse(data.toString());
         
-        if (message.type === 'auth' && message.userId) {
+        if (message.type === 'identify' && message.userId) {
           userId = message.userId as string;
           connectedClients.set(ws, userId);
-          await storage.updateUserOnlineStatus(userId, true);
           
-          console.log(`User ${userId} connected via WebSocket`);
-          ws.send(JSON.stringify({ type: 'auth_success' }));
+          console.log(`User ${userId} identified via WebSocket`);
+          console.log(`Total connected clients: ${connectedClients.size}`);
+          ws.send(JSON.stringify({ type: 'identify_success' }));
         } else if (message.type === 'message' && userId) {
           // Handle real-time message
           const newMessage = await storage.sendMessage(userId, {

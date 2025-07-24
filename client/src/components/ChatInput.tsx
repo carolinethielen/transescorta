@@ -65,8 +65,8 @@ export function ChatInput({
   };
 
   return (
-    <div className="fixed bottom-16 left-0 right-0 max-w-full p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 z-50">
-      <div className="flex items-center space-x-2 max-w-full">
+    <div className="fixed bottom-16 left-0 right-0 p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 z-50">
+      <div className="flex items-center space-x-2 max-w-full mx-auto" style={{ maxWidth: 'calc(100vw - 2rem)' }}>
         {/* Attachment Button */}
         <Dialog open={showAttachments} onOpenChange={setShowAttachments}>
           <DialogTrigger asChild>

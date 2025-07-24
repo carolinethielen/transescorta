@@ -177,8 +177,14 @@ export default function ChatMainNew() {
       const socket = new WebSocket(wsUrl);
       
       socket.onopen = () => {
-        console.log('WebSocket connected');
+        console.log('WebSocket connected successfully');
         setWs(socket);
+        
+        // Send user identification to server
+        socket.send(JSON.stringify({
+          type: 'identify',
+          userId: user.id
+        }));
       };
 
       socket.onmessage = (event) => {
@@ -469,7 +475,7 @@ export default function ChatMainNew() {
       {/* Messages Area - Fixed height, only scroll when needed */}
       <div className="flex-1 bg-gray-50 dark:bg-gray-900 overflow-hidden" style={{ height: 'calc(100vh - 200px)' }}>
         <div className="h-full overflow-y-auto">
-          <div className="p-4 pb-4 flex flex-col justify-end min-h-full">
+          <div className="p-4 pb-4 flex flex-col justify-start min-h-full">
             {messagesLoading ? (
               <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
@@ -483,14 +489,16 @@ export default function ChatMainNew() {
                 ))}
               </div>
             ) : messages.length === 0 ? (
-              <div className="text-center py-8">
-                <p className="text-muted-foreground">Noch keine Nachrichten</p>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Schreibe die erste Nachricht!
-                </p>
+              <div className="text-center py-8 flex-1 flex items-center justify-center">
+                <div>
+                  <p className="text-muted-foreground">Noch keine Nachrichten</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Schreibe die erste Nachricht!
+                  </p>
+                </div>
               </div>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-2 flex-1 flex flex-col justify-end">
                 {messages.map((message, index) => {
                   const isFromMe = message.senderId === user.id;
                   const showAvatar = !isFromMe && (index === 0 || messages[index - 1]?.senderId !== message.senderId);
