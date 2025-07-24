@@ -57,6 +57,7 @@ function Router() {
       )}
       
       {/* Profile viewing - accessible but may require auth for contact */}
+      <Route path="/profile/:userId" component={ProfileDetailFixed} />
       <Route path="/profile" component={ProfileDetailFixed} />
       <Route path="/explore" component={Explore} />
       <Route component={NotFound} />

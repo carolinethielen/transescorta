@@ -12,14 +12,18 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 
 export default function ProfileDetailFixed() {
-  const { userId } = useParams();
-  const [, navigate] = useLocation();
+  const [location, navigate] = useLocation();
   const { user: currentUser } = useAuth();
   const { toast } = useToast();
+  
+  // Get user ID from URL params (either /profile/:userId or /profile?id=userId)
+  const { userId } = useParams();
+  const urlParams = new URLSearchParams(location.split('?')[1] || '');
+  const profileId = userId || urlParams.get('id');
 
   const { data: user, isLoading } = useQuery<User>({
-    queryKey: ['/api/users', userId],
-    enabled: !!userId,
+    queryKey: ['/api/users', profileId],
+    enabled: !!profileId,
   });
 
   const handleContactEscort = () => {
@@ -34,7 +38,7 @@ export default function ProfileDetailFixed() {
       }, 1000);
       return;
     }
-    navigate(`/chat?user=${userId}`);
+    navigate(`/chat?user=${profileId}`);
     toast({
       title: "Chat wird geöffnet",
       description: `Du startest eine Unterhaltung mit ${user?.firstName || 'diesem Escort'}`,
@@ -83,7 +87,7 @@ export default function ProfileDetailFixed() {
           </Button>
 
           {/* Contact Button - Top Right (only for other profiles) */}
-          {currentUser && user.id !== currentUser.id && (
+          {currentUser && user && user.id !== currentUser.id && (
             <Button
               className="absolute top-4 right-4 rounded-full bg-[#FF007F] hover:bg-[#FF007F]/90 z-10"
               size="sm"
