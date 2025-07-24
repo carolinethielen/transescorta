@@ -37,10 +37,9 @@ export function LocationSelector({ selectedLocation, onLocationChange }: Locatio
 
   const handleUseCurrentLocation = () => {
     getCurrentLocation();
-    if (coordinates) {
-      onLocationChange('Mein Standort', { lat: coordinates.latitude, lon: coordinates.longitude });
-      setIsOpen(false);
-    }
+    // Pass a special flag to indicate GPS location is being used
+    onLocationChange('Aktuellen Standort verwenden');
+    setIsOpen(false);
   };
 
   const handleCitySelect = (cityName: string) => {

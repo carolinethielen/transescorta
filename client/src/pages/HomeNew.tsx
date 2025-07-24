@@ -44,15 +44,15 @@ export default function Home() {
 
   // Auto-set user coordinates and location when GPS location is available
   useEffect(() => {
-    if (coordinates && !userCoordinates) {
+    if (coordinates && currentCity) {
       setUserCoordinates({ lat: coordinates.latitude, lon: coordinates.longitude });
       
-      // Update location to show detected city if using "Mein Standort"
-      if (selectedLocation === 'Mein Standort' && currentCity) {
+      // Always update location to show detected city when GPS is used
+      if (selectedLocation === 'Mein Standort' || selectedLocation === 'Aktuellen Standort verwenden' || selectedLocation === 'Standort wird ermittelt...') {
         setSelectedLocation(currentCity);
       }
     }
-  }, [coordinates, currentCity, userCoordinates, selectedLocation]);
+  }, [coordinates, currentCity, selectedLocation]);
 
   // Fetch escorts based on authentication status
   const { data: rawUsers = [], isLoading, error } = useQuery({
@@ -120,9 +120,26 @@ export default function Home() {
 
   // Handle location change
   const handleLocationChange = (location: string, coordinates?: { lat: number; lon: number }) => {
-    setSelectedLocation(location);
-    if (coordinates) {
-      setUserCoordinates(coordinates);
+    console.log('HomeNew - Location changed to:', location, 'with coordinates:', coordinates);
+    
+    // If "Aktuellen Standort verwenden" was clicked, use GPS location
+    if (location === 'Aktuellen Standort verwenden' && currentCity) {
+      setSelectedLocation(currentCity);
+      if (coordinates) {
+        setUserCoordinates(coordinates);
+      }
+    } else if (location === 'Aktuellen Standort verwenden' && !currentCity) {
+      // GPS is being used but city not detected yet
+      setSelectedLocation('Standort wird ermittelt...');
+      if (coordinates) {
+        setUserCoordinates(coordinates);
+      }
+    } else {
+      // Manual location selection
+      setSelectedLocation(location);
+      if (coordinates) {
+        setUserCoordinates(coordinates);
+      }
     }
   };
 
