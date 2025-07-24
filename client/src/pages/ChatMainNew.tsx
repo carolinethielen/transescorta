@@ -15,13 +15,29 @@ import { ChatInput } from '@/components/ChatInput';
 import { ChatBubble } from '@/components/ChatBubble';
 import type { Message, User, ChatRoom } from '@shared/schema';
 
-// Audio notification for new messages
+// Audio notification for new messages - WhatsApp-style tone
 const playNotificationSound = () => {
   try {
-    const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmMcBDuY3PbDeSgFKn7L8diMOQgXZLjr55NBDR5Mp+PtwPBWFApEp+DysFQ');
-    audio.volume = 0.3;
-    audio.play().catch(() => {});
-  } catch {}
+    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    // WhatsApp-like notification tone
+    oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+    oscillator.frequency.setValueAtTime(1000, audioContext.currentTime + 0.1);
+    oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.2);
+    
+    gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+    
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + 0.3);
+  } catch (error) {
+    console.error('Error playing notification sound:', error);
+  }
 };
 
 export default function ChatMainNew() {
@@ -121,11 +137,19 @@ export default function ChatMainNew() {
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/chat', selectedChatUserId, 'messages'] });
+      // Immediate refresh of current chat messages
+      if (selectedChatUserId) {
+        queryClient.invalidateQueries({ queryKey: ['/api/chat', selectedChatUserId, 'messages'] });
+        queryClient.refetchQueries({ queryKey: ['/api/chat', selectedChatUserId, 'messages'] });
+      }
+      
+      // Refresh chat rooms and unread count
       queryClient.invalidateQueries({ queryKey: ['/api/chat/rooms'] });
       queryClient.invalidateQueries({ queryKey: ['/api/chat/unread-count'] });
+      
+      // Clear input and scroll
       setMessageText('');
-      scrollToBottom();
+      setTimeout(scrollToBottom, 100);
     },
     onError: (error) => {
       console.error('Send message error:', error);
@@ -156,19 +180,25 @@ export default function ChatMainNew() {
         try {
           const data = JSON.parse(event.data);
           if (data.type === 'new_message') {
-            // Immediate refresh for current chat
-            if (selectedChatUserId) {
+            console.log('New message received:', data);
+            
+            // Immediately refetch messages for current chat
+            if (selectedChatUserId && data.message) {
               queryClient.invalidateQueries({ queryKey: ['/api/chat', selectedChatUserId, 'messages'] });
+              queryClient.refetchQueries({ queryKey: ['/api/chat', selectedChatUserId, 'messages'] });
             }
+            
             // Refresh chat rooms and unread count
             queryClient.invalidateQueries({ queryKey: ['/api/chat/rooms'] });
             queryClient.invalidateQueries({ queryKey: ['/api/chat/unread-count'] });
+            queryClient.refetchQueries({ queryKey: ['/api/chat/rooms'] });
+            queryClient.refetchQueries({ queryKey: ['/api/chat/unread-count'] });
             
             // Play notification sound
             playNotificationSound();
             
             // Auto-scroll to bottom
-            setTimeout(scrollToBottom, 100);
+            setTimeout(scrollToBottom, 200);
           }
         } catch (e) {
           console.error('WebSocket message parsing error:', e);
@@ -389,7 +419,7 @@ export default function ChatMainNew() {
 
   // Show full-screen chat when a contact is selected (WhatsApp-style)
   return (
-    <div className="flex flex-col h-screen bg-background overflow-hidden">
+    <div className="flex flex-col h-screen bg-background relative overflow-hidden">
       {/* Chat Header - No call/video/menu buttons */}
       <div className="p-4 border-b bg-card">
         <div className="flex items-center space-x-3">
@@ -428,10 +458,10 @@ export default function ChatMainNew() {
         </div>
       </div>
 
-      {/* Messages Area - Takes up remaining space above input */}
-      <div className="flex-1 overflow-hidden bg-gray-50 dark:bg-gray-900">
+      {/* Messages Area - Fixed height with proper spacing for input */}
+      <div className="flex-1 overflow-hidden bg-gray-50 dark:bg-gray-900" style={{ height: 'calc(100vh - 140px)' }}>
         <ScrollArea className="h-full">
-          <div className="p-4 pb-24">
+          <div className="p-4 pb-4">
             {messagesLoading ? (
               <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
