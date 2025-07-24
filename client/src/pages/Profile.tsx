@@ -57,6 +57,10 @@ export default function Profile() {
                 src={user.profileImageUrl}
                 alt="Profilbild"
                 className="w-24 h-24 rounded-full border-4 border-background object-cover"
+                onError={(e) => {
+                  console.log('Profile image failed to load:', user.profileImageUrl);
+                  e.currentTarget.style.display = 'none';
+                }}
               />
             ) : (
               <div className="w-24 h-24 rounded-full border-4 border-background">

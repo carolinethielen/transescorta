@@ -1,306 +1,258 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useLocation } from 'wouter';
+import { useParams } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { type User } from '@shared/schema';
+import { MapPin, MessageCircle, Crown, Heart, Star, ArrowLeft } from 'lucide-react';
+import { PlaceholderImage } from '@/components/PlaceholderImage';
+import { useLocation } from 'wouter';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { 
-  ArrowLeft, 
-  MapPin, 
-  Crown, 
-  MessageCircle, 
-  Heart,
-  Clock,
-  User,
-  Ruler,
-  Weight,
-  Target,
-  Globe,
-  ChevronLeft,
-  ChevronRight,
-  Image as ImageIcon
-} from 'lucide-react';
-import type { User as UserType } from '@shared/schema';
 
 export default function ProfileDetailFixed() {
+  const { userId } = useParams();
   const [, navigate] = useLocation();
-  const { user } = useAuth();
+  const { user: currentUser } = useAuth();
   const { toast } = useToast();
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  
-  // Extract user ID from URL
-  const profileId = new URLSearchParams(window.location.search).get('id');
-  
-  const { data: profile, isLoading, error } = useQuery<UserType>({
-    queryKey: [`/api/users/${profileId}`],
-    enabled: !!profileId,
-    retry: 1,
+
+  const { data: user, isLoading } = useQuery<User>({
+    queryKey: ['/api/users', userId],
+    enabled: !!userId,
   });
 
-  // Prepare image gallery
-  const profileImages = profile?.profileImageUrl 
-    ? [profile.profileImageUrl]
-    : ['https://images.unsplash.com/photo-1494790108755-2616b612b977?w=400'];
-
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % profileImages.length);
-  };
-
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + profileImages.length) % profileImages.length);
-  };
-
   const handleContactEscort = () => {
-    if (!user) {
+    if (!currentUser) {
       toast({
         title: "Anmeldung erforderlich",
         description: "Du musst dich anmelden, um Escorts zu kontaktieren",
         variant: "destructive",
       });
       setTimeout(() => {
-        navigate("/login");
+        navigate("/select-type");
       }, 1000);
       return;
     }
-    
-    navigate(`/chat?user=${profileId}`);
+    navigate(`/chat?user=${userId}`);
     toast({
       title: "Chat wird geöffnet",
-      description: `Du startest eine Unterhaltung mit ${profile?.firstName || 'diesem Escort'}`,
+      description: `Du startest eine Unterhaltung mit ${user?.firstName || 'diesem Escort'}`,
     });
-  };
-
-  const handleBack = () => {
-    navigate('/');
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="h-screen flex items-center justify-center">
         <div className="animate-spin w-8 h-8 border-4 border-[#FF007F] border-t-transparent rounded-full" />
       </div>
     );
   }
 
-  if (!profile) {
+  if (!user) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-xl font-semibold mb-2">Profil nicht gefunden</h2>
-          <Button onClick={handleBack}>Zurück zur Übersicht</Button>
+          <Button onClick={() => navigate('/')}>Zurück zur Startseite</Button>
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border bg-background sticky top-0 z-10">
-        <Button 
-          variant="ghost" 
-          size="sm"
-          onClick={handleBack}
-          className="flex items-center gap-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Zurück
-        </Button>
-        <h1 className="text-lg font-semibold">Profil</h1>
-        <div className="w-16" />
-      </div>
+  const displayName = user.firstName || 'Anonymer Nutzer';
+  const userAge = user.age ? `, ${user.age}` : '';
 
-      <div className="max-w-2xl mx-auto p-4 space-y-6">
-        {/* Profile Image */}
-        <Card>
-          <CardContent className="p-0">
-            <div className="relative h-96 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden">
-              <img
-                src={profileImages[currentImageIndex]}
-                alt={`${profile.firstName || 'Escort'} - Profilbild`}
-                className="w-full h-full object-cover"
+  return (
+    <div className="min-h-screen bg-background p-4">
+      <Card className="overflow-hidden">
+        {/* Profile Header */}
+        <div className="relative">
+          {/* Cover Photo */}
+          <div className="h-48 bg-gradient-to-r from-[#FF007F]/20 to-purple-500/20" />
+          
+          {/* Back Button - Top Left */}
+          <Button
+            variant="secondary"
+            size="sm"
+            className="absolute top-4 left-4 rounded-full z-10"
+            onClick={() => navigate('/')}
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Zurück
+          </Button>
+
+          {/* Contact Button - Top Right (only for other profiles) */}
+          {currentUser && user.id !== currentUser.id && (
+            <Button
+              className="absolute top-4 right-4 rounded-full bg-[#FF007F] hover:bg-[#FF007F]/90 z-10"
+              size="sm"
+              onClick={handleContactEscort}
+            >
+              <MessageCircle className="w-4 h-4 mr-2" />
+              Kontakt
+            </Button>
+          )}
+
+          {/* Profile Picture */}
+          <div className="absolute -bottom-12 left-4">
+            {user.profileImageUrl ? (
+              <img 
+                src={user.profileImageUrl}
+                alt="Profilbild"
+                className="w-24 h-24 rounded-full border-4 border-background object-cover"
                 onError={(e) => {
-                  e.currentTarget.src = 'https://images.unsplash.com/photo-1494790108755-2616b612b977?w=400';
+                  console.log('Profile image failed to load:', user.profileImageUrl);
+                  e.currentTarget.style.display = 'none';
+                  // Show placeholder instead
+                  const placeholder = e.currentTarget.nextElementSibling as HTMLElement;
+                  if (placeholder) placeholder.style.display = 'block';
                 }}
               />
-              
-              {/* Status Badges */}
-              {profile.isPremium && (
-                <div className="absolute top-4 right-4">
-                  <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black flex items-center gap-1">
-                    <Crown className="w-3 h-3" />
-                    Premium
-                  </Badge>
-                </div>
-              )}
-              {profile.isOnline && (
-                <div className="absolute top-4 left-4">
-                  <Badge className="bg-green-500 text-white flex items-center gap-1">
-                    <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-                    Online
-                  </Badge>
-                </div>
+            ) : (
+              <div className="w-24 h-24 rounded-full border-4 border-background">
+                <PlaceholderImage size="lg" userType={user.userType || 'trans'} />
+              </div>
+            )}
+            {/* Hidden placeholder as fallback */}
+            {user.profileImageUrl && (
+              <div className="w-24 h-24 rounded-full border-4 border-background" style={{ display: 'none' }}>
+                <PlaceholderImage size="lg" userType={user.userType || 'trans'} />
+              </div>
+            )}
+          </div>
+        </div>
+
+        <CardContent className="pt-16 pb-6 px-6">
+          {/* Profile Info */}
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <h1 className="text-2xl font-bold flex items-center gap-2">
+                {displayName}{userAge}
+                {user.isPremium && (
+                  <Crown className="w-5 h-5 text-yellow-500" />
+                )}
+              </h1>
+              {user.location && (
+                <p className="text-muted-foreground flex items-center gap-1 mt-1">
+                  <MapPin className="w-4 h-4" />
+                  {user.location}
+                </p>
               )}
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Profile Information */}
-        <Card>
-          <CardContent className="p-6">
-            <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold mb-2">
-                {profile.firstName} {profile.lastName || ''}
-              </h2>
-              
-              <div className="flex items-center justify-center gap-4 text-muted-foreground mb-4">
-                {profile.age && (
-                  <div className="flex items-center gap-1">
-                    <User className="w-4 h-4" />
-                    {profile.age} Jahre
-                  </div>
-                )}
-                {profile.location && (
-                  <div className="flex items-center gap-1">
-                    <MapPin className="w-4 h-4" />
-                    {profile.location}
-                  </div>
-                )}
-              </div>
-              
-              <div className="space-y-3">
-                <Button
-                  onClick={handleContactEscort}
-                  className="w-full bg-[#FF007F] hover:bg-[#FF007F]/90 text-white"
-                  size="lg"
-                >
-                  <MessageCircle className="w-4 h-4 mr-2" />
-                  Jetzt kontaktieren
-                </Button>
-                
-                <Button variant="outline" className="w-full" size="lg">
-                  <Heart className="w-4 h-4 mr-2" />
-                  Zu Favoriten
-                </Button>
-              </div>
+          {/* Bio */}
+          {user.bio && (
+            <div className="mb-6">
+              <h3 className="font-semibold mb-2">Über mich</h3>
+              <p className="text-muted-foreground">{user.bio}</p>
             </div>
-          </CardContent>
-        </Card>
+          )}
 
-        {/* Bio Section */}
-        {profile.bio && (
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="text-lg font-semibold mb-3">Über mich</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                {profile.bio}
-              </p>
-            </CardContent>
-          </Card>
-        )}
+          {/* Trans Escort Specific Info */}
+          {user.userType === 'trans' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              {/* Physical Details */}
+              <Card>
+                <CardContent className="p-4">
+                  <h4 className="font-medium mb-3 flex items-center gap-2">
+                    <Heart className="w-4 h-4 text-[#FF007F]" />
+                    Körperliche Details
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    {user.height && (
+                      <div>Größe: {user.height} cm</div>
+                    )}
+                    {user.weight && (
+                      <div>Gewicht: {user.weight} kg</div>
+                    )}
+                    {user.bodyType && (
+                      <div>Körpertyp: {user.bodyType}</div>
+                    )}
+                    {user.ethnicity && (
+                      <div>Ethnizität: {user.ethnicity}</div>
+                    )}
+                    {user.cockSize && (
+                      <div>Schwanzgröße: {user.cockSize} cm</div>
+                    )}
+                    {user.circumcision && (
+                      <div>Beschneidung: {user.circumcision}</div>
+                    )}
+                    {user.position && (
+                      <div>Position: {user.position}</div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
 
-        {/* Services */}
-        {profile.services && profile.services.length > 0 && (
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="text-lg font-semibold mb-3">Services</h3>
-              <div className="flex flex-wrap gap-2">
-                {profile.services.map((service, index) => (
-                  <Badge key={index} variant="secondary" className="text-sm">
-                    {service}
-                  </Badge>
+              {/* Services & Pricing */}
+              <Card>
+                <CardContent className="p-4">
+                  <h4 className="font-medium mb-3 flex items-center gap-2">
+                    <Star className="w-4 h-4 text-[#FF007F]" />
+                    Services & Preise
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    {user.hourlyRate && (
+                      <div className="font-medium text-[#FF007F] text-lg">
+                        {user.hourlyRate}€ / Stunde
+                      </div>
+                    )}
+                    {user.services && user.services.length > 0 && (
+                      <div>
+                        <div className="text-xs text-muted-foreground mb-2">Services:</div>
+                        <div className="flex flex-wrap gap-1">
+                          {user.services.map((service: string, idx: number) => (
+                            <Badge key={`${service}-${idx}`} variant="secondary" className="text-xs">
+                              {service}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* Additional Images Gallery */}
+          {user.profileImages && user.profileImages.length > 0 && (
+            <div className="mb-6">
+              <h3 className="font-semibold mb-3">Weitere Bilder</h3>
+              <div className="grid grid-cols-3 gap-2">
+                {user.profileImages.map((imageUrl: string, index: number) => (
+                  <img
+                    key={index}
+                    src={imageUrl}
+                    alt={`Zusatzbild ${index + 1}`}
+                    className="w-full aspect-square object-cover rounded-lg border border-gray-200"
+                    onError={(e) => {
+                      console.log('Gallery image failed to load:', imageUrl);
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
                 ))}
               </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Details */}
-        <Card>
-          <CardContent className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Details</h3>
-            <div className="grid grid-cols-2 gap-4">
-              {profile.height && (
-                <div className="flex items-center gap-2">
-                  <Ruler className="w-4 h-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Größe</p>
-                    <p className="font-medium">{profile.height} cm</p>
-                  </div>
-                </div>
-              )}
-              
-              {profile.weight && (
-                <div className="flex items-center gap-2">
-                  <Weight className="w-4 h-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Gewicht</p>
-                    <p className="font-medium">{profile.weight} kg</p>
-                  </div>
-                </div>
-              )}
-              
-              {profile.bodyType && (
-                <div className="flex items-center gap-2">
-                  <User className="w-4 h-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Körpertyp</p>
-                    <p className="font-medium">{profile.bodyType}</p>
-                  </div>
-                </div>
-              )}
-              
-              {profile.ethnicity && (
-                <div className="flex items-center gap-2">
-                  <Globe className="w-4 h-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Herkunft</p>
-                    <p className="font-medium">{profile.ethnicity}</p>
-                  </div>
-                </div>
-              )}
-              
-              {profile.position && (
-                <div className="flex items-center gap-2">
-                  <Target className="w-4 h-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Position</p>
-                    <p className="font-medium capitalize">{profile.position}</p>
-                  </div>
-                </div>
-              )}
-              
-              {profile.hourlyRate && (
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4 text-muted-foreground" />
-                  <div>
-                    <p className="text-sm text-muted-foreground">Stundensatz</p>
-                    <p className="font-medium">{profile.hourlyRate}€</p>
-                  </div>
-                </div>
-              )}
             </div>
-          </CardContent>
-        </Card>
+          )}
 
-        {/* Interests */}
-        {profile.interests && profile.interests.length > 0 && (
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="text-lg font-semibold mb-3">Interessen</h3>
+          {/* Interests */}
+          {user.interests && user.interests.length > 0 && (
+            <div className="mb-6">
+              <h3 className="font-semibold mb-3">Interessen</h3>
               <div className="flex flex-wrap gap-2">
-                {profile.interests.map((interest, index) => (
-                  <Badge key={index} variant="outline" className="text-sm">
+                {user.interests.map((interest: string, index: number) => (
+                  <Badge key={index} variant="outline">
                     {interest}
                   </Badge>
                 ))}
               </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
