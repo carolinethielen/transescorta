@@ -26,9 +26,8 @@ export function ProfileCard({ user, onClick }: ProfileCardProps) {
         </div>
       )}
       
-      {user.isOnline && (
-        <div className="absolute top-2 right-2 w-3 h-3 bg-green-500 rounded-full border-2 border-white z-10" />
-      )}
+      {/* Always show online indicator - all users are considered online */}
+      <div className="absolute top-2 right-2 w-3 h-3 bg-green-500 rounded-full border-2 border-white z-10" />
       
       <div className="aspect-[3/4] bg-muted">
         {user.profileImageUrl ? (

@@ -137,19 +137,24 @@ export default function ChatMainNew() {
       }
     },
     onSuccess: () => {
-      // Immediate refresh of current chat messages
+      // Immediate optimistic update - add message to local state
       if (selectedChatUserId) {
         queryClient.invalidateQueries({ queryKey: ['/api/chat', selectedChatUserId, 'messages'] });
-        queryClient.refetchQueries({ queryKey: ['/api/chat', selectedChatUserId, 'messages'] });
+        
+        // Force immediate refetch
+        queryClient.refetchQueries({ 
+          queryKey: ['/api/chat', selectedChatUserId, 'messages'],
+          type: 'active'
+        });
       }
       
-      // Refresh chat rooms and unread count
+      // Update chat rooms and unread count
       queryClient.invalidateQueries({ queryKey: ['/api/chat/rooms'] });
       queryClient.invalidateQueries({ queryKey: ['/api/chat/unread-count'] });
       
-      // Clear input and scroll
+      // Clear input and scroll immediately
       setMessageText('');
-      setTimeout(scrollToBottom, 100);
+      scrollToBottom();
     },
     onError: (error) => {
       console.error('Send message error:', error);
@@ -182,23 +187,28 @@ export default function ChatMainNew() {
           if (data.type === 'new_message') {
             console.log('New message received:', data);
             
-            // Immediately refetch messages for current chat
-            if (selectedChatUserId && data.message) {
+            // Immediate update for current chat
+            if (selectedChatUserId && (data.senderId === selectedChatUserId || data.receiverId === selectedChatUserId)) {
               queryClient.invalidateQueries({ queryKey: ['/api/chat', selectedChatUserId, 'messages'] });
-              queryClient.refetchQueries({ queryKey: ['/api/chat', selectedChatUserId, 'messages'] });
+              
+              // Force immediate refetch without cache
+              queryClient.refetchQueries({ 
+                queryKey: ['/api/chat', selectedChatUserId, 'messages'],
+                type: 'active'
+              });
             }
             
-            // Refresh chat rooms and unread count
+            // Update chat rooms and unread count
             queryClient.invalidateQueries({ queryKey: ['/api/chat/rooms'] });
             queryClient.invalidateQueries({ queryKey: ['/api/chat/unread-count'] });
-            queryClient.refetchQueries({ queryKey: ['/api/chat/rooms'] });
-            queryClient.refetchQueries({ queryKey: ['/api/chat/unread-count'] });
             
-            // Play notification sound
-            playNotificationSound();
+            // Play notification sound only for received messages
+            if (data.senderId !== user.id) {
+              playNotificationSound();
+            }
             
             // Auto-scroll to bottom
-            setTimeout(scrollToBottom, 200);
+            setTimeout(scrollToBottom, 50);
           }
         } catch (e) {
           console.error('WebSocket message parsing error:', e);
@@ -382,9 +392,8 @@ export default function ChatMainNew() {
                             <h3 className="font-medium truncate">
                               {room.otherUser.firstName} {room.otherUser.lastName}
                             </h3>
-                            {room.otherUser.isOnline && (
-                              <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />
-                            )}
+                            {/* Always show online status */}
+                            <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />
                           </div>
                           {room.lastMessage && room.lastMessage.createdAt && (
                             <span className="text-xs text-muted-foreground">
@@ -446,22 +455,21 @@ export default function ChatMainNew() {
                 <h3 className="font-medium">
                   {chatPartner?.firstName} {chatPartner?.lastName}
                 </h3>
-                {chatPartner?.isOnline && (
-                  <div className="w-2 h-2 bg-green-500 rounded-full" />
-                )}
+                {/* Always show online status */}
+                <div className="w-2 h-2 bg-green-500 rounded-full" />
               </div>
               <p className="text-sm text-muted-foreground">
-                {chatPartner?.isOnline ? 'Online' : 'Zuletzt gesehen'}
+                Online
               </p>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Messages Area - Fixed height with proper spacing for input */}
-      <div className="flex-1 overflow-hidden bg-gray-50 dark:bg-gray-900" style={{ height: 'calc(100vh - 140px)' }}>
-        <ScrollArea className="h-full">
-          <div className="p-4 pb-4">
+      {/* Messages Area - Fixed height, only scroll when needed */}
+      <div className="flex-1 bg-gray-50 dark:bg-gray-900 overflow-hidden" style={{ height: 'calc(100vh - 200px)' }}>
+        <div className="h-full overflow-y-auto">
+          <div className="p-4 pb-4 flex flex-col justify-end min-h-full">
             {messagesLoading ? (
               <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
@@ -522,7 +530,7 @@ export default function ChatMainNew() {
               </div>
             )}
           </div>
-        </ScrollArea>
+        </div>
       </div>
 
       {/* Enhanced Chat Input with Attachments */}

@@ -236,18 +236,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const message = await storage.sendMessage(senderId, messageData);
       console.log(`Message sent from ${senderId} to ${messageData.receiverId}: ${message.content}`);
       
-      // Broadcast to WebSocket clients (both sender and receiver)
+      // Broadcast to WebSocket clients immediately
+      const broadcastData = JSON.stringify({
+        type: 'new_message',
+        message: message,
+        senderId: senderId,
+        receiverId: messageData.receiverId,
+        timestamp: Date.now()
+      });
+      
+      // Send to both sender and receiver for instant updates
       const notifyUsers = [senderId, messageData.receiverId];
+      let broadcastCount = 0;
       for (const [socket, userId] of connectedClients.entries()) {
         if (notifyUsers.includes(userId) && socket.readyState === WebSocket.OPEN) {
-          socket.send(JSON.stringify({
-            type: 'new_message',
-            message: message,
-            senderId: senderId,
-            receiverId: messageData.receiverId
-          }));
+          socket.send(broadcastData);
+          broadcastCount++;
         }
       }
+      console.log(`Message broadcasted to ${broadcastCount} connected clients`);
       
       res.json(message);
     } catch (error) {

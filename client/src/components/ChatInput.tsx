@@ -65,8 +65,8 @@ export function ChatInput({
   };
 
   return (
-    <div className="fixed bottom-16 left-0 right-0 p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 z-50">
-      <div className="flex items-center space-x-2">
+    <div className="fixed bottom-16 left-0 right-0 max-w-full p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 z-50">
+      <div className="flex items-center space-x-2 max-w-full">
         {/* Attachment Button */}
         <Dialog open={showAttachments} onOpenChange={setShowAttachments}>
           <DialogTrigger asChild>
@@ -137,7 +137,7 @@ export function ChatInput({
           onChange={(e) => setMessageText(e.target.value)}
           onKeyPress={handleKeyPress}
           placeholder={placeholder}
-          className="flex-1 border-gray-300 dark:border-gray-600"
+          className="flex-1 min-w-0 border-gray-300 dark:border-gray-600"
           disabled={isLoading}
         />
 
@@ -146,7 +146,7 @@ export function ChatInput({
           onClick={onSendMessage}
           disabled={!messageText.trim() || isLoading}
           size="sm"
-          className="bg-[#FF007F] hover:bg-[#FF007F]/90 text-white"
+          className="bg-[#FF007F] hover:bg-[#FF007F]/90 text-white flex-shrink-0"
         >
           <Send className="w-4 h-4" />
         </Button>
