@@ -194,21 +194,23 @@ export default function ChatMainNew() {
           console.log('🔔 WebSocket message received:', data);
           
           if (data.type === 'new_message') {
-            // Immediate optimistic update for current chat
+            console.log('🔔 Real-time message received instantly:', data);
+            
+            // INSTANT update for current chat - no delay
             if (selectedChatUserId && (data.senderId === selectedChatUserId || data.receiverId === selectedChatUserId)) {
+              // Immediate optimistic update
               queryClient.setQueryData(['/api/chat', selectedChatUserId, 'messages'], (oldMessages: any[] = []) => {
-                // Avoid duplicates
-                if (!oldMessages.find(m => m.id === data.message.id)) {
-                  return [...oldMessages, data.message];
+                const exists = oldMessages.find(m => m.id === data.message.id);
+                if (!exists) {
+                  const updatedMessages = [...oldMessages, data.message];
+                  console.log('💬 Message added to chat instantly');
+                  return updatedMessages;
                 }
                 return oldMessages;
               });
-              
-              // Force refetch for consistency
-              queryClient.refetchQueries({ queryKey: ['/api/chat', selectedChatUserId, 'messages'] });
             }
             
-            // Update chat rooms and unread count
+            // Update other data
             queryClient.invalidateQueries({ queryKey: ['/api/chat/rooms'] });
             queryClient.invalidateQueries({ queryKey: ['/api/chat/unread-count'] });
             
@@ -217,8 +219,8 @@ export default function ChatMainNew() {
               playNotificationSound();
             }
             
-            // Auto-scroll immediately
-            setTimeout(scrollToBottom, 10);
+            // Scroll immediately
+            setTimeout(scrollToBottom, 50);
           }
         } catch (e) {
           console.error('WebSocket message parsing error:', e);
@@ -238,14 +240,23 @@ export default function ChatMainNew() {
     }
   }, [user, queryClient]);
 
-  // Auto-scroll to bottom
+  // Auto-scroll to bottom only when needed
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'auto', block: 'end' });
+    }
   };
 
+  // Only scroll when new messages arrive (not on every render)
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    const container = messagesEndRef.current?.parentElement;
+    if (container && messages.length > 0) {
+      const isScrolledToBottom = container.scrollHeight - container.scrollTop <= container.clientHeight + 50;
+      if (isScrolledToBottom) {
+        setTimeout(scrollToBottom, 100);
+      }
+    }
+  }, [messages.length]);
 
   // Send message handlers
   const handleSendMessage = () => {
@@ -478,8 +489,8 @@ export default function ChatMainNew() {
 
       {/* Messages Area - Fixed height, only scroll when needed */}
       <div className="flex-1 bg-gray-50 dark:bg-gray-900 flex flex-col" style={{ height: 'calc(100vh - 200px)' }}>
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-4 pb-4 min-h-full flex flex-col">
+        <div className="flex-1 overflow-y-auto" ref={messagesEndRef}>
+          <div className="p-4 pb-4 flex flex-col justify-end min-h-full">
             {messagesLoading ? (
               <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
@@ -519,7 +530,7 @@ export default function ChatMainNew() {
                           title: 'Privates Album',
                           coverImage: '/placeholder-album.jpg',
                           imageCount: 0,
-                          accessExpiresAt: message.privateAlbumAccessExpiresAt?.toISOString() || new Date(Date.now() + 24*60*60*1000).toISOString()
+                          accessExpiresAt: (message.privateAlbumAccessExpiresAt || new Date(Date.now() + 24*60*60*1000)).toISOString()
                         } : undefined
                       }}
                       isFromMe={isFromMe}
@@ -538,7 +549,6 @@ export default function ChatMainNew() {
                     />
                   );
                 })}
-                <div ref={messagesEndRef} />
               </div>
             )}
           </div>

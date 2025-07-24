@@ -66,7 +66,7 @@ export function ChatInput({
 
   return (
     <div className="fixed bottom-16 left-0 right-0 p-4 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 z-50">
-      <div className="flex items-center space-x-2 w-full max-w-md mx-auto">
+      <div className="flex items-center space-x-2 w-full max-w-sm mx-auto px-2">
         {/* Attachment Button */}
         <Dialog open={showAttachments} onOpenChange={setShowAttachments}>
           <DialogTrigger asChild>
