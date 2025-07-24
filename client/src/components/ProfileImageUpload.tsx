@@ -10,7 +10,7 @@ interface ProfileImageUploadProps {
   currentImage?: string;
   additionalImages?: string[];
   onImageUpload: (imageUrl: string, isMainImage: boolean) => void;
-  onImageDelete: (imageUrl: string, isMainImage: boolean) => void;
+  onImageDelete: (imageUrl: string) => void;
   maxImages?: number;
   isTransUser?: boolean;
 }
@@ -54,19 +54,17 @@ export function ProfileImageUpload({
     setUploading(true);
 
     try {
-      // Convert to base64 for now (in production, upload to cloud storage)
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const imageUrl = e.target?.result as string;
-        onImageUpload(imageUrl, isMainImage);
-        setUploading(false);
-        
-        toast({
-          title: "Bild hochgeladen",
-          description: isMainImage ? "Profilbild wurde aktualisiert." : "Bild wurde hinzugefügt.",
-        });
-      };
-      reader.readAsDataURL(file);
+      // Compress image before upload
+      const { resizeForProfile, resizeForGallery } = await import('@/utils/imageCompression');
+      const compressedImage = await (isMainImage ? resizeForProfile(file) : resizeForGallery(file));
+      
+      onImageUpload(compressedImage, isMainImage);
+      setUploading(false);
+      
+      toast({
+        title: "Bild hochgeladen",
+        description: isMainImage ? "Profilbild wurde aktualisiert." : "Bild wurde hinzugefügt.",
+      });
     } catch (error) {
       console.error('Upload error:', error);
       toast({
@@ -81,11 +79,11 @@ export function ProfileImageUpload({
     event.target.value = '';
   };
 
-  const handleDeleteImage = (imageUrl: string, isMainImage: boolean) => {
-    onImageDelete(imageUrl, isMainImage);
+  const handleDeleteImage = (imageUrl: string) => {
+    onImageDelete(imageUrl);
     toast({
       title: "Bild gelöscht",
-      description: isMainImage ? "Profilbild wurde entfernt." : "Bild wurde entfernt.",
+      description: "Bild wurde entfernt.",
     });
   };
 
@@ -113,7 +111,7 @@ export function ProfileImageUpload({
                 variant="destructive"
                 size="sm"
                 className="absolute -top-2 -right-2 w-6 h-6 rounded-full p-0"
-                onClick={() => handleDeleteImage(currentImage, true)}
+                onClick={() => handleDeleteImage(currentImage)}
               >
                 <X className="w-3 h-3" />
               </Button>
@@ -187,7 +185,7 @@ export function ProfileImageUpload({
                 variant="destructive"
                 size="sm"
                 className="absolute -top-2 -right-2 w-6 h-6 rounded-full p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={() => handleDeleteImage(imageUrl, false)}
+                onClick={() => handleDeleteImage(imageUrl)}
               >
                 <X className="w-3 h-3" />
               </Button>
