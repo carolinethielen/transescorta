@@ -255,7 +255,11 @@ export default function ProfileEditUnified() {
       profileImages: Array.isArray(profileImages) ? profileImages : []
     };
     
+    console.log('Form values before submit:', form.getValues());
     console.log('Submitting profile data:', submitData);
+    console.log('Profile Image URL:', profileImageUrl);
+    console.log('Profile Images Array:', profileImages);
+    
     updateProfileMutation.mutate(submitData);
   };
 
@@ -295,7 +299,7 @@ export default function ProfileEditUnified() {
                 </CardHeader>
                 <CardContent>
                   <ProfileImageUpload
-                    currentImage={form.watch('profileImageUrl') || user?.profileImageUrl}
+                    currentImage={form.watch('profileImageUrl') || user?.profileImageUrl || ''}
                     additionalImages={form.watch('profileImages') || user?.profileImages || []}
                     onImageUpload={handleImageUpload}
                     onImageDelete={handleImageDelete}
