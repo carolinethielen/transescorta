@@ -136,25 +136,26 @@ export default function ChatMainNew() {
         });
       }
     },
-    onSuccess: () => {
-      // Immediate optimistic update - add message to local state
+    onSuccess: (newMessage) => {
+      // Clear input immediately for instant feedback
+      setMessageText('');
+      
+      // Immediately update messages list with optimistic update
       if (selectedChatUserId) {
-        queryClient.invalidateQueries({ queryKey: ['/api/chat', selectedChatUserId, 'messages'] });
-        
-        // Force immediate refetch
-        queryClient.refetchQueries({ 
-          queryKey: ['/api/chat', selectedChatUserId, 'messages'],
-          type: 'active'
+        queryClient.setQueryData(['/api/chat', selectedChatUserId, 'messages'], (oldMessages: any[] = []) => {
+          return [...oldMessages, newMessage];
         });
+        
+        // Then refetch to ensure consistency
+        queryClient.invalidateQueries({ queryKey: ['/api/chat', selectedChatUserId, 'messages'] });
       }
       
       // Update chat rooms and unread count
       queryClient.invalidateQueries({ queryKey: ['/api/chat/rooms'] });
       queryClient.invalidateQueries({ queryKey: ['/api/chat/unread-count'] });
       
-      // Clear input and scroll immediately
-      setMessageText('');
-      scrollToBottom();
+      // Auto-scroll immediately
+      setTimeout(scrollToBottom, 10);
     },
     onError: (error) => {
       console.error('Send message error:', error);
@@ -190,31 +191,34 @@ export default function ChatMainNew() {
       socket.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
+          console.log('🔔 WebSocket message received:', data);
+          
           if (data.type === 'new_message') {
-            console.log('New message received:', data);
-            
-            // Immediate update for current chat
+            // Immediate optimistic update for current chat
             if (selectedChatUserId && (data.senderId === selectedChatUserId || data.receiverId === selectedChatUserId)) {
-              queryClient.invalidateQueries({ queryKey: ['/api/chat', selectedChatUserId, 'messages'] });
-              
-              // Force immediate refetch without cache
-              queryClient.refetchQueries({ 
-                queryKey: ['/api/chat', selectedChatUserId, 'messages'],
-                type: 'active'
+              queryClient.setQueryData(['/api/chat', selectedChatUserId, 'messages'], (oldMessages: any[] = []) => {
+                // Avoid duplicates
+                if (!oldMessages.find(m => m.id === data.message.id)) {
+                  return [...oldMessages, data.message];
+                }
+                return oldMessages;
               });
+              
+              // Force refetch for consistency
+              queryClient.refetchQueries({ queryKey: ['/api/chat', selectedChatUserId, 'messages'] });
             }
             
             // Update chat rooms and unread count
             queryClient.invalidateQueries({ queryKey: ['/api/chat/rooms'] });
             queryClient.invalidateQueries({ queryKey: ['/api/chat/unread-count'] });
             
-            // Play notification sound only for received messages
+            // Play notification sound for received messages
             if (data.senderId !== user.id) {
               playNotificationSound();
             }
             
-            // Auto-scroll to bottom
-            setTimeout(scrollToBottom, 50);
+            // Auto-scroll immediately
+            setTimeout(scrollToBottom, 10);
           }
         } catch (e) {
           console.error('WebSocket message parsing error:', e);
@@ -473,9 +477,9 @@ export default function ChatMainNew() {
       </div>
 
       {/* Messages Area - Fixed height, only scroll when needed */}
-      <div className="flex-1 bg-gray-50 dark:bg-gray-900 overflow-hidden" style={{ height: 'calc(100vh - 200px)' }}>
-        <div className="h-full overflow-y-auto">
-          <div className="p-4 pb-4 flex flex-col justify-start min-h-full">
+      <div className="flex-1 bg-gray-50 dark:bg-gray-900 flex flex-col" style={{ height: 'calc(100vh - 200px)' }}>
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-4 pb-4 min-h-full flex flex-col">
             {messagesLoading ? (
               <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
@@ -498,7 +502,7 @@ export default function ChatMainNew() {
                 </div>
               </div>
             ) : (
-              <div className="space-y-2 flex-1 flex flex-col justify-end">
+              <div className="space-y-2 flex-1 flex flex-col justify-start">
                 {messages.map((message, index) => {
                   const isFromMe = message.senderId === user.id;
                   const showAvatar = !isFromMe && (index === 0 || messages[index - 1]?.senderId !== message.senderId);
