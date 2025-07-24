@@ -10,7 +10,9 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { ArrowLeft, Send, MessageCircle, User2 } from 'lucide-react';
+import { ArrowLeft, Send, MessageCircle, User2, Download, ExternalLink } from 'lucide-react';
+import { ChatInput } from '@/components/ChatInput';
+import { ChatBubble } from '@/components/ChatBubble';
 import type { Message, User, ChatRoom } from '@shared/schema';
 
 // Audio notification for new messages
@@ -79,12 +81,44 @@ export default function ChatMainNew() {
 
   // Send message mutation
   const sendMessageMutation = useMutation({
-    mutationFn: async ({ receiverId, content }: { receiverId: string; content: string }) => {
-      return await apiRequest('POST', '/api/chat/messages', { 
-        receiverId, 
-        content,
-        messageType: 'text'
-      });
+    mutationFn: async ({ receiverId, content, messageType, imageFile, privateAlbumId }: { 
+      receiverId: string; 
+      content: string;
+      messageType?: string;
+      imageFile?: File;
+      privateAlbumId?: string;
+    }) => {
+      if (messageType === 'image' && imageFile) {
+        const formData = new FormData();
+        formData.append('receiverId', receiverId);
+        formData.append('content', content || '');
+        formData.append('messageType', 'image');
+        formData.append('image', imageFile);
+        
+        const response = await fetch('/api/chat/messages/image', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (!response.ok) {
+          throw new Error('Failed to send image');
+        }
+        
+        return response.json();
+      } else if (messageType === 'private_album' && privateAlbumId) {
+        return await apiRequest('POST', '/api/chat/messages', { 
+          receiverId, 
+          content: content || '',
+          messageType: 'private_album',
+          privateAlbumId
+        });
+      } else {
+        return await apiRequest('POST', '/api/chat/messages', { 
+          receiverId, 
+          content,
+          messageType: 'text'
+        });
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/chat', selectedChatUserId, 'messages'] });
@@ -122,12 +156,19 @@ export default function ChatMainNew() {
         try {
           const data = JSON.parse(event.data);
           if (data.type === 'new_message') {
-            // Refresh messages and rooms
-            queryClient.invalidateQueries({ queryKey: ['/api/chat'] });
+            // Immediate refresh for current chat
+            if (selectedChatUserId) {
+              queryClient.invalidateQueries({ queryKey: ['/api/chat', selectedChatUserId, 'messages'] });
+            }
+            // Refresh chat rooms and unread count
+            queryClient.invalidateQueries({ queryKey: ['/api/chat/rooms'] });
             queryClient.invalidateQueries({ queryKey: ['/api/chat/unread-count'] });
             
             // Play notification sound
             playNotificationSound();
+            
+            // Auto-scroll to bottom
+            setTimeout(scrollToBottom, 100);
           }
         } catch (e) {
           console.error('WebSocket message parsing error:', e);
@@ -156,7 +197,7 @@ export default function ChatMainNew() {
     scrollToBottom();
   }, [messages]);
 
-  // Send message handler
+  // Send message handlers
   const handleSendMessage = () => {
     if (!messageText.trim() || !selectedChatUserId || sendMessageMutation.isPending) return;
     
@@ -164,9 +205,40 @@ export default function ChatMainNew() {
       sendMessageMutation.mutate({
         receiverId: selectedChatUserId,
         content: messageText.trim(),
+        messageType: 'text'
       });
     } catch (error) {
       console.error('Failed to send message:', error);
+    }
+  };
+
+  const handleSendImage = (imageFile: File) => {
+    if (!selectedChatUserId || sendMessageMutation.isPending) return;
+    
+    try {
+      sendMessageMutation.mutate({
+        receiverId: selectedChatUserId,
+        content: messageText.trim() || '',
+        messageType: 'image',
+        imageFile
+      });
+    } catch (error) {
+      console.error('Failed to send image:', error);
+    }
+  };
+
+  const handleSendPrivateAlbum = (albumId: string) => {
+    if (!selectedChatUserId || sendMessageMutation.isPending) return;
+    
+    try {
+      sendMessageMutation.mutate({
+        receiverId: selectedChatUserId,
+        content: messageText.trim() || '',
+        messageType: 'private_album',
+        privateAlbumId: albumId
+      });
+    } catch (error) {
+      console.error('Failed to send private album:', error);
     }
   };
 
@@ -271,9 +343,7 @@ export default function ChatMainNew() {
                             {room.otherUser.firstName?.charAt(0) || '?'}
                           </AvatarFallback>
                         </Avatar>
-                        {room.otherUser.isOnline && (
-                          <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-background rounded-full" />
-                        )}
+
                       </div>
                       
                       <div className="flex-1 min-w-0">
@@ -319,7 +389,7 @@ export default function ChatMainNew() {
 
   // Show full-screen chat when a contact is selected (WhatsApp-style)
   return (
-    <div className="flex flex-col h-screen bg-background relative">
+    <div className="flex flex-col h-screen bg-background overflow-hidden">
       {/* Chat Header - No call/video/menu buttons */}
       <div className="p-4 border-b bg-card">
         <div className="flex items-center space-x-3">
@@ -359,9 +429,9 @@ export default function ChatMainNew() {
       </div>
 
       {/* Messages Area - Takes up remaining space above input */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden bg-gray-50 dark:bg-gray-900">
         <ScrollArea className="h-full">
-          <div className="p-4 pb-4">
+          <div className="p-4 pb-24">
             {messagesLoading ? (
               <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
@@ -382,42 +452,40 @@ export default function ChatMainNew() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-2">
                 {messages.map((message, index) => {
                   const isFromMe = message.senderId === user.id;
                   const showAvatar = !isFromMe && (index === 0 || messages[index - 1]?.senderId !== message.senderId);
+                  const nextMessageFromSameUser = messages[index + 1]?.senderId === message.senderId;
                   
                   return (
-                    <div
+                    <ChatBubble
                       key={message.id}
-                      className={`flex items-start gap-3 ${isFromMe ? 'flex-row-reverse' : ''}`}
-                    >
-                      {showAvatar && (
-                        <Avatar className="w-8 h-8">
-                          <AvatarImage src={isFromMe ? (user.profileImageUrl || undefined) : (chatPartner?.profileImageUrl || undefined)} />
-                          <AvatarFallback>
-                            {isFromMe ? user.firstName?.charAt(0) : chatPartner?.firstName?.charAt(0)}
-                          </AvatarFallback>
-                        </Avatar>
-                      )}
-                      <div className={`flex-1 ${showAvatar ? '' : 'ml-11'} ${isFromMe ? 'mr-11' : ''}`}>
-                        <div
-                          className={`inline-block p-3 rounded-lg max-w-xs lg:max-w-md ${
-                            isFromMe
-                              ? 'bg-[#FF007F] text-white ml-auto'
-                              : 'bg-muted'
-                          }`}
-                        >
-                          {message.content}
-                        </div>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {message.createdAt ? new Date(message.createdAt).toLocaleTimeString('de-DE', {
-                            hour: '2-digit',
-                            minute: '2-digit',
-                          }) : ''}
-                        </p>
-                      </div>
-                    </div>
+                      message={{
+                        ...message,
+                        imageUrl: message.imageUrl || undefined,
+                        privateAlbum: message.privateAlbumId ? {
+                          id: message.privateAlbumId,
+                          title: 'Privates Album',
+                          coverImage: '/placeholder-album.jpg',
+                          imageCount: 0,
+                          accessExpiresAt: message.privateAlbumAccessExpiresAt?.toISOString() || new Date(Date.now() + 24*60*60*1000).toISOString()
+                        } : undefined
+                      }}
+                      isFromMe={isFromMe}
+                      showAvatar={showAvatar && !nextMessageFromSameUser}
+                      user={user}
+                      chatPartner={chatPartner}
+                      onDownloadImage={(url) => {
+                        const link = document.createElement('a');
+                        link.href = url;
+                        link.download = 'image.jpg';
+                        link.click();
+                      }}
+                      onAccessPrivateAlbum={(albumId) => {
+                        navigate(`/albums/private/${albumId}`);
+                      }}
+                    />
                   );
                 })}
                 <div ref={messagesEndRef} />
@@ -427,27 +495,16 @@ export default function ChatMainNew() {
         </ScrollArea>
       </div>
 
-      {/* Message Input - Sticky at bottom above navigation */}
-      <div className="sticky bottom-0 p-4 border-t bg-card/95 backdrop-blur-sm z-40" style={{ marginBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
-        <div className="flex items-center space-x-2">
-          <Input
-            value={messageText}
-            onChange={(e) => setMessageText(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Nachricht schreiben..."
-            className="flex-1"
-            disabled={sendMessageMutation.isPending}
-          />
-          <Button
-            onClick={handleSendMessage}
-            disabled={!messageText.trim() || sendMessageMutation.isPending}
-            size="sm"
-            className="bg-[#FF007F] hover:bg-[#FF007F]/90"
-          >
-            <Send className="w-4 h-4" />
-          </Button>
-        </div>
-      </div>
+      {/* Enhanced Chat Input with Attachments */}
+      <ChatInput
+        messageText={messageText}
+        setMessageText={setMessageText}
+        onSendMessage={handleSendMessage}
+        onSendImage={handleSendImage}
+        onSendPrivateAlbum={handleSendPrivateAlbum}
+        isLoading={sendMessageMutation.isPending}
+        placeholder={`Nachricht an ${chatPartner?.firstName}...`}
+      />
     </div>
   );
 }

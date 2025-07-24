@@ -1,156 +1,154 @@
-import React, { useState } from 'react';
-import { format } from 'date-fns';
-import { de } from 'date-fns/locale';
-import { Check, CheckCheck, Download, Maximize2 } from 'lucide-react';
-import { PlaceholderImage } from './PlaceholderImage';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
+import React from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-
-interface Message {
-  id: string;
-  senderId: string;
-  receiverId: string;
-  content: string;
-  messageType?: 'text' | 'image';
-  imageUrl?: string;
-  isRead: boolean;
-  createdAt: string;
-}
+import { Download, Crown, Lock } from 'lucide-react';
+import type { Message, User } from '@shared/schema';
 
 interface ChatBubbleProps {
-  message: Message;
-  currentUserId: string;
-  senderImage?: string;
-  senderName?: string;
-  senderUserType?: 'trans' | 'man';
-  showAvatar?: boolean;
-  isLastInGroup?: boolean;
+  message: Message & {
+    imageUrl?: string;
+    privateAlbum?: {
+      id: string;
+      title: string;
+      coverImage: string;
+      imageCount: number;
+      accessExpiresAt: string;
+    };
+  };
+  isFromMe: boolean;
+  showAvatar: boolean;
+  user: User;
+  chatPartner?: User;
+  onDownloadImage?: (url: string) => void;
+  onAccessPrivateAlbum?: (albumId: string) => void;
 }
 
-export function ChatBubble({ 
-  message, 
-  currentUserId, 
-  senderImage, 
-  senderName,
-  senderUserType = 'trans',
-  showAvatar = true,
-  isLastInGroup = true
+export function ChatBubble({
+  message,
+  isFromMe,
+  showAvatar,
+  user,
+  chatPartner,
+  onDownloadImage,
+  onAccessPrivateAlbum
 }: ChatBubbleProps) {
-  const isOwn = message.senderId === currentUserId;
-  const time = format(new Date(message.createdAt), 'HH:mm', { locale: de });
-  const [imageLoading, setImageLoading] = useState(true);
+  const isExpired = message.privateAlbum && new Date(message.privateAlbum.accessExpiresAt) < new Date();
 
   return (
-    <div className={`flex items-end gap-2 mb-1 ${isOwn ? 'flex-row-reverse' : 'flex-row'} animate-in slide-in-from-bottom-2 duration-300`}>
-      {/* Avatar - only show for last message in group and for other person */}
-      {showAvatar && !isOwn && isLastInGroup && (
-        <div className="flex-shrink-0 mb-1">
-          {senderImage ? (
-            <img
-              src={senderImage}
-              alt={senderName || 'Sender'}
-              className="w-8 h-8 rounded-full object-cover border border-gray-200"
-            />
-          ) : (
-            <PlaceholderImage size="sm" userType={senderUserType} />
-          )}
-        </div>
-      )}
-      {showAvatar && !isOwn && !isLastInGroup && (
-        <div className="w-8 h-8 flex-shrink-0" /> // Spacer for alignment
-      )}
-
-      {/* Message Bubble */}
-      <div className={`max-w-[75%] ${isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
-        {/* Sender name for group chats (optional) */}
-        {!isOwn && showAvatar && isLastInGroup && senderName && (
-          <span className="text-xs text-gray-500 mb-1 px-2">{senderName}</span>
+    <div className={`flex ${isFromMe ? 'justify-end' : 'justify-start'} mb-1`}>
+      <div className={`flex items-end gap-2 max-w-[80%] ${isFromMe ? 'flex-row-reverse' : ''}`}>
+        {/* Avatar only for other users and when showing avatar */}
+        {!isFromMe && showAvatar && (
+          <Avatar className="w-6 h-6 mb-1">
+            <AvatarImage src={chatPartner?.profileImageUrl || undefined} />
+            <AvatarFallback className="text-xs">
+              {chatPartner?.firstName?.charAt(0) || '?'}
+            </AvatarFallback>
+          </Avatar>
         )}
+        {!isFromMe && !showAvatar && <div className="w-6" />}
+        
+        <div className={`flex flex-col ${isFromMe ? 'items-end' : 'items-start'}`}>
+          {/* Text Message */}
+          {message.messageType === 'text' && (
+            <div
+              className={`px-4 py-2 rounded-2xl max-w-xs lg:max-w-md break-words ${
+                isFromMe
+                  ? 'bg-[#FF007F] text-white rounded-br-md'
+                  : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700 rounded-bl-md'
+              }`}
+            >
+              {message.content}
+            </div>
+          )}
 
-        <div 
-          className={`px-4 py-2 rounded-2xl shadow-sm transition-all duration-200 hover:shadow-md ${
-            isOwn 
-              ? 'bg-[#FF007F] text-white rounded-br-md' 
-              : 'bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-bl-md'
-          }`}
-        >
           {/* Image Message */}
           {message.messageType === 'image' && message.imageUrl && (
-            <div className="relative">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <div className="cursor-pointer group relative">
-                    <img
-                      src={message.imageUrl}
-                      alt="Geteiltes Bild"
-                      className="max-w-full max-h-48 rounded-lg object-cover"
-                      onLoad={() => setImageLoading(false)}
-                      style={{ display: imageLoading ? 'none' : 'block' }}
-                    />
-                    {imageLoading && (
-                      <div className="w-48 h-32 bg-gray-200 rounded-lg flex items-center justify-center">
-                        <div className="animate-spin w-6 h-6 border-2 border-[#FF007F] border-t-transparent rounded-full" />
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-200 rounded-lg flex items-center justify-center">
-                      <Maximize2 className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </div>
-                  </div>
-                </DialogTrigger>
-                <DialogContent className="max-w-4xl max-h-[90vh] p-0">
-                  <div className="relative">
-                    <img
-                      src={message.imageUrl}
-                      alt="Geteiltes Bild"
-                      className="w-full h-auto max-h-[80vh] object-contain"
-                    />
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="absolute top-4 right-4"
-                      onClick={() => {
-                        const a = document.createElement('a');
-                        a.href = message.imageUrl!;
-                        a.download = 'chat-image.jpg';
-                        a.click();
-                      }}
-                    >
-                      <Download className="w-4 h-4 mr-2" />
-                      Download
-                    </Button>
-                  </div>
-                </DialogContent>
-              </Dialog>
-              
-              {/* Caption if exists */}
+            <div
+              className={`rounded-2xl overflow-hidden max-w-xs lg:max-w-md ${
+                isFromMe ? 'rounded-br-md' : 'rounded-bl-md'
+              }`}
+            >
+              <div className="relative group">
+                <img 
+                  src={message.imageUrl} 
+                  alt="Geteiltes Bild"
+                  className="w-full h-auto max-h-64 object-cover"
+                />
+                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onDownloadImage?.(message.imageUrl!)}
+                    className="text-white hover:bg-white/20"
+                  >
+                    <Download className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
               {message.content && (
-                <p className="mt-2 text-sm">{message.content}</p>
+                <div className={`px-3 py-2 ${isFromMe ? 'bg-[#FF007F] text-white' : 'bg-white dark:bg-gray-800'}`}>
+                  {message.content}
+                </div>
               )}
             </div>
           )}
 
-          {/* Text Message */}
-          {message.messageType !== 'image' && (
-            <p className="text-sm leading-relaxed break-words">{message.content}</p>
+          {/* Private Album Message */}
+          {message.messageType === 'private_album' && message.privateAlbum && (
+            <Card 
+              className={`max-w-xs cursor-pointer hover:shadow-md transition-shadow ${
+                isExpired ? 'opacity-60' : ''
+              }`}
+              onClick={() => !isExpired && onAccessPrivateAlbum?.(message.privateAlbum!.id)}
+            >
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3 mb-2">
+                  <Crown className="w-5 h-5 text-yellow-500" />
+                  <div className="flex-1">
+                    <h4 className="font-medium text-sm">{message.privateAlbum.title}</h4>
+                    <p className="text-xs text-muted-foreground">
+                      {message.privateAlbum.imageCount} private Fotos
+                    </p>
+                  </div>
+                  {isExpired && <Lock className="w-4 h-4 text-muted-foreground" />}
+                </div>
+                
+                <div className="aspect-video bg-muted rounded-lg overflow-hidden mb-2">
+                  <img 
+                    src={message.privateAlbum.coverImage} 
+                    alt={message.privateAlbum.title}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <Badge variant={isExpired ? "secondary" : "default"} className="text-xs">
+                    {isExpired ? 'Zugang abgelaufen' : '24h Zugang'}
+                  </Badge>
+                  {!isExpired && (
+                    <p className="text-xs text-muted-foreground">
+                      Läuft ab: {new Date(message.privateAlbum.accessExpiresAt).toLocaleDateString('de-DE')}
+                    </p>
+                  )}
+                </div>
+                
+                {message.content && (
+                  <p className="text-sm mt-2">{message.content}</p>
+                )}
+              </CardContent>
+            </Card>
           )}
-        </div>
 
-        {/* Time and Read Status */}
-        <div className={`flex items-center gap-1 mt-1 px-2 ${isOwn ? 'flex-row-reverse' : 'flex-row'}`}>
-          <span className="text-xs text-gray-400">
-            {time}
-          </span>
-          
-          {/* Read indicators for own messages */}
-          {isOwn && (
-            <div className="ml-1">
-              {message.isRead ? (
-                <CheckCheck className="w-3 h-3 text-blue-500" />
-              ) : (
-                <Check className="w-3 h-3 text-gray-400" />
-              )}
-            </div>
-          )}
+          {/* Timestamp */}
+          <p className={`text-xs text-gray-500 mt-1 ${isFromMe ? 'text-right' : 'text-left'}`}>
+            {message.createdAt ? new Date(message.createdAt).toLocaleTimeString('de-DE', {
+              hour: '2-digit',
+              minute: '2-digit',
+            }) : ''}
+          </p>
         </div>
       </div>
     </div>

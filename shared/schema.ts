@@ -82,7 +82,9 @@ export const messages = pgTable("messages", {
   senderId: varchar("sender_id").notNull().references(() => users.id),
   receiverId: varchar("receiver_id").notNull().references(() => users.id),
   content: text("content").notNull(),
-  messageType: varchar("message_type").default('text').$type<'text' | 'image'>(),
+  messageType: varchar("message_type").default('text').$type<'text' | 'image' | 'private_album'>(),
+  privateAlbumId: varchar('private_album_id'), // For private album sharing
+  privateAlbumAccessExpiresAt: timestamp('private_album_access_expires_at'), // 24h access expiry
   imageUrl: varchar("image_url"), // For photo messages
   isRead: boolean("is_read").default(false),
   createdAt: timestamp("created_at").defaultNow(),
@@ -176,10 +178,12 @@ export const sendMessageSchema = createInsertSchema(messages).pick({
   content: true,
   messageType: true,
   imageUrl: true,
+  privateAlbumId: true,
 }).extend({
   content: z.string().min(1).max(1000).optional(),
-  messageType: z.enum(['text', 'image']).default('text'),
+  messageType: z.enum(['text', 'image', 'private_album']).default('text'),
   imageUrl: z.string().url().optional(),
+  privateAlbumId: z.string().optional(),
 });
 
 // Private albums table for escort photo galleries
