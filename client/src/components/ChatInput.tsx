@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Send, Paperclip, Image as ImageIcon, Crown } from 'lucide-react';
@@ -77,6 +77,9 @@ export function ChatInput({
           <DialogContent className="max-w-md">
             <DialogHeader>
               <DialogTitle>Anhang senden</DialogTitle>
+              <DialogDescription>
+                Wählen Sie einen Anhang zum Senden aus
+              </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               {/* Photo Upload */}

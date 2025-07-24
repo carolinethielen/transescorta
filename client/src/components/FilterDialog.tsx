@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -115,6 +115,9 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
               Zurücksetzen
             </Button>
           </DialogTitle>
+          <DialogDescription>
+            Passen Sie die Suchkriterien an, um passende Escorts zu finden
+          </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-6">

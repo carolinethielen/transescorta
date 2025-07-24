@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
@@ -94,6 +94,10 @@ export function ImageGallery({ images, mainImage, userName }: ImageGalleryProps)
       {/* Fullscreen Dialog */}
       <Dialog open={fullscreenOpen} onOpenChange={setFullscreenOpen}>
         <DialogContent className="max-w-screen-lg w-full h-full max-h-screen bg-black/95 border-none p-0">
+          <DialogTitle className="sr-only">Bildergalerie - {userName}</DialogTitle>
+          <DialogDescription className="sr-only">
+            Zeigt Bild {currentImageIndex + 1} von {allImages.length} in der Vollbildansicht
+          </DialogDescription>
           <div className="relative w-full h-full flex items-center justify-center">
             {/* Close Button */}
             <Button

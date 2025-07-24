@@ -10,6 +10,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from '@/components/ui/dialog';
 import {
   Form,
@@ -201,6 +202,9 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
             </div>
           </div>
           <DialogTitle className="text-2xl font-bold">TransConnect</DialogTitle>
+          <DialogDescription>
+            Melden Sie sich an oder erstellen Sie ein neues Konto
+          </DialogDescription>
         </DialogHeader>
 
         <Tabs defaultValue={defaultTab} className="w-full">

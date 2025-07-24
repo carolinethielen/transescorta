@@ -46,21 +46,18 @@ export const users = pgTable("users", {
   // Profile fields
   age: integer("age"),
   bio: text("bio"),
-  height: integer("height"), // in cm
-  weight: integer("weight"), // in kg
-  cockSize: integer("cock_size"), // in cm
-  circumcision: varchar("circumcision").$type<'beschnitten' | 'unbeschnitten' | 'teilweise'>(),
-  position: varchar("position").$type<'top' | 'bottom' | 'versatile'>(),
-  bodyType: varchar("body_type"),
-  ethnicity: varchar("ethnicity"),
-  services: jsonb("services").$type<string[]>().default([]),
-  hourlyRate: integer("hourly_rate"), // in EUR
+  profession: varchar("profession"),
+  company: varchar("company"),
+  experience: varchar("experience"), // Years of experience
+  skills: jsonb("skills").$type<string[]>().default([]),
+  education: varchar("education"),
+  certifications: jsonb("certifications").$type<string[]>().default([]),
   location: varchar("location"),
   latitude: real("latitude"),
   longitude: real("longitude"),
   interests: jsonb("interests").$type<string[]>().default([]),
   profileImages: jsonb("profile_images").$type<string[]>().default([]), // Array of multiple profile images
-  userType: varchar("user_type").$type<'trans' | 'man'>().default('trans'),
+  userType: varchar("user_type").$type<'professional' | 'mentor' | 'student'>().default('professional'),
   isOnline: boolean("is_online").default(false),
   lastSeen: timestamp("last_seen"),
   createdAt: timestamp("created_at").defaultNow(),

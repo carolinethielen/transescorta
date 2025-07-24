@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
 import { MapPin, Navigation, Search } from 'lucide-react';
 import { useGeolocation } from '@/hooks/useGeolocation';
 
@@ -71,6 +71,9 @@ export function LocationSelector({ selectedLocation, onLocationChange }: Locatio
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Standort auswählen</DialogTitle>
+          <DialogDescription>
+            Wählen Sie Ihren aktuellen Standort oder eine Stadt aus der Liste
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
           {/* Current Location */}

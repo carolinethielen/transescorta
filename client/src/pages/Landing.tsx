@@ -14,7 +14,7 @@ export default function Landing() {
             TransConnect
           </h1>
           <p className="text-xl text-muted-foreground mb-8">
-            Die Premium-Escort-Plattform für Trans*-Services
+            Professional Networking Platform for Trans* Community
           </p>
           <Button 
             size="lg"
@@ -30,9 +30,9 @@ export default function Landing() {
           <Card>
             <CardContent className="p-6 text-center">
               <Heart className="w-12 h-12 text-[#FF007F] mx-auto mb-4" />
-              <h3 className="font-semibold mb-2">Authentische Verbindungen</h3>
+              <h3 className="font-semibold mb-2">Professional Connections</h3>
               <p className="text-sm text-muted-foreground">
-                Finde Menschen, die dich verstehen
+                Connect with trans professionals, mentors, and allies
               </p>
             </CardContent>
           </Card>
@@ -40,9 +40,9 @@ export default function Landing() {
           <Card>
             <CardContent className="p-6 text-center">
               <Users className="w-12 h-12 text-[#FF007F] mx-auto mb-4" />
-              <h3 className="font-semibold mb-2">Sichere Community</h3>
+              <h3 className="font-semibold mb-2">Safe Professional Space</h3>
               <p className="text-sm text-muted-foreground">
-                Ein geschützter Raum für Trans*-Personen
+                A secure environment for trans professionals to network
               </p>
             </CardContent>
           </Card>
@@ -50,9 +50,9 @@ export default function Landing() {
           <Card>
             <CardContent className="p-6 text-center">
               <Shield className="w-12 h-12 text-[#FF007F] mx-auto mb-4" />
-              <h3 className="font-semibold mb-2">Privatsphäre</h3>
+              <h3 className="font-semibold mb-2">Privacy Protection</h3>
               <p className="text-sm text-muted-foreground">
-                Deine Daten sind bei uns sicher
+                Your professional data is secure and confidential
               </p>
             </CardContent>
           </Card>
@@ -60,9 +60,9 @@ export default function Landing() {
           <Card>
             <CardContent className="p-6 text-center">
               <Crown className="w-12 h-12 text-[#FF007F] mx-auto mb-4" />
-              <h3 className="font-semibold mb-2">Premium Features</h3>
+              <h3 className="font-semibold mb-2">Premium Networking</h3>
               <p className="text-sm text-muted-foreground">
-                Erweiterte Funktionen für bessere Matches
+                Advanced features for professional growth
               </p>
             </CardContent>
           </Card>
@@ -71,7 +71,7 @@ export default function Landing() {
         {/* Call to Action */}
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4">
-            Bereit für echte Verbindungen?
+            Ready to advance your career?
           </h2>
           <p className="text-muted-foreground mb-6">
             Melde dich kostenlos an und finde deine Community.

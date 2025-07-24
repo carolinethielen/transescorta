@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
@@ -37,7 +37,7 @@ export default function PrivateAlbums() {
   });
 
   // Fetch user's private albums
-  const { data: albums = [], isLoading } = useQuery({
+  const { data: albums = [], isLoading } = useQuery<any[]>({
     queryKey: ['/api/albums/my'],
     enabled: !!user,
   });
@@ -140,6 +140,9 @@ export default function PrivateAlbums() {
               <DialogContent>
                 <DialogHeader>
                   <DialogTitle>Privates Album erstellen</DialogTitle>
+                  <DialogDescription>
+                    Erstellen Sie ein neues privates Album für exklusive Inhalte
+                  </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
                   <div>

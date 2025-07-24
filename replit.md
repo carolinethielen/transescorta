@@ -1,12 +1,22 @@
-# TransConnect - Trans* Escort Platform
+# TransConnect - Professional Trans* Networking Platform
 
 ## Overview
 
-TransConnect is a modern, mobile-first escort platform specifically designed following the hunqz.com model. Trans* users serve as escorts/service providers whose profiles are displayed publicly in a browsable grid, while men register as customers to contact them. The platform features a one-way visibility system where only trans escorts appear in the browsing interface, real-time chat functionality, and location-based discovery.
+TransConnect is a sophisticated platform for secure, real-time professional networking with advanced user profile management and location-based intelligent features. The platform connects transgender professionals with mentors, employers, and community members in a safe, secure environment. It features comprehensive user profiles, real-time messaging, location-based networking, and professional development tools.
 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+
+## Recent Changes (January 2025)
+
+### Professional Networking Platform Transformation (January 24, 2025)
+- **Complete Platform Rebrand**: Transformed application from escort platform to professional networking platform
+- **Schema Updates**: Replaced escort-related fields with professional fields (profession, company, experience, skills, education, certifications)
+- **UI Updates**: Updated all user-facing text from escort/dating terminology to professional networking
+- **Database Migration**: Pushed schema changes to support professional networking features
+- **Landing Page**: Updated to reflect professional networking purpose and benefits
+- **Component Renaming**: Updated HomeNew.tsx to use "professionals" instead of "escorts" throughout
 
 ## Recent Changes (January 2025)
 

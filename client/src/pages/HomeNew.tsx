@@ -54,68 +54,68 @@ export default function Home() {
     }
   }, [coordinates, currentCity, selectedLocation]);
 
-  // Fetch escorts based on authentication status
+  // Fetch professionals based on authentication status
   const { data: rawUsers = [], isLoading, error } = useQuery({
     queryKey: user ? ['/api/users/recommended'] : ['/api/users/public'],
     retry: false,
   });
 
-  // Also fetch public escorts to always show demo data
+  // Also fetch public professionals to always show demo data
   const { data: publicUsers = [] } = useQuery({
     queryKey: ['/api/users/public'],
     retry: false,
   });
 
-  // Use public escorts if recommended is empty or failed
+  // Use public professionals if recommended is empty or failed
   const displayUsers = (rawUsers && Array.isArray(rawUsers) && rawUsers.length > 0) ? rawUsers : publicUsers;
 
-  // Convert and organize escorts by categories
-  const escorts = (displayUsers as any[]).map((escort: any) => {
-    const distance = escort.latitude && escort.longitude && userCoordinates
-      ? calculateDistance(userCoordinates.lat, userCoordinates.lon, escort.latitude, escort.longitude)
+  // Convert and organize professionals by categories
+  const professionals = (displayUsers as any[]).map((professional: any) => {
+    const distance = professional.latitude && professional.longitude && userCoordinates
+      ? calculateDistance(userCoordinates.lat, userCoordinates.lon, professional.latitude, professional.longitude)
       : 0;
     
     return {
-      ...escort,
-      firstName: escort.firstName || '',
-      lastName: escort.lastName || '',
-      profileImageUrl: escort.profileImageUrl || '',
-      location: escort.location || '',
-      services: escort.services || [],
+      ...professional,
+      firstName: professional.firstName || '',
+      lastName: professional.lastName || '',
+      profileImageUrl: professional.profileImageUrl || '',
+      location: professional.location || '',
+      services: professional.services || [],
       distance,
     };
   });
 
   // Apply filters if any
-  const filteredEscorts = filters ? escorts.filter(escort => {
-    if (filters.ageRange && (escort.age < filters.ageRange[0] || escort.age > filters.ageRange[1])) return false;
-    if (filters.priceRange && escort.hourlyRate && (escort.hourlyRate < filters.priceRange[0] || escort.hourlyRate > filters.priceRange[1])) return false;
-    if (filters.position && escort.position !== filters.position) return false;
-    if (filters.bodyType && escort.bodyType !== filters.bodyType) return false;
-    if (filters.ethnicity && escort.ethnicity !== filters.ethnicity) return false;
-    if (filters.onlineOnly && !escort.isOnline) return false;
-    if (filters.premiumOnly && !escort.isPremium) return false;
+  const filteredProfessionals = filters ? professionals.filter(professional => {
+    if (filters.ageRange && (professional.age < filters.ageRange[0] || professional.age > filters.ageRange[1])) return false;
+    if (filters.priceRange && professional.hourlyRate && (professional.hourlyRate < filters.priceRange[0] || professional.hourlyRate > filters.priceRange[1])) return false;
+    if (filters.position && professional.position !== filters.position) return false;
+    if (filters.bodyType && professional.bodyType !== filters.bodyType) return false;
+    if (filters.ethnicity && professional.ethnicity !== filters.ethnicity) return false;
+    if (filters.onlineOnly && !professional.isOnline) return false;
+    if (filters.premiumOnly && !professional.isPremium) return false;
     if (filters.services && filters.services.length > 0) {
-      const hasService = filters.services.some((service: string) => escort.services?.includes(service));
+      const hasService = filters.services.some((service: string) => professional.services?.includes(service));
       if (!hasService) return false;
     }
     return true;
-  }) : escorts;
+  }) : professionals;
 
-  // Organize escorts like hunqz.com: Premium first, then new, then by distance
-  const premiumEscorts = filteredEscorts.filter(escort => escort.isPremium);
-  const newEscorts = filteredEscorts.filter(escort => !escort.isPremium).sort((a, b) => 
+  // Organize professionals: Premium first, then new, then by distance
+  const premiumProfessionals = filteredProfessionals.filter(professional => professional.isPremium);
+  const newProfessionals = filteredProfessionals.filter(professional => !professional.isPremium).sort((a: any, b: any) => 
     new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
   );
-  const nearbyEscorts = [...filteredEscorts].sort((a, b) => a.distance - b.distance);
+  const nearbyProfessionals = [...filteredProfessionals].sort((a: any, b: any) => a.distance - b.distance);
 
-  const handleContactEscort = (escort: any) => {
+  const handleContactProfessional = (professional: any) => {
     if (!isAuthenticated) {
       setAuthTab('register');
       setShowAuthModal(true);
       return;
     }
-    navigate(`/chat?user=${escort.id}`);
+    navigate(`/chat?user=${professional.id}`);
   };
 
   // Handle location change
@@ -143,28 +143,28 @@ export default function Home() {
     }
   };
 
-  const handleEscortClick = (escortId: string) => {
-    console.log('HomeNew - Clicking escort with ID:', escortId);
+  const handleProfessionalClick = (professionalId: string) => {
+    console.log('HomeNew - Clicking professional with ID:', professionalId);
     if (!isAuthenticated) {
       setAuthTab('login');
       setShowAuthModal(true);
       return;
     }
     // Use wouter navigation for instant loading without page reload
-    console.log('HomeNew - Navigating to profile with ID:', escortId);
-    navigate(`/profile?id=${escortId}`);
+    console.log('HomeNew - Navigating to profile with ID:', professionalId);
+    navigate(`/profile?id=${professionalId}`);
   };
 
-  const EscortCard = ({ escort }: { escort: any }) => (
+  const ProfessionalCard = ({ professional }: { professional: any }) => (
     <div 
       className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer border border-gray-200 dark:border-gray-700"
-      onClick={() => handleEscortClick(escort.id)}
+      onClick={() => handleProfessionalClick(professional.id)}
     >
       <div className="relative aspect-[4/5] overflow-hidden">
-        {escort.profileImageUrl ? (
+        {professional.profileImageUrl ? (
           <img
-            src={escort.profileImageUrl}
-            alt={escort.firstName || 'Escort Profile'}
+            src={professional.profileImageUrl}
+            alt={professional.firstName || 'Professional Profile'}
             className="w-full h-full object-cover"
             onError={(e) => {
               // If image fails to load, show placeholder instead
@@ -184,21 +184,21 @@ export default function Home() {
         )}
         
         {/* Online Status - Top Left */}
-        {escort.isOnline && (
+        {professional.isOnline && (
           <div className="absolute top-2 left-2 w-3 h-3 bg-green-500 border-2 border-white rounded-full shadow-sm animate-pulse"></div>
         )}
         
         {/* Premium Badge - Top Right */}
-        {escort.isPremium && (
+        {professional.isPremium && (
           <div className="absolute top-2 right-2 bg-yellow-500/90 text-white p-1 rounded-full shadow-sm">
             <Crown className="w-3 h-3" />
           </div>
         )}
 
         {/* Distance - Bottom Right */}
-        {escort.distance > 0 && (
+        {professional.distance > 0 && (
           <div className="absolute bottom-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
-            {Math.round(escort.distance)}km
+            {Math.round(professional.distance)}km
           </div>
         )}
       </div>
@@ -207,16 +207,16 @@ export default function Home() {
       <div className="p-3">
         <div className="flex justify-between items-center">
           <h3 className="font-semibold text-lg text-gray-900 dark:text-white truncate">
-            {escort.firstName}
+            {professional.firstName}
           </h3>
           <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">
-            {escort.age}
+            {professional.age}
           </span>
         </div>
         
         <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mt-1">
           <MapPin className="w-3 h-3 mr-1" />
-          {escort.location}
+          {professional.location}
         </div>
       </div>
     </div>
@@ -280,49 +280,49 @@ export default function Home() {
             </div>
           )}
           
-          {/* Premium Escorts Section */}
-          {premiumEscorts.length > 0 && (
+          {/* Premium Professionals Section */}
+          {premiumProfessionals.length > 0 && (
             <section className="mb-8">
-              <SectionHeader title="Premium Escorts" icon={Crown} count={premiumEscorts.length} />
+              <SectionHeader title="Premium Professionals" icon={Crown} count={premiumProfessionals.length} />
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
-                {premiumEscorts.map((escort) => (
-                  <EscortCard key={escort.id} escort={escort} />
+                {premiumProfessionals.map((professional) => (
+                  <ProfessionalCard key={professional.id} professional={professional} />
                 ))}
               </div>
             </section>
           )}
 
-          {/* New Escorts Section */}
-          {newEscorts.length > 0 && (
+          {/* New Professionals Section */}
+          {newProfessionals.length > 0 && (
             <section className="mb-8">
-              <SectionHeader title="Neue Escorts" icon={Star} count={newEscorts.slice(0, 10).length} />
+              <SectionHeader title="New Professionals" icon={Star} count={newProfessionals.slice(0, 10).length} />
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
-                {newEscorts.slice(0, 10).map((escort) => (
-                  <EscortCard key={escort.id} escort={escort} />
+                {newProfessionals.slice(0, 10).map((professional) => (
+                  <ProfessionalCard key={professional.id} professional={professional} />
                 ))}
               </div>
             </section>
           )}
 
-          {/* Nearby Escorts Section */}
-          {nearbyEscorts.length > 0 && (
+          {/* Nearby Professionals Section */}
+          {nearbyProfessionals.length > 0 && (
             <section className="mb-8">
               <SectionHeader 
-                title={selectedLocation === 'Mein Standort' ? 'Escorts in der Nähe' : `Escorts in ${selectedLocation}`} 
+                title={selectedLocation === 'Mein Standort' ? 'Professionals Nearby' : `Professionals in ${selectedLocation}`} 
                 icon={MapPin} 
-                count={nearbyEscorts.length} 
+                count={nearbyProfessionals.length} 
               />
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
-                {nearbyEscorts.map((escort) => (
-                  <EscortCard key={escort.id} escort={escort} />
+                {nearbyProfessionals.map((professional) => (
+                  <ProfessionalCard key={professional.id} professional={professional} />
                 ))}
               </div>
             </section>
           )}
 
-          {escorts.length === 0 && !isLoading && (
+          {filteredProfessionals.length === 0 && !isLoading && (
             <div className="text-center py-12">
-              <p className="text-gray-600 dark:text-gray-400">Keine Escorts in dieser Region verfügbar.</p>
+              <p className="text-gray-600 dark:text-gray-400">No professionals available in this region.</p>
             </div>
           )}
         </div>
