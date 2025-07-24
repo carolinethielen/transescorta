@@ -127,12 +127,14 @@ export default function Home() {
   };
 
   const handleEscortClick = (escortId: string) => {
+    console.log('HomeNew - Clicking escort with ID:', escortId);
     if (!isAuthenticated) {
       setAuthTab('login');
       setShowAuthModal(true);
       return;
     }
     // Use wouter navigation for instant loading without page reload
+    console.log('HomeNew - Navigating to profile with ID:', escortId);
     navigate(`/profile?id=${escortId}`);
   };
 

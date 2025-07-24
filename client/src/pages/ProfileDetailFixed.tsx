@@ -18,8 +18,13 @@ export default function ProfileDetailFixed() {
   
   // Get user ID from URL params (either /profile/:userId or /profile?id=userId)
   const { userId } = useParams();
-  const urlParams = new URLSearchParams(location.split('?')[1] || '');
+  const urlParams = new URLSearchParams(window.location.search);
   const profileId = userId || urlParams.get('id');
+  
+  console.log('ProfileDetailFixed - Current location:', location);
+  console.log('ProfileDetailFixed - userId from params:', userId);
+  console.log('ProfileDetailFixed - URL search params:', window.location.search);
+  console.log('ProfileDetailFixed - profileId resolved:', profileId);
 
   const { data: user, isLoading, error } = useQuery<User>({
     queryKey: ['/api/users', profileId, 'public'],
