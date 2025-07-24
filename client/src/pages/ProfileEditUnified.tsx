@@ -100,6 +100,8 @@ export default function ProfileEditUnified() {
       location: '',
       latitude: undefined,
       longitude: undefined,
+      profileImageUrl: '',
+      profileImages: [],
       height: undefined,
       weight: undefined,
       cockSize: undefined,
@@ -124,6 +126,8 @@ export default function ProfileEditUnified() {
         location: currentUser.location || '',
         latitude: currentUser.latitude || undefined,
         longitude: currentUser.longitude || undefined,
+        profileImageUrl: currentUser.profileImageUrl || '',
+        profileImages: currentUser.profileImages || [],
         height: currentUser.height || undefined,
         weight: currentUser.weight || undefined,
         cockSize: currentUser.cockSize || undefined,
@@ -195,15 +199,20 @@ export default function ProfileEditUnified() {
   });
 
   const handleImageUpload = (imageUrl: string, isMain: boolean = true) => {
+    console.log('Image uploaded:', imageUrl, 'isMain:', isMain);
+    
     if (isMain) {
-      form.setValue('profileImageUrl', imageUrl);
-      // Trigger form update to show image immediately
-      form.trigger('profileImageUrl');
+      // Update form state for main profile image
+      form.setValue('profileImageUrl', imageUrl, { shouldDirty: true, shouldTouch: true });
     } else {
+      // Add to additional images array
       const currentImages = form.getValues('profileImages') || [];
-      form.setValue('profileImages', [...currentImages, imageUrl]);
-      form.trigger('profileImages');
+      const newImages = [...currentImages, imageUrl];
+      form.setValue('profileImages', newImages, { shouldDirty: true, shouldTouch: true });
     }
+    
+    // Force form re-render
+    form.trigger();
     
     // Show immediate feedback
     toast({
@@ -216,13 +225,17 @@ export default function ProfileEditUnified() {
     const currentMain = form.getValues('profileImageUrl');
     const currentImages = form.getValues('profileImages') || [];
     
+    console.log('Deleting image:', imageUrl);
+    
     if (currentMain === imageUrl) {
-      form.setValue('profileImageUrl', '');
-      form.trigger('profileImageUrl');
+      form.setValue('profileImageUrl', '', { shouldDirty: true, shouldTouch: true });
     } else {
-      form.setValue('profileImages', currentImages.filter(img => img !== imageUrl));
-      form.trigger('profileImages');
+      const filteredImages = currentImages.filter(img => img !== imageUrl);
+      form.setValue('profileImages', filteredImages, { shouldDirty: true, shouldTouch: true });
     }
+    
+    // Force form re-render
+    form.trigger();
     
     toast({
       title: "Bild entfernt",
@@ -231,12 +244,15 @@ export default function ProfileEditUnified() {
   };
 
   const onSubmit = (data: UpdateProfile) => {
+    const profileImageUrl = form.getValues('profileImageUrl');
+    const profileImages = form.getValues('profileImages');
+    
     const submitData = {
       ...data,
       services: selectedServices,
       interests: selectedInterests,
-      profileImageUrl: form.getValues('profileImageUrl'),
-      profileImages: form.getValues('profileImages')
+      profileImageUrl: profileImageUrl || null,
+      profileImages: Array.isArray(profileImages) ? profileImages : []
     };
     
     console.log('Submitting profile data:', submitData);

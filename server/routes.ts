@@ -78,11 +78,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put('/api/auth/profile', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.id;
-      const profileData = updateProfileSchema.parse(req.body);
+      const requestData = req.body;
       
-      console.log(`Updating profile for user ${userId}:`, profileData);
+      console.log(`Updating profile for user ${userId}:`, requestData);
       
-      const user = await storage.updateUserProfile(userId, profileData);
+      // Extract image data separately
+      const { profileImageUrl, profileImages, ...profileData } = requestData;
+      
+      // Validate main profile data
+      const validatedProfile = updateProfileSchema.parse(profileData);
+      
+      // Add image data back
+      const fullProfileData = {
+        ...validatedProfile,
+        profileImageUrl: profileImageUrl || null,
+        profileImages: Array.isArray(profileImages) ? profileImages : []
+      };
+      
+      const user = await storage.updateUserProfile(userId, fullProfileData);
       
       console.log(`Profile updated successfully for user ${userId}`);
       res.json({ success: true, user });
