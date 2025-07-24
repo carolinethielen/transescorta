@@ -15,7 +15,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { updateProfileSchema, type UpdateProfile } from '@shared/schema';
-import { ProfileImageUpload } from '@/components/ProfileImageUpload';
+import { ProfileImageUploadNew } from '@/components/ProfileImageUploadNew';
 import { ArrowLeft, Save, MapPin, User, Heart, DollarSign, Camera } from 'lucide-react';
 
 // Location detection using GPS
@@ -198,68 +198,16 @@ export default function ProfileEditUnified() {
     },
   });
 
-  const handleImageUpload = (imageUrl: string, isMain: boolean = true) => {
-    console.log('Image uploaded:', imageUrl, 'isMain:', isMain);
-    
-    if (isMain) {
-      // Update form state for main profile image
-      form.setValue('profileImageUrl', imageUrl, { shouldDirty: true, shouldTouch: true });
-    } else {
-      // Add to additional images array
-      const currentImages = form.getValues('profileImages') || [];
-      const newImages = [...currentImages, imageUrl];
-      form.setValue('profileImages', newImages, { shouldDirty: true, shouldTouch: true });
-    }
-    
-    // Force form re-render
-    form.trigger();
-    
-    // Show immediate feedback
-    toast({
-      title: "Bild hochgeladen",
-      description: isMain ? "Profilbild wurde aktualisiert" : "Zusätzliches Bild wurde hinzugefügt",
-    });
-  };
 
-  const handleImageDelete = (imageUrl: string) => {
-    const currentMain = form.getValues('profileImageUrl');
-    const currentImages = form.getValues('profileImages') || [];
-    
-    console.log('Deleting image:', imageUrl);
-    
-    if (currentMain === imageUrl) {
-      form.setValue('profileImageUrl', '', { shouldDirty: true, shouldTouch: true });
-    } else {
-      const filteredImages = currentImages.filter(img => img !== imageUrl);
-      form.setValue('profileImages', filteredImages, { shouldDirty: true, shouldTouch: true });
-    }
-    
-    // Force form re-render
-    form.trigger();
-    
-    toast({
-      title: "Bild entfernt",
-      description: "Das Bild wurde aus deinem Profil entfernt",
-    });
-  };
 
   const onSubmit = (data: UpdateProfile) => {
-    const profileImageUrl = form.getValues('profileImageUrl');
-    const profileImages = form.getValues('profileImages');
-    
     const submitData = {
       ...data,
       services: selectedServices,
       interests: selectedInterests,
-      profileImageUrl: profileImageUrl || null,
-      profileImages: Array.isArray(profileImages) ? profileImages : []
     };
     
-    console.log('Form values before submit:', form.getValues());
     console.log('Submitting profile data:', submitData);
-    console.log('Profile Image URL:', profileImageUrl);
-    console.log('Profile Images Array:', profileImages);
-    
     updateProfileMutation.mutate(submitData);
   };
 
@@ -298,12 +246,13 @@ export default function ProfileEditUnified() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ProfileImageUpload
-                    currentImage={form.watch('profileImageUrl') || user?.profileImageUrl || ''}
-                    additionalImages={form.watch('profileImages') || user?.profileImages || []}
-                    onImageUpload={handleImageUpload}
-                    onImageDelete={handleImageDelete}
-                    isTransUser={true}
+                  <ProfileImageUploadNew
+                    currentMainImage={form.watch('profileImageUrl') || user?.profileImageUrl || undefined}
+                    currentImages={form.watch('profileImages') || user?.profileImages || []}
+                    onImageUpdate={(mainImage, additionalImages) => {
+                      form.setValue('profileImageUrl', mainImage || '', { shouldDirty: true });
+                      form.setValue('profileImages', additionalImages, { shouldDirty: true });
+                    }}
                   />
                 </CardContent>
               </Card>

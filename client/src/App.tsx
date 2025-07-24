@@ -15,7 +15,7 @@ import Home from "@/pages/HomeNew";
 import ChatMainNew from "@/pages/ChatMainNew";
 import Profile from "@/pages/Profile";
 import ProfileEditUnified from "@/pages/ProfileEditUnified";
-import ProfileDetailFixed from "@/pages/ProfileDetailFixed";
+import EscortProfile from "@/pages/EscortProfile";
 import Explore from "@/pages/Explore";
 import Settings from "@/pages/Settings";
 import Subscribe from "@/pages/Subscribe";
@@ -57,8 +57,8 @@ function Router() {
       )}
       
       {/* Profile viewing - accessible but may require auth for contact */}
-      <Route path="/profile/:userId" component={ProfileDetailFixed} />
-      <Route path="/profile" component={ProfileDetailFixed} />
+      <Route path="/profile/:userId" component={EscortProfile} />
+      <Route path="/profile" component={EscortProfile} />
       <Route path="/explore" component={Explore} />
       <Route component={NotFound} />
     </Switch>

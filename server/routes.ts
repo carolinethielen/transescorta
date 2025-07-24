@@ -1,7 +1,11 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
+import express from "express";
 import multer from "multer";
+import path from "path";
+import fs from "fs";
+import { nanoid } from "nanoid";
 import { storage } from "./storage";
 import { setupCustomAuth, isAuthenticated } from "./customAuth";
 import { sendMessageSchema, createMatchSchema, updateProfileSchema } from "@shared/schema";
@@ -14,9 +18,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // WebSocket connection tracking
   const connectedClients = new Map<WebSocket, string>();
   
+  // Ensure upload directory exists
+  const uploadDir = path.join(process.cwd(), 'uploads', 'profile-images');
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+
   // Configure multer for image uploads
+  const storage_multer = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+      const uniqueName = `${nanoid()}-${Date.now()}${path.extname(file.originalname)}`;
+      cb(null, uniqueName);
+    }
+  });
+
   const upload = multer({
-    storage: multer.memoryStorage(),
+    storage: storage_multer,
     limits: {
       fileSize: 5 * 1024 * 1024, // 5MB limit
     },
@@ -43,6 +63,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to get public escorts" });
     }
   });
+
+  // Upload routes
+  app.post('/api/upload/profile-image', isAuthenticated, upload.single('image'), async (req: any, res) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ message: 'No file uploaded' });
+      }
+
+      // Generate public URL for the uploaded image
+      const imageUrl = `/uploads/profile-images/${req.file.filename}`;
+      
+      console.log('Image uploaded successfully:', {
+        userId: req.user.id,
+        filename: req.file.filename,
+        imageUrl
+      });
+
+      res.json({
+        success: true,
+        imageUrl,
+        filename: req.file.filename
+      });
+    } catch (error) {
+      console.error('Upload error:', error);
+      res.status(500).json({ 
+        message: 'Upload failed',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
+
+  // Serve uploaded images
+  app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
