@@ -95,71 +95,85 @@ export default function Profile() {
 
           {/* Trans Escort Specific Info */}
           {user?.userType === 'trans' && (
-            <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               {/* Physical Details */}
-              {(user.height || user.weight || user.cockSize) && (
-                <Card>
-                  <CardContent className="p-4">
-                    <h4 className="font-medium mb-3 flex items-center gap-2">
-                      <Heart className="w-4 h-4 text-[#FF007F]" />
-                      Körperliche Details
-                    </h4>
-                    <div className="space-y-2 text-sm">
-                      {user.height && (
-                        <div>Größe: {user.height} cm</div>
-                      )}
-                      {user.weight && (
-                        <div>Gewicht: {user.weight} kg</div>
-                      )}
-                      {user.cockSize && (
-                        <div>Schwanzgröße: {user.cockSize} cm</div>
-                      )}
-                      {user.circumcision && (
-                        <div>Beschneidung: {user.circumcision}</div>
-                      )}
-                      {user.position && (
-                        <div>Position: {user.position}</div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+              <Card>
+                <CardContent className="p-4">
+                  <h4 className="font-medium mb-3 flex items-center gap-2">
+                    <Heart className="w-4 h-4 text-[#FF007F]" />
+                    Körperliche Details
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    {user.height && (
+                      <div>Größe: {user.height} cm</div>
+                    )}
+                    {user.weight && (
+                      <div>Gewicht: {user.weight} kg</div>
+                    )}
+                    {user.bodyType && (
+                      <div>Körpertyp: {user.bodyType}</div>
+                    )}
+                    {user.ethnicity && (
+                      <div>Ethnizität: {user.ethnicity}</div>
+                    )}
+                    {user.cockSize && (
+                      <div>Schwanzgröße: {user.cockSize} cm</div>
+                    )}
+                    {user.circumcision && (
+                      <div>Beschneidung: {user.circumcision}</div>
+                    )}
+                    {user.position && (
+                      <div>Position: {user.position}</div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
 
               {/* Services & Pricing */}
-              {(user.services?.length > 0 || user.hourlyRate) && (
-                <Card>
-                  <CardContent className="p-4">
-                    <h4 className="font-medium mb-3 flex items-center gap-2">
-                      <Star className="w-4 h-4 text-[#FF007F]" />
-                      Services & Preise
-                    </h4>
-                    <div className="space-y-2 text-sm">
-                      {user.hourlyRate && (
-                        <div className="font-medium text-[#FF007F]">
-                          {user.hourlyRate}€ / Stunde
+              <Card>
+                <CardContent className="p-4">
+                  <h4 className="font-medium mb-3 flex items-center gap-2">
+                    <Star className="w-4 h-4 text-[#FF007F]" />
+                    Services & Preise
+                  </h4>
+                  <div className="space-y-2 text-sm">
+                    {user.hourlyRate && (
+                      <div className="font-medium text-[#FF007F] text-lg">
+                        {user.hourlyRate}€ / Stunde
+                      </div>
+                    )}
+                    {user.services && user.services.length > 0 && (
+                      <div>
+                        <div className="text-xs text-muted-foreground mb-2">Services:</div>
+                        <div className="flex flex-wrap gap-1">
+                          {user.services.map((service: string, idx: number) => (
+                            <Badge key={`${service}-${idx}`} variant="secondary" className="text-xs">
+                              {service}
+                            </Badge>
+                          ))}
                         </div>
-                      )}
-                      {user.services && user.services.length > 0 && (
-                        <div>
-                          <div className="text-xs text-muted-foreground mb-1">Services:</div>
-                          <div className="flex flex-wrap gap-1">
-                            {user.services.slice(0, 3).map((service: string, idx: number) => (
-                              <Badge key={`${service}-${idx}`} variant="secondary" className="text-xs">
-                                {service}
-                              </Badge>
-                            ))}
-                            {user.services && user.services.length > 3 && (
-                              <Badge variant="secondary" className="text-xs">
-                                +{user.services.length - 3} mehr
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* Additional Images Gallery */}
+          {user?.profileImages && user.profileImages.length > 0 && (
+            <div className="mb-6">
+              <h3 className="font-semibold mb-3">Weitere Bilder</h3>
+              <div className="grid grid-cols-3 gap-2">
+                {user.profileImages.map((imageUrl: string, index: number) => (
+                  <img
+                    key={index}
+                    src={imageUrl}
+                    alt={`Zusatzbild ${index + 1}`}
+                    className="w-full aspect-square object-cover rounded-lg border border-gray-200"
+                  />
+                ))}
+              </div>
             </div>
           )}
 

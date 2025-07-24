@@ -376,13 +376,9 @@ export class DatabaseStorage implements IStorage {
       updatedAt: new Date(),
     };
     
-    // Handle profile images
-    if (profile.profileImageUrl !== undefined) {
-      updateData.profileImageUrl = profile.profileImageUrl;
-    }
-    if (profile.profileImages !== undefined) {
-      updateData.profileImages = profile.profileImages;
-    }
+    // Explicitly handle profile images - ensure they're saved
+    updateData.profileImageUrl = profile.profileImageUrl || null;
+    updateData.profileImages = Array.isArray(profile.profileImages) ? profile.profileImages : [];
     
     console.log(`Updating user ${userId} with data:`, updateData);
     
@@ -391,6 +387,10 @@ export class DatabaseStorage implements IStorage {
       .set(updateData)
       .where(eq(users.id, userId))
       .returning();
+    
+    if (!user) {
+      throw new Error('User not found');
+    }
     
     console.log(`Updated user:`, user);
     return user;
