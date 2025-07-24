@@ -181,8 +181,9 @@ export default function ProfileEditUnified() {
         title: "Profil gespeichert",
         description: "Dein Profil wurde erfolgreich aktualisiert!",
       });
-      // Stay on edit page to avoid navigation issues
-      // navigate('/profile');
+      setTimeout(() => {
+        navigate('/my-profile');
+      }, 1000);
     },
     onError: (error: Error) => {
       toast({
@@ -196,10 +197,19 @@ export default function ProfileEditUnified() {
   const handleImageUpload = (imageUrl: string, isMain: boolean = true) => {
     if (isMain) {
       form.setValue('profileImageUrl', imageUrl);
+      // Trigger form update to show image immediately
+      form.trigger('profileImageUrl');
     } else {
       const currentImages = form.getValues('profileImages') || [];
       form.setValue('profileImages', [...currentImages, imageUrl]);
+      form.trigger('profileImages');
     }
+    
+    // Show immediate feedback
+    toast({
+      title: "Bild hochgeladen",
+      description: isMain ? "Profilbild wurde aktualisiert" : "Zusätzliches Bild wurde hinzugefügt",
+    });
   };
 
   const handleImageDelete = (imageUrl: string) => {
@@ -208,9 +218,16 @@ export default function ProfileEditUnified() {
     
     if (currentMain === imageUrl) {
       form.setValue('profileImageUrl', '');
+      form.trigger('profileImageUrl');
     } else {
       form.setValue('profileImages', currentImages.filter(img => img !== imageUrl));
+      form.trigger('profileImages');
     }
+    
+    toast({
+      title: "Bild entfernt",
+      description: "Das Bild wurde aus deinem Profil entfernt",
+    });
   };
 
   const onSubmit = (data: UpdateProfile) => {
@@ -262,8 +279,8 @@ export default function ProfileEditUnified() {
                 </CardHeader>
                 <CardContent>
                   <ProfileImageUpload
-                    currentImage={currentUser?.profileImageUrl}
-                    additionalImages={currentUser?.profileImages || []}
+                    currentImage={form.watch('profileImageUrl') || user?.profileImageUrl}
+                    additionalImages={form.watch('profileImages') || user?.profileImages || []}
                     onImageUpload={handleImageUpload}
                     onImageDelete={handleImageDelete}
                     isTransUser={true}

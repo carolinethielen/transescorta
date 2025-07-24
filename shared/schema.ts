@@ -159,6 +159,8 @@ export const updateProfileSchema = z.object({
   location: z.string().min(1, "Standort ist erforderlich").optional(),
   latitude: z.number().optional(),
   longitude: z.number().optional(),
+  profileImageUrl: z.string().optional(),
+  profileImages: z.array(z.string()).optional(),
   // Trans escort specific fields
   height: z.number().min(140, "Mindestens 140cm").max(220, "Maximal 220cm").optional(),
   weight: z.number().min(40, "Mindestens 40kg").max(200, "Maximal 200kg").optional(),
