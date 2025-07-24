@@ -246,8 +246,7 @@ export default function Home() {
       <header className="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur border-b border-gray-200 dark:border-gray-700">
         <div className="container mx-auto px-4 py-3">
           <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-[#FF007F]">TransConnect</h1>
-            
+            <h1 className="text-2xl font-bold text-[#FF007F]">TransEscorta</h1>
             <div className="flex items-center space-x-3">
               {/* Location Selector */}
               <LocationSelector
@@ -263,9 +262,9 @@ export default function Home() {
                 variant="ghost"
                 size="sm"
                 onClick={toggleTheme}
-                className="p-2"
+                className="h-8 w-8 p-1 hover:bg-gray-100 dark:hover:bg-gray-800"
               >
-                {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                {theme === 'dark' ? <Sun className="w-4 h-4 text-gray-600 dark:text-gray-400" /> : <Moon className="w-4 h-4 text-gray-600 dark:text-gray-400" />}
               </Button>
             </div>
           </div>

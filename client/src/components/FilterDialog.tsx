@@ -99,14 +99,11 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button 
-          variant={activeSummary ? "default" : "outline"} 
+          variant="ghost" 
           size="sm"
-          className={activeSummary ? "bg-[#FF007F] hover:bg-[#FF007F]/90 text-white max-w-48" : ""}
+          className={`h-8 w-8 p-1 ${activeSummary ? 'bg-[#FF007F] text-white hover:bg-[#FF007F]/90' : 'hover:bg-gray-100 dark:hover:bg-gray-800'}`}
         >
-          <Filter className="w-4 h-4 mr-1 flex-shrink-0" />
-          <span className="truncate">
-            {activeSummary || 'Filter'}
-          </span>
+          <Filter className={`w-4 h-4 ${activeSummary ? 'text-white' : 'text-gray-600 dark:text-gray-400'}`} />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md max-h-[80vh] overflow-y-auto">
