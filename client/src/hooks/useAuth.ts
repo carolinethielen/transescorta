@@ -3,9 +3,12 @@ import { useEffect } from "react";
 import { type User } from "@shared/schema";
 
 export function useAuth() {
-  const { data: user, isLoading } = useQuery<User>({
+  const { data: user, isLoading, error } = useQuery<User>({
     queryKey: ["/api/auth/user"],
     retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
   // Handle user type update from localStorage after login
@@ -35,8 +38,8 @@ export function useAuth() {
   }, [user]);
 
   return {
-    user,
+    user: error ? null : user,
     isLoading,
-    isAuthenticated: !!user,
+    isAuthenticated: !!user && !error,
   };
 }

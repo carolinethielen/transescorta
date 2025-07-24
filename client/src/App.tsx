@@ -28,6 +28,15 @@ import PrivateAlbums from "@/pages/PrivateAlbums";
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
 
+  // Don't show loading for unauthenticated users - just show the app
+  if (isLoading && isAuthenticated) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <div className="animate-spin w-8 h-8 border-4 border-[#FF007F] border-t-transparent rounded-full" />
+      </div>
+    );
+  }
+
   return (
     <Switch>
       {/* Authentication routes - always accessible */}
@@ -43,7 +52,7 @@ function Router() {
       <Route path="/landing" component={Landing} />
       
       {/* Protected routes - require authentication */}
-      {isAuthenticated && !isLoading && (
+      {isAuthenticated && (
         <>
           <Route path="/chat" component={ChatMainNew} />
           <Route path="/my-profile" component={Profile} />
