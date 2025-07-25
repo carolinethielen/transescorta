@@ -24,7 +24,9 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Heart, Eye, EyeOff } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Heart, Eye, EyeOff, Shield, Lock } from 'lucide-react';
+import { Link } from 'wouter';
 
 const loginSchema = z.object({
   email: z.string().email('Ungültige E-Mail-Adresse'),
@@ -39,6 +41,9 @@ const registerSchema = z.object({
   lastName: z.string().optional(),
   userType: z.enum(['trans', 'man'], {
     required_error: 'Bitte wähle deinen Kontotyp',
+  }),
+  acceptTerms: z.boolean().refine(val => val === true, {
+    message: 'Du musst die Nutzungsbedingungen und Datenschutzerklärung akzeptieren',
   }),
 }).refine((data) => data.password === data.confirmPassword, {
   message: 'Passwörter stimmen nicht überein',
@@ -76,6 +81,7 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
       firstName: '',
       lastName: '',
       userType: undefined as any,
+      acceptTerms: false,
     },
   });
 
@@ -141,7 +147,7 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
 
   const registerMutation = useMutation({
     mutationFn: async (data: RegisterForm) => {
-      const { confirmPassword, ...registerData } = data;
+      const { confirmPassword, acceptTerms, ...registerData } = data;
       
       // Get reCAPTCHA token first
       let recaptchaToken;
@@ -210,7 +216,7 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader className="text-center">
           <div className="flex justify-center mb-4">
             <div className="bg-[#FF007F] p-3 rounded-full">
@@ -431,6 +437,47 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
                         </div>
                       </FormControl>
                       <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                {/* Security Information */}
+                <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 space-y-2">
+                  <div className="flex items-center space-x-2 text-green-700 dark:text-green-300">
+                    <Shield className="w-4 h-4" />
+                    <span className="text-sm font-medium">Sicher & Verschlüsselt</span>
+                  </div>
+                  <div className="flex items-center space-x-2 text-green-600 dark:text-green-400">
+                    <Lock className="w-4 h-4" />
+                    <span className="text-xs">Deine Daten werden SSL-verschlüsselt und sicher gespeichert</span>
+                  </div>
+                </div>
+
+                {/* Terms & Privacy Checkbox */}
+                <FormField
+                  control={registerForm.control}
+                  name="acceptTerms"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                      <FormControl>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      </FormControl>
+                      <div className="space-y-1 leading-none">
+                        <div className="text-sm">
+                          Ich akzeptiere die{' '}
+                          <Link href="/terms" className="text-[#FF007F] hover:underline font-medium">
+                            Nutzungsbedingungen
+                          </Link>{' '}
+                          und{' '}
+                          <Link href="/privacy" className="text-[#FF007F] hover:underline font-medium">
+                            Datenschutzerklärung
+                          </Link>
+                        </div>
+                        <FormMessage />
+                      </div>
                     </FormItem>
                   )}
                 />
