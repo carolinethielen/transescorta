@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { Heart, LogIn, Eye, EyeOff } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const loginSchema = z.object({
   email: z.string().email('Ungültige E-Mail-Adresse'),
@@ -22,6 +23,7 @@ type LoginForm = z.infer<typeof loginSchema>;
 export default function Login() {
   const [, navigate] = useLocation();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -39,8 +41,8 @@ export default function Login() {
     },
     onSuccess: (data) => {
       toast({
-        title: "Anmeldung erfolgreich!",
-        description: `Willkommen zurück, ${data.user?.firstName || 'User'}!`,
+        title: t?.loginSuccess || "Anmeldung erfolgreich!",
+        description: `${t?.welcomeBack || 'Willkommen zurück'}, ${data.user?.firstName || 'User'}!`,
       });
       
       // Invalidate user query to refetch user data
@@ -51,8 +53,8 @@ export default function Login() {
     },
     onError: (error: any) => {
       toast({
-        title: "Anmeldung fehlgeschlagen",
-        description: error.message || "Ungültige E-Mail oder Passwort.",
+        title: t?.loginFailed || "Anmeldung fehlgeschlagen",
+        description: error.message || t?.invalidCredentials || "Ungültige E-Mail oder Passwort.",
         variant: "destructive",
       });
     },
@@ -72,7 +74,7 @@ export default function Login() {
             </div>
           </div>
           <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-            Anmelden
+            {t?.loginTitle || 'Anmelden'}
           </CardTitle>
           <CardDescription>
             Melde dich bei deinem TransConnect-Konto an

@@ -4,6 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { ImageGallery } from '@/components/ImageGallery';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { 
   MapPin, 
   Clock, 
@@ -34,6 +35,7 @@ export function EscortProfileView({
   onContact, 
   onEdit 
 }: EscortProfileViewProps) {
+  const { t } = useLanguage();
   
   return (
     <div className="min-h-screen bg-background">
@@ -48,7 +50,7 @@ export function EscortProfileView({
             className="absolute top-4 left-4 z-10 bg-white/90 dark:bg-black/90 hover:bg-white dark:hover:bg-black"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Zurück
+            {t?.backButton || 'Zurück'}
           </Button>
         )}
 
@@ -60,7 +62,7 @@ export function EscortProfileView({
                 onClick={onEdit}
                 className="bg-[#FF007F] hover:bg-[#FF007F]/90"
               >
-                Profil bearbeiten
+                {t?.editProfile || 'Profil bearbeiten'}
               </Button>
             )
           ) : (
@@ -70,7 +72,7 @@ export function EscortProfileView({
                 className="bg-[#FF007F] hover:bg-[#FF007F]/90"
               >
                 <MessageCircle className="w-4 h-4 mr-2" />
-                Kontakt
+                {t?.contact || 'Kontakt'}
               </Button>
             )
           )}

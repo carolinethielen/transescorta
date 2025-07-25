@@ -34,7 +34,7 @@ export default function Home() {
   const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated } = useAuth();
   const { t } = useLanguage();
-  const [selectedLocation, setSelectedLocation] = useState(t?.myLocation || 'Mein Standort');
+  const [selectedLocation, setSelectedLocation] = useState('Mein Standort');
   const [userCoordinates, setUserCoordinates] = useState<{ lat: number; lon: number } | null>(null);
   const [filters, setFilters] = useState<any>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -50,7 +50,7 @@ export default function Home() {
       setUserCoordinates({ lat: coordinates.latitude, lon: coordinates.longitude });
       
       // Always update location to show detected city when GPS is used
-      if (selectedLocation === (t?.myLocation || 'Mein Standort') || selectedLocation === (t?.useCurrentLocation || 'Aktuellen Standort verwenden') || selectedLocation === (t?.detectingLocation || 'Standort wird ermittelt...')) {
+      if (selectedLocation === 'Mein Standort' || selectedLocation === (t?.useCurrentLocation || 'Aktuellen Standort verwenden') || selectedLocation === (t?.detectingLocation || 'Standort wird ermittelt...')) {
         setSelectedLocation(currentCity);
       }
     }

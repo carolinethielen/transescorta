@@ -129,6 +129,22 @@ export interface Translations {
   backButton: string;
   profileImages: string;
   servicesOffered: string;
+  
+  // Additional UI translations needed
+  myLocation: string;
+  useCurrentLocation: string;
+  detectingLocation: string;
+  contact: string;
+  newEscortsSection: string;
+  premiumEscortsSection: string;
+  registerTitle: string;
+  loginTitle: string;
+  welcomeBack: string;
+  loginSuccess: string;
+  loginFailed: string;
+  invalidCredentials: string;
+  escortsIn: string;
+  noEscortsFound: string;
 }
 
 export const supportedLanguages = [
@@ -270,6 +286,22 @@ export const translations: Record<string, Translations> = {
     backButton: 'Zurück',
     profileImages: 'Profilbilder',
     servicesOffered: 'Angebotene Services',
+    
+    // Additional UI translations needed
+    myLocation: 'Mein Standort',
+    useCurrentLocation: 'Aktuellen Standort verwenden',
+    detectingLocation: 'Standort wird ermittelt...',
+    contact: 'Kontakt',
+    newEscortsSection: 'Neue Escorts',
+    premiumEscortsSection: 'Premium Escorts',
+    registerTitle: 'Registrieren',
+    loginTitle: 'Anmelden',
+    welcomeBack: 'Willkommen zurück',
+    loginSuccess: 'Anmeldung erfolgreich!',
+    loginFailed: 'Anmeldung fehlgeschlagen',
+    invalidCredentials: 'Ungültige E-Mail oder Passwort',
+    escortsIn: 'Escorts in',
+    noEscortsFound: 'Keine Escorts gefunden',
   },
   
   en: {
@@ -402,6 +434,22 @@ export const translations: Record<string, Translations> = {
     backButton: 'Back',
     profileImages: 'Profile Images',
     servicesOffered: 'Services Offered',
+    
+    // Additional UI translations needed
+    myLocation: 'My Location',
+    useCurrentLocation: 'Use Current Location',
+    detectingLocation: 'Detecting Location...',
+    contact: 'Contact',
+    newEscortsSection: 'New Escorts',
+    premiumEscortsSection: 'Premium Escorts',
+    registerTitle: 'Register',
+    loginTitle: 'Login',
+    welcomeBack: 'Welcome Back',
+    loginSuccess: 'Login Successful!',
+    loginFailed: 'Login Failed',
+    invalidCredentials: 'Invalid Email or Password',
+    escortsIn: 'Escorts in',
+    noEscortsFound: 'No Escorts Found',
   },
   
   pt: {
@@ -534,6 +582,22 @@ export const translations: Record<string, Translations> = {
     backButton: 'Voltar',
     profileImages: 'Imagens do Perfil',
     servicesOffered: 'Serviços Oferecidos',
+    
+    // Additional UI translations needed
+    myLocation: 'Minha Localização',
+    useCurrentLocation: 'Usar Localização Atual',
+    detectingLocation: 'Detectando Localização...',
+    contact: 'Contato',
+    newEscortsSection: 'Novos Escorts',
+    premiumEscortsSection: 'Escorts Premium',
+    registerTitle: 'Registrar',
+    loginTitle: 'Entrar',
+    welcomeBack: 'Bem-vindo de Volta',
+    loginSuccess: 'Login Realizado com Sucesso!',
+    loginFailed: 'Falha no Login',
+    invalidCredentials: 'Email ou Senha Inválidos',
+    escortsIn: 'Escorts em',
+    noEscortsFound: 'Nenhum Escort Encontrado',
   },
   
   es: {
@@ -666,6 +730,22 @@ export const translations: Record<string, Translations> = {
     backButton: 'Atrás',
     profileImages: 'Imágenes del Perfil',
     servicesOffered: 'Servicios Ofrecidos',
+    
+    // Additional UI translations needed
+    myLocation: 'Mi Ubicación',
+    useCurrentLocation: 'Usar Ubicación Actual',
+    detectingLocation: 'Detectando Ubicación...',
+    contact: 'Contacto',
+    newEscortsSection: 'Nuevos Escorts',
+    premiumEscortsSection: 'Escorts Premium',
+    registerTitle: 'Registrarse',
+    loginTitle: 'Iniciar Sesión',
+    welcomeBack: 'Bienvenido de Vuelta',
+    loginSuccess: 'Inicio de Sesión Exitoso!',
+    loginFailed: 'Fallo en el Inicio de Sesión',
+    invalidCredentials: 'Email o Contraseña Inválidos',
+    escortsIn: 'Escorts en',
+    noEscortsFound: 'No se Encontraron Escorts',
   },
   
   fr: {
@@ -798,5 +878,21 @@ export const translations: Record<string, Translations> = {
     backButton: 'Retour',
     profileImages: 'Images du Profil',
     servicesOffered: 'Services Offerts',
+    
+    // Additional UI translations needed
+    myLocation: 'Ma Localisation',
+    useCurrentLocation: 'Utiliser la Localisation Actuelle',
+    detectingLocation: 'Détection de la Localisation...',
+    contact: 'Contact',
+    newEscortsSection: 'Nouveaux Escorts',
+    premiumEscortsSection: 'Escorts Premium',
+    registerTitle: 'S\'inscrire',
+    loginTitle: 'Se Connecter',
+    welcomeBack: 'Bon Retour',
+    loginSuccess: 'Connexion Réussie!',
+    loginFailed: 'Échec de la Connexion',
+    invalidCredentials: 'Email ou Mot de Passe Invalide',
+    escortsIn: 'Escorts à',
+    noEscortsFound: 'Aucun Escort Trouvé',
   },
 };
