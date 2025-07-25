@@ -244,7 +244,7 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur border-b border-gray-200 dark:border-gray-700">
-        <div className="container mx-auto px-4 py-3">
+        <div className="w-full mx-auto px-4 py-3">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold text-[#FF007F]">TransEscorta</h1>
             <div className="flex items-center space-x-3">
@@ -273,7 +273,7 @@ export default function Home() {
 
       {/* Content */}
       <main className="bg-gray-50 dark:bg-gray-900 min-h-screen">
-        <div className="container mx-auto px-4 py-6">
+        <div className="w-full mx-auto px-4 py-6">
           {locationLoading && (
             <div className="text-center py-4">
               <p className="text-sm text-gray-600 dark:text-gray-400">Standort wird ermittelt...</p>
@@ -284,7 +284,7 @@ export default function Home() {
           {premiumEscorts.length > 0 && (
             <section className="mb-8">
               <SectionHeader title="Premium Escorts" icon={Crown} />
-              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5">
                 {premiumEscorts.map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}
@@ -296,7 +296,7 @@ export default function Home() {
           {newEscorts.length > 0 && (
             <section className="mb-8">
               <SectionHeader title="Neue Escorts" icon={Star} />
-              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5">
                 {newEscorts.map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}
@@ -311,7 +311,7 @@ export default function Home() {
                 title={selectedLocation === 'Mein Standort' ? 'Escorts in der Nähe' : `Escorts in ${selectedLocation}`} 
                 icon={MapPin} 
               />
-              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-5">
                 {nearbyEscorts.map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}
@@ -329,7 +329,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 mt-12">
-        <div className="container mx-auto px-4 py-8">
+        <div className="w-full mx-auto px-4 py-8">
           <div className="flex flex-col items-center space-y-4">
             {/* Legal Links */}
             <div className="flex flex-wrap justify-center gap-4 text-sm">
