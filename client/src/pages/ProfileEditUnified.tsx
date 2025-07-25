@@ -73,7 +73,7 @@ const bodyTypes = [
 ];
 
 const ethnicities = [
-  'Europäisch', 'Lateinamerikanisch', 'Asiatisch', 'Afrikanisch', 'Arabisch', 'Gemischt'
+  'Kaukasisch', 'Lateinamerikanisch', 'Asiatisch', 'Afrikanisch', 'Arabisch', 'Gemischt'
 ];
 
 export default function ProfileEditUnified() {

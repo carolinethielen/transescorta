@@ -16,6 +16,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
   const [filters, setFilters] = useState({
     ageRange: [18, 50],
     priceRange: [50, 500],
+    cockSizeRange: [10, 30],
     position: '',
     bodyType: '',
     ethnicity: '',
@@ -34,7 +35,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
 
   const positions = ['top', 'bottom', 'versatile'];
   const bodyTypes = ['Schlank', 'Athletisch', 'Durchschnittlich', 'Kurvig', 'Plus Size', 'Muskulös'];
-  const ethnicities = ['Europäisch', 'Lateinamerikanisch', 'Asiatisch', 'Afrikanisch', 'Arabisch', 'Gemischt'];
+  const ethnicities = ['Kaukasisch', 'Lateinamerikanisch', 'Asiatisch', 'Afrikanisch', 'Arabisch', 'Gemischt'];
 
   const handleServiceToggle = (service: string) => {
     const newServices = filters.services.includes(service)
@@ -53,6 +54,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
     const clearedFilters = {
       ageRange: [18, 50],
       priceRange: [50, 500],
+      cockSizeRange: [10, 30],
       position: '',
       bodyType: '',
       ethnicity: '',
@@ -75,17 +77,20 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
     if (filters.priceRange[0] !== 50 || filters.priceRange[1] !== 500) {
       active.push(`${filters.priceRange[0]}-${filters.priceRange[1]}€`);
     }
-    if (filters.position) {
-      active.push(filters.position);
+    if (filters.cockSizeRange[0] !== 10 || filters.cockSizeRange[1] !== 30) {
+      active.push(`${filters.cockSizeRange[0]}-${filters.cockSizeRange[1]}cm`);
     }
-    if (filters.bodyType) {
+    if (filters.position && filters.position !== 'all') {
+      active.push(filters.position === 'top' ? 'Top' : filters.position === 'bottom' ? 'Bottom' : 'Versatile');
+    }
+    if (filters.circumcision && filters.circumcision !== 'all') {
+      active.push(filters.circumcision);
+    }
+    if (filters.bodyType && filters.bodyType !== 'all') {
       active.push(filters.bodyType);
     }
     if (filters.ethnicity && filters.ethnicity !== 'all') {
       active.push(filters.ethnicity);
-    }
-    if (filters.circumcision && filters.circumcision !== 'all') {
-      active.push(filters.circumcision);
     }
     if (filters.services.length > 0) {
       active.push(`${filters.services.length} Service${filters.services.length > 1 ? 's' : ''}`);
@@ -125,7 +130,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
         </DialogHeader>
         
         <div className="space-y-6">
-          {/* Age Range */}
+          {/* 1. Age Range */}
           <div>
             <label className="text-sm font-medium mb-2 block">
               Alter: {filters.ageRange[0]} - {filters.ageRange[1]} Jahre
@@ -140,7 +145,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
             />
           </div>
 
-          {/* Price Range */}
+          {/* 2. Price Range */}
           <div>
             <label className="text-sm font-medium mb-2 block">
               Preis: {filters.priceRange[0]}€ - {filters.priceRange[1]}€ pro Stunde
@@ -155,7 +160,22 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
             />
           </div>
 
-          {/* Position */}
+          {/* 3. Cock Size Range */}
+          <div>
+            <label className="text-sm font-medium mb-2 block">
+              Schwanzgröße: {filters.cockSizeRange[0]} - {filters.cockSizeRange[1]} cm
+            </label>
+            <Slider
+              value={filters.cockSizeRange}
+              onValueChange={(value) => setFilters({ ...filters, cockSizeRange: value })}
+              min={10}
+              max={30}
+              step={1}
+              className="w-full"
+            />
+          </div>
+
+          {/* 4. Position */}
           <div>
             <label className="text-sm font-medium mb-2 block">Position</label>
             <Select value={filters.position} onValueChange={(value) => setFilters({ ...filters, position: value })}>
@@ -175,7 +195,23 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
             </Select>
           </div>
 
-          {/* Body Type */}
+          {/* 5. Circumcision */}
+          <div>
+            <label className="text-sm font-medium mb-2 block">Beschneidung</label>
+            <Select value={filters.circumcision || ''} onValueChange={(value) => setFilters({ ...filters, circumcision: value })}>
+              <SelectTrigger>
+                <SelectValue placeholder="Beschneidung wählen..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Alle</SelectItem>
+                <SelectItem value="beschnitten">Beschnitten</SelectItem>
+                <SelectItem value="unbeschnitten">Unbeschnitten</SelectItem>
+                <SelectItem value="teilweise">Teilweise</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* 6. Body Type */}
           <div>
             <label className="text-sm font-medium mb-2 block">Körpertyp</label>
             <Select value={filters.bodyType} onValueChange={(value) => setFilters({ ...filters, bodyType: value })}>
@@ -193,7 +229,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
             </Select>
           </div>
 
-          {/* Ethnicity */}
+          {/* 7. Ethnicity */}
           <div>
             <label className="text-sm font-medium mb-2 block">Ethnizität</label>
             <Select value={filters.ethnicity} onValueChange={(value) => setFilters({ ...filters, ethnicity: value })}>
@@ -211,7 +247,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
             </Select>
           </div>
 
-          {/* Services */}
+          {/* 8. Services */}
           <div>
             <label className="text-sm font-medium mb-2 block">Services</label>
             <div className="grid grid-cols-2 gap-2">
@@ -230,23 +266,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
             </div>
           </div>
 
-          {/* Circumcision Filter - Additional for Trans escorts */}
-          <div>
-            <label className="text-sm font-medium mb-2 block">Beschneidung</label>
-            <Select value={filters.circumcision || ''} onValueChange={(value) => setFilters({ ...filters, circumcision: value })}>
-              <SelectTrigger>
-                <SelectValue placeholder="Beschneidung wählen..." />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Alle</SelectItem>
-                <SelectItem value="beschnitten">Beschnitten</SelectItem>
-                <SelectItem value="unbeschnitten">Unbeschnitten</SelectItem>
-                <SelectItem value="teilweise">Teilweise</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Status Filters */}
+          {/* 9. Status Filters */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
               <Checkbox
