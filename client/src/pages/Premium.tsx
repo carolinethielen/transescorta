@@ -41,33 +41,33 @@ export default function Premium() {
   const premiumFeatures = [
     {
       icon: <Crown className="w-5 h-5 text-[#FF007F]" />,
-      title: "Premium Badge",
-      description: "Goldene Krone in deinem Profil für bessere Sichtbarkeit"
+      title: t?.premiumBadge || "Premium Badge",
+      description: t?.premiumBadgeDesc || "Goldene Krone in deinem Profil für bessere Sichtbarkeit"
     },
     {
       icon: <Star className="w-5 h-5 text-[#FF007F]" />,
-      title: "Premium Sektion",
-      description: "Erscheine in der separaten Premium Escorts Sektion"
+      title: t?.premiumSection || "Premium Sektion",
+      description: t?.premiumSectionDesc || "Erscheine in der separaten Premium Escorts Sektion"
     },
     {
       icon: <Zap className="w-5 h-5 text-[#FF007F]" />,
-      title: "Priorität",
-      description: "Höhere Platzierung in Suchergebnissen"
+      title: t?.priority || "Priorität",
+      description: t?.priorityDesc || "Höhere Platzierung in Suchergebnissen"
     },
     {
       icon: <Eye className="w-5 h-5 text-[#FF007F]" />,
-      title: "Mehr Sichtbarkeit",
-      description: "Dein Profil wird häufiger angezeigt"
+      title: t?.moreVisibility || "Mehr Sichtbarkeit",
+      description: t?.moreVisibilityDesc || "Dein Profil wird häufiger angezeigt"
     },
     {
       icon: <MessageCircle className="w-5 h-5 text-[#FF007F]" />,
-      title: "Chat Priorität",
-      description: "Deine Nachrichten werden bevorzugt angezeigt"
+      title: t?.chatPriority || "Chat Priorität",
+      description: t?.chatPriorityDesc || "Deine Nachrichten werden bevorzugt angezeigt"
     },
     {
       icon: <MapPin className="w-5 h-5 text-[#FF007F]" />,
-      title: "Erweiterte Reichweite",
-      description: "Sichtbar in größerem Umkreis"
+      title: t?.extendedReach || "Erweiterte Reichweite",
+      description: t?.extendedReachDesc || "Sichtbar in größerem Umkreis"
     }
   ];
 
@@ -80,11 +80,11 @@ export default function Premium() {
           <div className="flex items-center justify-center gap-2">
             <Crown className="w-8 h-8 text-[#FF007F]" />
             <h1 className="text-3xl font-bold bg-gradient-to-r from-[#FF007F] to-purple-600 bg-clip-text text-transparent">
-              TransEscorta Premium
+              {t?.appName || 'TransEscorta'} {t?.premium || 'Premium'}
             </h1>
           </div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Steigere deine Sichtbarkeit und erhalte mehr Anfragen mit unserem Premium-Zugang
+            {t?.premiumHeaderDesc || 'Steigere deine Sichtbarkeit und erhalte mehr Anfragen mit unserem Premium-Zugang'}
           </p>
         </div>
 
@@ -105,15 +105,15 @@ export default function Premium() {
                     <h3 className="font-semibold">{user.firstName || user.email}</h3>
                     <div className="flex items-center gap-2">
                       <Badge variant={user.isPremium ? "default" : "secondary"}>
-                        {user.isPremium ? "Premium Mitglied" : "Standard Mitglied"}
+                        {user.isPremium ? (t?.premiumMember || "Premium Mitglied") : (t?.standardMember || "Standard Mitglied")}
                       </Badge>
                     </div>
                   </div>
                 </div>
                 {user.isPremium && (
                   <div className="text-right">
-                    <p className="text-sm text-muted-foreground">Premium aktiv</p>
-                    <p className="text-xs text-green-600">1 Monat aktiv</p>
+                    <p className="text-sm text-muted-foreground">{t?.premiumActive || 'Premium aktiv'}</p>
+                    <p className="text-xs text-green-600">{t?.oneMonthActive || '1 Monat aktiv'}</p>
                   </div>
                 )}
               </div>
@@ -126,15 +126,15 @@ export default function Premium() {
           <CardHeader className="text-center pb-4">
             <div className="flex items-center justify-center gap-2 mb-2">
               <Crown className="w-6 h-6 text-[#FF007F]" />
-              <CardTitle className="text-2xl">Premium Zugang</CardTitle>
+              <CardTitle className="text-2xl">{t?.premiumAccess || 'Premium Zugang'}</CardTitle>
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-center gap-1">
                 <span className="text-4xl font-bold text-[#FF007F]">€9,99</span>
-                <span className="text-muted-foreground">einmalig</span>
+                <span className="text-muted-foreground">{t?.oneTime || 'einmalig'}</span>
               </div>
               <CardDescription>
-                Einmalige Zahlung für 1 Monat Premium • Keine automatische Verlängerung
+                {t?.oneTimePaymentDesc || 'Einmalige Zahlung für 1 Monat Premium • Keine automatische Verlängerung'}
               </CardDescription>
             </div>
           </CardHeader>

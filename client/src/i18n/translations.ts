@@ -125,6 +125,43 @@ export interface Translations {
   privacySettingUpdated: string;
   settingNotSaved: string;
   
+  // Additional auth fields
+  usernamePlaceholder: string;
+  
+  // Push notifications
+  pushNotificationsEnabled: string;
+  pushNotificationsEnabledDesc: string;
+  permissionDenied: string;
+  pushNotificationsBrowserSettings: string;
+  pushNotificationsNotActivated: string;
+  
+  // Logout
+  logoutSuccess: string;
+  logoutSuccessDesc: string;
+  
+  // Premium features
+  premiumBadge: string;
+  premiumBadgeDesc: string;
+  premiumSection: string;
+  premiumSectionDesc: string;
+  priority: string;
+  priorityDesc: string;
+  moreVisibility: string;
+  moreVisibilityDesc: string;
+  chatPriority: string;
+  chatPriorityDesc: string;
+  extendedReach: string;
+  extendedReachDesc: string;
+  premiumUpgrade: string;
+  premiumUpgradeDesc: string;
+  premiumHeaderDesc: string;
+  premiumMember: string;
+  standardMember: string;
+  oneMonthActive: string;
+  premiumAccess: string;
+  oneTimePaymentDesc: string;
+  oneTime: string;
+  
   // Status & Nachrichten
   loading: string;
   error: string;
@@ -212,6 +249,43 @@ export const translations: Record<string, Translations> = {
     settingSaved: 'Einstellung gespeichert',
     privacySettingUpdated: 'Deine Privatsphäre-Einstellung wurde aktualisiert',
     settingNotSaved: 'Einstellung konnte nicht gespeichert werden',
+    
+    // Additional auth fields
+    usernamePlaceholder: 'Dein Benutzername',
+    
+    // Push notifications
+    pushNotificationsEnabled: 'Push-Benachrichtigungen aktiviert',
+    pushNotificationsEnabledDesc: 'Du erhältst jetzt Benachrichtigungen für neue Nachrichten',
+    permissionDenied: 'Berechtigung verweigert',
+    pushNotificationsBrowserSettings: 'Push-Benachrichtigungen können in den Browser-Einstellungen aktiviert werden',
+    pushNotificationsNotActivated: 'Push-Benachrichtigungen konnten nicht aktiviert werden',
+    
+    // Logout
+    logoutSuccess: 'Erfolgreich abgemeldet',
+    logoutSuccessDesc: 'Du wurdest erfolgreich abgemeldet',
+    
+    // Premium features
+    premiumBadge: 'Premium Badge',
+    premiumBadgeDesc: 'Goldene Krone in deinem Profil für bessere Sichtbarkeit',
+    premiumSection: 'Premium Sektion',
+    premiumSectionDesc: 'Erscheine in der separaten Premium Escorts Sektion',
+    priority: 'Priorität',
+    priorityDesc: 'Höhere Platzierung in Suchergebnissen',
+    moreVisibility: 'Mehr Sichtbarkeit',
+    moreVisibilityDesc: 'Dein Profil wird häufiger angezeigt',
+    chatPriority: 'Chat Priorität',
+    chatPriorityDesc: 'Deine Nachrichten werden bevorzugt angezeigt',
+    extendedReach: 'Erweiterte Reichweite',
+    extendedReachDesc: 'Sichtbar in größerem Umkreis',
+    premiumUpgrade: 'Premium Upgrade',
+    premiumUpgradeDesc: 'Upgrade jetzt für nur €9.99 für 1 Monat Premium-Zugang',
+    premiumHeaderDesc: 'Steigere deine Sichtbarkeit und erhalte mehr Anfragen mit unserem Premium-Zugang',
+    premiumMember: 'Premium Mitglied',
+    standardMember: 'Standard Mitglied',
+    oneMonthActive: '1 Monat aktiv',
+    premiumAccess: 'Premium Zugang',
+    oneTimePaymentDesc: 'Einmalige Zahlung für 1 Monat Premium • Keine automatische Verlängerung',
+    oneTime: 'einmalig',
     
     // Registrierung
     iAm: 'Ich bin',
@@ -374,6 +448,43 @@ export const translations: Record<string, Translations> = {
     settingSaved: 'Setting saved',
     privacySettingUpdated: 'Your privacy setting has been updated',
     settingNotSaved: 'Setting could not be saved',
+    
+    // Additional auth fields
+    usernamePlaceholder: 'Your username',
+    
+    // Push notifications
+    pushNotificationsEnabled: 'Push notifications enabled',
+    pushNotificationsEnabledDesc: 'You will now receive notifications for new messages',
+    permissionDenied: 'Permission denied',
+    pushNotificationsBrowserSettings: 'Push notifications can be enabled in browser settings',
+    pushNotificationsNotActivated: 'Push notifications could not be activated',
+    
+    // Logout
+    logoutSuccess: 'Successfully logged out',
+    logoutSuccessDesc: 'You have been successfully logged out',
+    
+    // Premium features
+    premiumBadge: 'Premium Badge',
+    premiumBadgeDesc: 'Golden crown in your profile for better visibility',
+    premiumSection: 'Premium Section',
+    premiumSectionDesc: 'Appear in the separate Premium Escorts section',
+    priority: 'Priority',
+    priorityDesc: 'Higher placement in search results',
+    moreVisibility: 'More Visibility',
+    moreVisibilityDesc: 'Your profile will be shown more frequently',
+    chatPriority: 'Chat Priority',
+    chatPriorityDesc: 'Your messages will be displayed preferentially',
+    extendedReach: 'Extended Reach',
+    extendedReachDesc: 'Visible in a larger radius',
+    premiumUpgrade: 'Premium Upgrade',
+    premiumUpgradeDesc: 'Upgrade now for just €9.99 for 1 month Premium access',
+    premiumHeaderDesc: 'Increase your visibility and get more requests with our Premium access',
+    premiumMember: 'Premium Member',
+    standardMember: 'Standard Member',
+    oneMonthActive: '1 month active',
+    premiumAccess: 'Premium Access',
+    oneTimePaymentDesc: 'One-time payment for 1 month Premium • No automatic renewal',
+    oneTime: 'one-time',
     
     // Registrierung
     iAm: 'I am',
@@ -575,6 +686,65 @@ export const translations: Record<string, Translations> = {
     offline: 'Offline',
     lastSeen: 'Visto por último',
     
+    // Auth validation messages
+    emailPlaceholder: 'seu@email.com',
+    passwordPlaceholder: 'Sua senha',
+    invalidEmail: 'Endereço de email inválido',
+    passwordMinLength: 'A senha deve ter pelo menos 6 caracteres',
+    usernameRequired: 'Nome de usuário é obrigatório',
+    selectUserType: 'Por favor, selecione seu tipo de conta',
+    acceptTermsRequired: 'Você deve aceitar os termos e política de privacidade',
+    passwordsNoMatch: 'As senhas não coincidem',
+    
+    // Auth feedback messages  
+    loginSuccess: 'Login realizado com sucesso!',
+    loginFailed: 'Falha no login',
+    welcomeBack: 'Bem-vindo de volta',
+    invalidCredentials: 'Email ou senha inválidos',
+    
+    // Settings page
+    manageAccount: 'Gerencie sua conta e preferências',
+    settingSaved: 'Configuração salva',
+    privacySettingUpdated: 'Sua configuração de privacidade foi atualizada',
+    settingNotSaved: 'Configuração não pôde ser salva',
+    
+    // Additional auth fields
+    usernamePlaceholder: 'Seu nome de usuário',
+    
+    // Push notifications
+    pushNotificationsEnabled: 'Notificações push ativadas',
+    pushNotificationsEnabledDesc: 'Você agora receberá notificações para novas mensagens',
+    permissionDenied: 'Permissão negada',
+    pushNotificationsBrowserSettings: 'Notificações push podem ser ativadas nas configurações do navegador',
+    pushNotificationsNotActivated: 'Notificações push não puderam ser ativadas',
+    
+    // Logout
+    logoutSuccess: 'Logout realizado com sucesso',
+    logoutSuccessDesc: 'Você foi desconectado com sucesso',
+    
+    // Premium features
+    premiumBadge: 'Badge Premium',
+    premiumBadgeDesc: 'Coroa dourada no seu perfil para melhor visibilidade',
+    premiumSection: 'Seção Premium',
+    premiumSectionDesc: 'Apareça na seção separada de Escorts Premium',
+    priority: 'Prioridade',
+    priorityDesc: 'Colocação mais alta nos resultados de busca',
+    moreVisibility: 'Mais Visibilidade',
+    moreVisibilityDesc: 'Seu perfil será mostrado com mais frequência',
+    chatPriority: 'Prioridade no Chat',
+    chatPriorityDesc: 'Suas mensagens serão exibidas preferencialmente',
+    extendedReach: 'Alcance Estendido',
+    extendedReachDesc: 'Visível em um raio maior',
+    premiumUpgrade: 'Upgrade Premium',
+    premiumUpgradeDesc: 'Faça upgrade agora por apenas €9.99 por 1 mês de acesso Premium',
+    premiumHeaderDesc: 'Aumente sua visibilidade e receba mais solicitações com nosso acesso Premium',
+    premiumMember: 'Membro Premium',
+    standardMember: 'Membro Padrão',
+    oneMonthActive: '1 mês ativo',
+    premiumAccess: 'Acesso Premium',
+    oneTimePaymentDesc: 'Pagamento único por 1 mês Premium • Sem renovação automática',
+    oneTime: 'único',
+    
     // Premium
     premium: 'Premium',
     upgradePremium: 'Upgrade Premium',
@@ -715,6 +885,65 @@ export const translations: Record<string, Translations> = {
     offline: 'Desconectado',
     lastSeen: 'Visto por última vez',
     
+    // Auth validation messages
+    emailPlaceholder: 'tu@email.com',
+    passwordPlaceholder: 'Tu contraseña',
+    invalidEmail: 'Dirección de email inválida',
+    passwordMinLength: 'La contraseña debe tener al menos 6 caracteres',
+    usernameRequired: 'El nombre de usuario es obligatorio',
+    selectUserType: 'Por favor selecciona tu tipo de cuenta',
+    acceptTermsRequired: 'Debes aceptar los términos y política de privacidad',
+    passwordsNoMatch: 'Las contraseñas no coinciden',
+    
+    // Auth feedback messages  
+    loginSuccess: '¡Inicio de sesión exitoso!',
+    loginFailed: 'Fallo en el inicio de sesión',
+    welcomeBack: 'Bienvenido de vuelta',
+    invalidCredentials: 'Email o contraseña inválidos',
+    
+    // Settings page
+    manageAccount: 'Gestiona tu cuenta y preferencias',
+    settingSaved: 'Configuración guardada',
+    privacySettingUpdated: 'Tu configuración de privacidad ha sido actualizada',
+    settingNotSaved: 'La configuración no pudo ser guardada',
+    
+    // Additional auth fields
+    usernamePlaceholder: 'Tu nombre de usuario',
+    
+    // Push notifications
+    pushNotificationsEnabled: 'Notificaciones push activadas',
+    pushNotificationsEnabledDesc: 'Ahora recibirás notificaciones para nuevos mensajes',
+    permissionDenied: 'Permiso denegado',
+    pushNotificationsBrowserSettings: 'Las notificaciones push se pueden activar en la configuración del navegador',
+    pushNotificationsNotActivated: 'Las notificaciones push no se pudieron activar',
+    
+    // Logout
+    logoutSuccess: 'Sesión cerrada exitosamente',
+    logoutSuccessDesc: 'Has cerrado sesión exitosamente',
+    
+    // Premium features
+    premiumBadge: 'Insignia Premium',
+    premiumBadgeDesc: 'Corona dorada en tu perfil para mejor visibilidad',
+    premiumSection: 'Sección Premium',
+    premiumSectionDesc: 'Aparece en la sección separada de Escorts Premium',
+    priority: 'Prioridad',
+    priorityDesc: 'Mayor posicionamiento en resultados de búsqueda',
+    moreVisibility: 'Más Visibilidad',
+    moreVisibilityDesc: 'Tu perfil se mostrará con más frecuencia',
+    chatPriority: 'Prioridad en Chat',
+    chatPriorityDesc: 'Tus mensajes se mostrarán preferencialmente',
+    extendedReach: 'Alcance Extendido',
+    extendedReachDesc: 'Visible en un radio más amplio',
+    premiumUpgrade: 'Actualización Premium',
+    premiumUpgradeDesc: 'Actualiza ahora por solo €9.99 por 1 mes de acceso Premium',
+    premiumHeaderDesc: 'Aumenta tu visibilidad y recibe más solicitudes con nuestro acceso Premium',
+    premiumMember: 'Miembro Premium',
+    standardMember: 'Miembro Estándar',
+    oneMonthActive: '1 mes activo',
+    premiumAccess: 'Acceso Premium',
+    oneTimePaymentDesc: 'Pago único por 1 mes Premium • Sin renovación automática',
+    oneTime: 'único',
+    
     // Premium
     premium: 'Premium',
     upgradePremium: 'Actualizar Premium',
@@ -854,6 +1083,65 @@ export const translations: Record<string, Translations> = {
     online: 'En Ligne',
     offline: 'Hors Ligne',
     lastSeen: 'Vu pour la dernière fois',
+    
+    // Auth validation messages
+    emailPlaceholder: 'votre@email.com',
+    passwordPlaceholder: 'Votre mot de passe',
+    invalidEmail: 'Adresse email invalide',
+    passwordMinLength: 'Le mot de passe doit contenir au moins 6 caractères',
+    usernameRequired: 'Le nom d\'utilisateur est requis',
+    selectUserType: 'Veuillez sélectionner votre type de compte',
+    acceptTermsRequired: 'Vous devez accepter les conditions et la politique de confidentialité',
+    passwordsNoMatch: 'Les mots de passe ne correspondent pas',
+    
+    // Auth feedback messages  
+    loginSuccess: 'Connexion réussie!',
+    loginFailed: 'Échec de la connexion',
+    welcomeBack: 'Bon retour',
+    invalidCredentials: 'Email ou mot de passe invalide',
+    
+    // Settings page
+    manageAccount: 'Gérez votre compte et vos préférences',
+    settingSaved: 'Paramètre sauvegardé',
+    privacySettingUpdated: 'Votre paramètre de confidentialité a été mis à jour',
+    settingNotSaved: 'Le paramètre n\'a pas pu être sauvegardé',
+    
+    // Additional auth fields
+    usernamePlaceholder: 'Votre nom d\'utilisateur',
+    
+    // Push notifications
+    pushNotificationsEnabled: 'Notifications push activées',
+    pushNotificationsEnabledDesc: 'Vous recevrez maintenant des notifications pour les nouveaux messages',
+    permissionDenied: 'Permission refusée',
+    pushNotificationsBrowserSettings: 'Les notifications push peuvent être activées dans les paramètres du navigateur',
+    pushNotificationsNotActivated: 'Les notifications push n\'ont pas pu être activées',
+    
+    // Logout
+    logoutSuccess: 'Déconnexion réussie',
+    logoutSuccessDesc: 'Vous avez été déconnecté avec succès',
+    
+    // Premium features
+    premiumBadge: 'Badge Premium',
+    premiumBadgeDesc: 'Couronne dorée sur votre profil pour une meilleure visibilité',
+    premiumSection: 'Section Premium',
+    premiumSectionDesc: 'Apparaître dans la section séparée des Escorts Premium',
+    priority: 'Priorité',
+    priorityDesc: 'Classement plus élevé dans les résultats de recherche',
+    moreVisibility: 'Plus de Visibilité',
+    moreVisibilityDesc: 'Votre profil sera affiché plus fréquemment',
+    chatPriority: 'Priorité Chat',
+    chatPriorityDesc: 'Vos messages seront affichés en priorité',
+    extendedReach: 'Portée Étendue',
+    extendedReachDesc: 'Visible dans un rayon plus large',
+    premiumUpgrade: 'Mise à niveau Premium',
+    premiumUpgradeDesc: 'Passez au Premium maintenant pour seulement €9.99 pour 1 mois d\'accès Premium',
+    premiumHeaderDesc: 'Augmentez votre visibilité et recevez plus de demandes avec notre accès Premium',
+    premiumMember: 'Membre Premium',
+    standardMember: 'Membre Standard',
+    oneMonthActive: '1 mois actif',
+    premiumAccess: 'Accès Premium',
+    oneTimePaymentDesc: 'Paiement unique pour 1 mois Premium • Pas de renouvellement automatique',
+    oneTime: 'unique',
     
     // Premium
     premium: 'Premium',

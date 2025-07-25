@@ -95,7 +95,7 @@ export function BottomNavigation() {
             className="flex-1 border-[#FF007F] text-[#FF007F] hover:bg-[#FF007F] hover:text-white transition-colors"
           >
             <LogIn className="w-4 h-4 mr-2" />
-            {t?.login || 'Einloggen'}
+            {t?.login || 'Anmelden'}
           </Button>
           <Button
             onClick={handleRegister}

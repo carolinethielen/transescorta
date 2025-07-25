@@ -126,8 +126,8 @@ export default function Settings() {
         
         if (permission === 'granted') {
           toast({
-            title: "Push-Benachrichtigungen aktiviert",
-            description: "Du erhältst jetzt Benachrichtigungen für neue Nachrichten.",
+            title: t?.pushNotificationsEnabled || "Push-Benachrichtigungen aktiviert",
+            description: t?.pushNotificationsEnabledDesc || "Du erhältst jetzt Benachrichtigungen für neue Nachrichten.",
           });
           
           // Register service worker for push notifications
@@ -136,16 +136,16 @@ export default function Settings() {
           }
         } else {
           toast({
-            title: "Berechtigung verweigert",
-            description: "Push-Benachrichtigungen können in den Browser-Einstellungen aktiviert werden.",
+            title: t?.permissionDenied || "Berechtigung verweigert",
+            description: t?.pushNotificationsBrowserSettings || "Push-Benachrichtigungen können in den Browser-Einstellungen aktiviert werden.",
             variant: "destructive",
           });
         }
       } catch (error) {
         console.error('Push notification error:', error);
         toast({
-          title: "Fehler",
-          description: "Push-Benachrichtigungen konnten nicht aktiviert werden.",
+          title: t?.error || "Fehler",
+          description: t?.pushNotificationsNotActivated || "Push-Benachrichtigungen konnten nicht aktiviert werden.",
           variant: "destructive",
         });
       }
@@ -186,8 +186,8 @@ export default function Settings() {
         credentials: 'include',
       });
       toast({
-        title: "Erfolgreich abgemeldet",
-        description: "Du wurdest erfolgreich abgemeldet.",
+        title: t?.logoutSuccess || "Erfolgreich abgemeldet",
+        description: t?.logoutSuccessDesc || "Du wurdest erfolgreich abgemeldet.",
       });
       // Reload page to clear all state
       window.location.href = '/';
@@ -217,7 +217,7 @@ export default function Settings() {
   return (
     <div className="min-h-screen bg-background p-4 pb-24">
       <div className="max-w-md mx-auto space-y-6">
-        <h1 className="text-2xl font-bold text-foreground">{t.settings}</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t?.settings || 'Einstellungen'}</h1>
         
         {/* User Info Card */}
         <Card>

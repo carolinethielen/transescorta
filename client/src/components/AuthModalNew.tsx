@@ -321,8 +321,8 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
                           >
                             <div className="text-center">
                               <div className="text-lg font-semibold text-[#FF007F]">💄</div>
-                              <div className="font-medium">Trans Escort</div>
-                              <div className="text-sm text-gray-500">Ich biete Services an</div>
+                              <div className="font-medium">{t?.transEscort || 'Trans Escort'}</div>
+                              <div className="text-sm text-gray-500">{t?.transEscortDesc || 'Ich biete Services an'}</div>
                             </div>
                           </div>
                           <div
@@ -335,8 +335,8 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
                           >
                             <div className="text-center">
                               <div className="text-lg font-semibold text-[#FF007F]">👤</div>
-                              <div className="font-medium">Kunde</div>
-                              <div className="text-sm text-gray-500">Ich suche Services</div>
+                              <div className="font-medium">{t?.customer || 'Kunde'}</div>
+                              <div className="text-sm text-gray-500">{t?.customerDesc || 'Ich suche Services'}</div>
                             </div>
                           </div>
                         </div>
@@ -351,9 +351,9 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
                   name="firstName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Benutzername *</FormLabel>
+                      <FormLabel>{t?.username || 'Benutzername'} *</FormLabel>
                       <FormControl>
-                        <Input placeholder="Dein Benutzername" {...field} />
+                        <Input placeholder={t?.usernamePlaceholder || "Dein Benutzername"} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
