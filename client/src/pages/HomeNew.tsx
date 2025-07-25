@@ -8,6 +8,7 @@ import { LocationSelector } from '@/components/LocationSelector';
 import { FilterDialog } from '@/components/FilterDialog';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useAuth } from '@/hooks/useAuth';
+import { useLanguage } from '@/contexts/LanguageContext';
 import AuthModalNew from '@/components/AuthModalNew';
 
 import { PlaceholderImage } from '@/components/PlaceholderImage';
@@ -35,6 +36,7 @@ export default function Home() {
   const [filters, setFilters] = useState<any>(null);
   const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated } = useAuth();
+  const { t } = useLanguage();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
   const { toast } = useToast();

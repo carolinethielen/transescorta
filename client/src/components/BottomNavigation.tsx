@@ -2,28 +2,29 @@ import React, { useState } from 'react';
 import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
+import { useLanguage } from '@/contexts/LanguageContext';
 import AuthModalNew from '@/components/AuthModalNew';
 import { Home, MessageCircle, User, Search, Settings, LogIn, UserPlus, ImageIcon, Crown } from 'lucide-react';
 import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 
-const getNavItems = (userType?: string) => {
+const getNavItems = (userType?: string, t?: any) => {
   if (userType === 'trans') {
     // Trans Escort Navigation
     return [
-      { path: '/', icon: Home, label: 'Home' },
-      { path: '/chat', icon: MessageCircle, label: 'Chat' },
-      { path: '/my-profile', icon: User, label: 'Profil' },
-      { path: '/premium', icon: Crown, label: 'Premium' },
-      { path: '/settings', icon: Settings, label: 'Mehr' },
+      { path: '/', icon: Home, label: t?.home || 'Home' },
+      { path: '/chat', icon: MessageCircle, label: t?.chat || 'Chat' },
+      { path: '/my-profile', icon: User, label: t?.profile || 'Profil' },
+      { path: '/premium', icon: Crown, label: t?.premium || 'Premium' },
+      { path: '/settings', icon: Settings, label: t?.more || 'Mehr' },
     ];
   } else {
     // Customer Navigation (no albums, no premium subscription needed)
     return [
-      { path: '/', icon: Home, label: 'Home' },
-      { path: '/chat', icon: MessageCircle, label: 'Chat' },
-      { path: '/my-profile', icon: User, label: 'Profil' },
-      { path: '/settings', icon: Settings, label: 'Mehr' },
+      { path: '/', icon: Home, label: t?.home || 'Home' },
+      { path: '/chat', icon: MessageCircle, label: t?.chat || 'Chat' },
+      { path: '/my-profile', icon: User, label: t?.profile || 'Profil' },
+      { path: '/settings', icon: Settings, label: t?.more || 'Mehr' },
     ];
   }
 };
@@ -31,6 +32,7 @@ const getNavItems = (userType?: string) => {
 export function BottomNavigation() {
   const [location, navigate] = useLocation();
   const { user, isAuthenticated, isLoading } = useAuth();
+  const { t } = useLanguage();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
 

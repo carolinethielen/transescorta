@@ -7,6 +7,8 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/contexts/ThemeContext';
+import { useLanguage } from '@/contexts/LanguageContext';
+import { LanguageSelector } from '@/components/LanguageSelector';
 import { useToast } from '@/hooks/use-toast';
 import { ChangePasswordModal } from '@/components/ChangePasswordModal';
 import { DeleteAccountModal } from '@/components/DeleteAccountModal';
@@ -16,7 +18,7 @@ import {
   User, Crown, Moon, Sun, LogOut, ChevronRight, 
   Key, Bell, Shield, HelpCircle, Smartphone, 
   Eye, EyeOff, UserX, Archive, MessageSquare,
-  Volume2, VolumeX, Vibrate
+  Volume2, VolumeX, Vibrate, Globe
 } from 'lucide-react';
 import AdminNavButton from '@/components/AdminNavButton';
 
@@ -24,6 +26,7 @@ export default function Settings() {
   const { user, isLoading } = useAuth();
   const [location, navigate] = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { t } = useLanguage();
   const { toast } = useToast();
   
   // Modal states
@@ -214,7 +217,7 @@ export default function Settings() {
   return (
     <div className="min-h-screen bg-background p-4 pb-24">
       <div className="max-w-md mx-auto space-y-6">
-        <h1 className="text-2xl font-bold text-foreground">Einstellungen</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t.settings}</h1>
         
         {/* User Info Card */}
         <Card>
@@ -229,14 +232,14 @@ export default function Settings() {
                 </h3>
                 <div className="flex items-center gap-2">
                   <p className="text-sm text-muted-foreground">
-                    {user?.userType === 'trans' ? 'Trans Escort' : 'Kunde'}
+                    {user?.userType === 'trans' ? t.transEscort : t.customer}
                   </p>
-                  {user?.isPremium && <Badge className="bg-[#FF007F] text-white">Premium</Badge>}
+                  {user?.isPremium && <Badge className="bg-[#FF007F] text-white">{t.premium}</Badge>}
                 </div>
               </div>
               <Button variant="outline" size="sm" onClick={() => navigate('/my-profile')}>
                 <User className="w-4 h-4 mr-2" />
-                Bearbeiten
+                {t.edit}
               </Button>
             </div>
           </CardContent>
@@ -359,6 +362,27 @@ export default function Settings() {
                 </div>
               </>
             )}
+          </CardContent>
+        </Card>
+
+        {/* Language Settings */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Globe className="w-5 h-5" />
+              {t.language}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="font-medium">{t.language}</div>
+                <div className="text-sm text-muted-foreground">
+                  Automatisch erkannt oder manuell ändern
+                </div>
+              </div>
+              <LanguageSelector showLabel={false} />
+            </div>
           </CardContent>
         </Card>
 

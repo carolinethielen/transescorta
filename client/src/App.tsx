@@ -4,6 +4,8 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import { useSEO, useGermanSEO } from "@/hooks/useSEO";
 import { Layout } from "@/components/Layout";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -34,6 +36,10 @@ import PrivateAlbums from "@/pages/PrivateAlbums";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
+  
+  // Apply SEO optimizations
+  useSEO();
+  useGermanSEO();
 
   // Don't show loading for unauthenticated users - just show the app
   if (isLoading && isAuthenticated) {
@@ -98,12 +104,14 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Layout>
-            <Router />
-          </Layout>
-        </TooltipProvider>
+        <LanguageProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Layout>
+              <Router />
+            </Layout>
+          </TooltipProvider>
+        </LanguageProvider>
       </ThemeProvider>
     </QueryClientProvider>
   );
