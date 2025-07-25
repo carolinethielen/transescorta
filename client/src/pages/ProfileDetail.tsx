@@ -8,6 +8,28 @@ import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/contexts/LanguageContext';
+
+// Service translation map (same as ProfileEditUnified)
+const getServiceTranslation = (service: string, t: any) => {
+  const serviceMap: Record<string, string> = {
+    'Begleitung': t?.serviceEscort || 'Begleitung',
+    'Massage': t?.serviceMassage || 'Massage', 
+    'Dinner Date': t?.serviceDinnerDate || 'Dinner Date',
+    'Overnights': t?.serviceOvernights || 'Overnights',
+    'Travel Companion': t?.serviceTravelCompanion || 'Travel Companion',
+    'Fetish': t?.serviceFetish || 'Fetish',
+    'Domination': t?.serviceDomination || 'Domination',
+    'Submission': t?.serviceSubmission || 'Submission',
+    'Role Play': t?.serviceRolePlay || 'Role Play',
+    'BDSM': t?.serviceBDSM || 'BDSM',
+    'Aktiv': t?.serviceActive || 'Aktiv',
+    'Passiv': t?.servicePassive || 'Passiv',
+    'Versatile': t?.serviceVersatile || 'Versatile',
+    'Oral': t?.serviceOral || 'Oral',
+    'Anal': t?.serviceAnal || 'Anal'
+  };
+  return serviceMap[service] || service;
+};
 import { 
   ArrowLeft, 
   MapPin, 
@@ -219,12 +241,12 @@ export default function ProfileDetail() {
                   size="lg"
                 >
                   <MessageCircle className="w-4 h-4 mr-2" />
-                  Jetzt kontaktieren
+                  {t?.contactNow || "Jetzt kontaktieren"}
                 </Button>
                 
                 <Button variant="outline" className="w-full" size="lg">
                   <Heart className="w-4 h-4 mr-2" />
-                  Zu Favoriten
+                  {t?.addToFavorites || "Zu Favoriten"}
                 </Button>
               </div>
             </div>
@@ -235,7 +257,7 @@ export default function ProfileDetail() {
         {profile.bio && (
           <Card>
             <CardContent className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Über mich</h3>
+              <h3 className="text-lg font-semibold mb-4">{t?.aboutMe || "Über mich"}</h3>
               <p className="text-muted-foreground leading-relaxed">{profile.bio}</p>
             </CardContent>
           </Card>
@@ -249,7 +271,7 @@ export default function ProfileDetail() {
               <div className="flex flex-wrap gap-2">
                 {profile.services.map((service: string, index: number) => (
                   <Badge key={index} variant="secondary" className="bg-[#FF007F]/10 text-[#FF007F] border-[#FF007F]/20">
-                    {service}
+                    {getServiceTranslation(service, t)}
                   </Badge>
                 ))}
               </div>
@@ -260,7 +282,7 @@ export default function ProfileDetail() {
         {/* Physical Details */}
         <Card>
           <CardContent className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Details</h3>
+            <h3 className="text-lg font-semibold mb-4">{t?.details || "Details"}</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
               {profile.height && (
                 <div className="flex items-center gap-2">

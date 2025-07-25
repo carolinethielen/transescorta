@@ -57,7 +57,49 @@ const useLocationDetection = () => {
   return { location, detectLocation, isDetecting };
 };
 
-// Predefined options
+// Service translation map
+const getServiceTranslation = (service: string, t: any) => {
+  const serviceMap: Record<string, string> = {
+    'Begleitung': t?.serviceEscort || 'Begleitung',
+    'Massage': t?.serviceMassage || 'Massage', 
+    'Dinner Date': t?.serviceDinnerDate || 'Dinner Date',
+    'Overnights': t?.serviceOvernights || 'Overnights',
+    'Travel Companion': t?.serviceTravelCompanion || 'Travel Companion',
+    'Fetish': t?.serviceFetish || 'Fetish',
+    'Domination': t?.serviceDomination || 'Domination',
+    'Submission': t?.serviceSubmission || 'Submission',
+    'Role Play': t?.serviceRolePlay || 'Role Play',
+    'BDSM': t?.serviceBDSM || 'BDSM',
+    'Aktiv': t?.serviceActive || 'Aktiv',
+    'Passiv': t?.servicePassive || 'Passiv',
+    'Versatile': t?.serviceVersatile || 'Versatile',
+    'Oral': t?.serviceOral || 'Oral',
+    'Anal': t?.serviceAnal || 'Anal'
+  };
+  return serviceMap[service] || service;
+};
+
+// Interest translation map  
+const getInterestTranslation = (interest: string, t: any) => {
+  const interestMap: Record<string, string> = {
+    'Sport': t?.interestSport || 'Sport',
+    'Musik': t?.interestMusic || 'Musik',
+    'Reisen': t?.interestTravel || 'Reisen',
+    'Kochen': t?.interestCooking || 'Kochen',
+    'Kunst': t?.interestArt || 'Kunst',
+    'Mode': t?.interestFashion || 'Mode',
+    'Fitness': t?.interestFitness || 'Fitness',
+    'Nachtleben': t?.interestNightlife || 'Nachtleben',
+    'Theater': t?.interestTheater || 'Theater',
+    'Kino': t?.interestCinema || 'Kino',
+    'Lesen': t?.interestReading || 'Lesen',
+    'Gaming': t?.interestGaming || 'Gaming',
+    'Fotografie': t?.interestPhotography || 'Fotografie'
+  };
+  return interestMap[interest] || interest;
+};
+
+// Predefined options (German keys - will be translated dynamically)
 const services = [
   'Begleitung', 'Massage', 'Dinner Date', 'Overnights', 'Travel Companion',
   'Fetish', 'Domination', 'Submission', 'Role Play', 'BDSM',
@@ -168,8 +210,8 @@ export default function ProfileEditUnified() {
       form.setValue('latitude', gpsLocation.latitude);
       form.setValue('longitude', gpsLocation.longitude);
       toast({
-        title: "Standort erkannt",
-        description: `Automatisch erkannt: ${gpsLocation.city}`,
+        title: t?.locationDetected || "Standort erkannt",
+        description: `${t?.automaticallyDetected || "Automatisch erkannt"}: ${gpsLocation.city}`,
       });
     }
   }, [gpsLocation, form, toast]);
@@ -365,7 +407,7 @@ export default function ProfileEditUnified() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <MapPin className="w-5 h-5 text-[#FF007F]" />
-                  Standort
+                  {t?.location || "Standort"}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -602,14 +644,14 @@ export default function ProfileEditUnified() {
                               }
                             }}
                           />
-                          <Label htmlFor={service} className="text-sm">{service}</Label>
+                          <Label htmlFor={service} className="text-sm">{getServiceTranslation(service, t)}</Label>
                         </div>
                       ))}
                     </div>
                     <div className="flex flex-wrap gap-1 mt-2">
                       {selectedServices.map((service) => (
                         <Badge key={service} variant="secondary" className="text-xs">
-                          {service}
+                          {getServiceTranslation(service, t)}
                         </Badge>
                       ))}
                     </div>
@@ -662,14 +704,14 @@ export default function ProfileEditUnified() {
                           }
                         }}
                       />
-                      <Label htmlFor={interest} className="text-sm">{interest}</Label>
+                      <Label htmlFor={interest} className="text-sm">{getInterestTranslation(interest, t)}</Label>
                     </div>
                   ))}
                 </div>
                 <div className="flex flex-wrap gap-1 mt-2">
                   {selectedInterests.map((interest) => (
                     <Badge key={interest} variant="secondary" className="text-xs">
-                      {interest}
+                      {getInterestTranslation(interest, t)}
                     </Badge>
                   ))}
                 </div>

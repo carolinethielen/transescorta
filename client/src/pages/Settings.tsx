@@ -505,7 +505,7 @@ export default function Settings() {
               className="w-full justify-between"
               onClick={() => window.open('/datenschutz', '_blank')}
             >
-              <span>Datenschutzerklärung</span>
+              <span>{t?.privacyPolicy || "Datenschutzerklärung"}</span>
               <ChevronRight className="w-4 h-4" />
             </Button>
 
@@ -527,9 +527,9 @@ export default function Settings() {
               <div className="flex items-center space-x-3">
                 {theme === 'dark' ? <Moon className="w-5 h-5 text-muted-foreground" /> : <Sun className="w-5 h-5 text-muted-foreground" />}
                 <div>
-                  <div className="font-medium text-foreground">Design</div>
+                  <div className="font-medium text-foreground">{t?.design || "Design"}</div>
                   <div className="text-sm text-muted-foreground">
-                    {theme === 'dark' ? 'Dunkel-Modus aktiv' : 'Hell-Modus aktiv'}
+                    {theme === 'dark' ? (t?.darkModeActive || 'Dunkel-Modus aktiv') : (t?.lightModeActive || 'Hell-Modus aktiv')}
                   </div>
                 </div>
               </div>

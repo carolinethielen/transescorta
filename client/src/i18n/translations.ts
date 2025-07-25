@@ -414,6 +414,49 @@ export const translations: Record<string, Translations> = {
     locationDisplayInfo: 'Dein Standort wird auf der Startseite mit Kilometerentfernung angezeigt',
     profileUpdatedSuccess: 'Dein Profil wurde erfolgreich aktualisiert!',
     
+    // Additional Missing Keys
+    details: 'Details',
+    locationDetected: 'Standort erkannt',
+    automaticallyDetected: 'Automatisch erkannt',  
+    privacyPolicy: 'Datenschutzerklärung',
+    design: 'Design',
+    darkModeActive: 'Dunkel-Modus aktiv',
+    lightModeActive: 'Hell-Modus aktiv',
+    contactNow: 'Jetzt kontaktieren',
+    addToFavorites: 'Zu Favoriten',
+    
+    // Services Translations (German)
+    serviceEscort: 'Begleitung',
+    serviceMassage: 'Massage',  
+    serviceDinnerDate: 'Dinner Date',
+    serviceOvernights: 'Overnights',
+    serviceTravelCompanion: 'Travel Companion',
+    serviceFetish: 'Fetish',
+    serviceDomination: 'Domination',
+    serviceSubmission: 'Submission',
+    serviceRolePlay: 'Role Play',
+    serviceBDSM: 'BDSM',
+    serviceActive: 'Aktiv',
+    servicePassive: 'Passiv',
+    serviceVersatile: 'Versatile',
+    serviceOral: 'Oral',
+    serviceAnal: 'Anal',
+    
+    // Interests Translations (German)
+    interestSport: 'Sport',
+    interestMusic: 'Musik',
+    interestTravel: 'Reisen',
+    interestCooking: 'Kochen',
+    interestArt: 'Kunst',
+    interestFashion: 'Mode',
+    interestFitness: 'Fitness',
+    interestNightlife: 'Nachtleben',
+    interestTheater: 'Theater',
+    interestCinema: 'Kino',
+    interestReading: 'Lesen',
+    interestGaming: 'Gaming',
+    interestPhotography: 'Fotografie',
+    
     // Push notifications
     pushNotificationsEnabled: 'Push-Benachrichtigungen aktiviert',
     pushNotificationsEnabledDesc: 'Du erhältst jetzt Benachrichtigungen für neue Nachrichten',
@@ -792,6 +835,47 @@ export const translations: Record<string, Translations> = {
     
     // Additional Form Options
     cancel: 'Cancel',
+    
+    // Additional Missing Keys
+    details: 'Details',
+    locationDetected: 'Location Detected',
+    automaticallyDetected: 'Automatically detected',
+    privacyPolicy: 'Privacy Policy',
+    design: 'Design',
+    darkModeActive: 'Dark mode active',
+    lightModeActive: 'Light mode active',
+    
+    // Services Translations
+    serviceEscort: 'Escort',
+    serviceMassage: 'Massage',  
+    serviceDinnerDate: 'Dinner Date',
+    serviceOvernights: 'Overnights',
+    serviceTravelCompanion: 'Travel Companion',
+    serviceFetish: 'Fetish',
+    serviceDomination: 'Domination',
+    serviceSubmission: 'Submission',
+    serviceRolePlay: 'Role Play',
+    serviceBDSM: 'BDSM',
+    serviceActive: 'Active',
+    servicePassive: 'Passive',
+    serviceVersatile: 'Versatile',
+    serviceOral: 'Oral',
+    serviceAnal: 'Anal',
+    
+    // Interests Translations
+    interestSport: 'Sport',
+    interestMusic: 'Music',
+    interestTravel: 'Travel',
+    interestCooking: 'Cooking',
+    interestArt: 'Art',
+    interestFashion: 'Fashion',
+    interestFitness: 'Fitness',
+    interestNightlife: 'Nightlife',
+    interestTheater: 'Theater',
+    interestCinema: 'Cinema',
+    interestReading: 'Reading',
+    interestGaming: 'Gaming',
+    interestPhotography: 'Photography',
     
     // Push notifications
     pushNotificationsEnabled: 'Push notifications enabled',
