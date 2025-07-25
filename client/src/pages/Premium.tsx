@@ -11,7 +11,7 @@ export default function Premium() {
   const { toast } = useToast();
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleUpgrade = async () => {
+  const handleUpgrade = () => {
     if (!user) {
       toast({
         title: "Anmeldung erforderlich",
@@ -23,43 +23,19 @@ export default function Premium() {
 
     setIsProcessing(true);
 
-    try {
-      // Send request to backend to generate proper Verotel URL with signature
-      const response = await fetch('/api/payments/create-verotel-url', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId: user.id,
-          amount: 9.99,
-          description: 'TransEscorta Premium - 1 Monat'
-        }),
-      });
+    // Einfache statische Verotel-URL ohne zusätzliche Parameter
+    // Callback-URLs werden direkt in Verotel-Konfiguration gesetzt
+    const verotelUrl = 'https://secure.verotel.com/startorder?description=TransEscorta+Premium+Abo&priceAmount=9.99&priceCurrency=EUR&shopID=134573&type=purchase&version=4&signature=2f500af84981e6c2919f0e0a885d40d8c552ab127b9e511b32630bf6823e410d';
+    
+    // Open in new tab
+    window.open(verotelUrl, '_blank');
 
-      if (!response.ok) {
-        throw new Error('Failed to create payment URL');
-      }
+    toast({
+      title: "Weiterleitung zu Verotel",
+      description: "Du wirst zur sicheren Zahlungsseite weitergeleitet.",
+    });
 
-      const { paymentUrl } = await response.json();
-      
-      // Open in new tab
-      window.open(paymentUrl, '_blank');
-
-      toast({
-        title: "Weiterleitung zu Verotel",
-        description: "Du wirst zur sicheren Zahlungsseite weitergeleitet.",
-      });
-    } catch (error) {
-      console.error('Payment error:', error);
-      toast({
-        title: "Fehler",
-        description: "Fehler beim Starten der Zahlung. Versuche es erneut.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsProcessing(false);
-    }
+    setIsProcessing(false);
   };
 
   const premiumFeatures = [

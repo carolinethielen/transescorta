@@ -1083,18 +1083,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       console.log('Verotel webhook received:', Object.fromEntries(params));
       
-      const referenceID = params.get('referenceID'); // This should be the user ID
+      const email = params.get('custom1'); // Email als Identifikation da keine referenceID bei statischem Link
       const status = params.get('status'); // 'approved' for successful payment
       const type = params.get('type'); // 'purchase' or 'subscription'
       
-      if (status === 'approved' && referenceID) {
-        // Activate premium for the user
-        await storage.updateUserPremiumStatus(referenceID, true);
-        console.log(`Premium activated for user: ${referenceID}`);
+      if (status === 'approved' && email) {
+        // Finde Nutzer über E-Mail und aktiviere Premium
+        const user = await storage.getUserByEmail(email);
+        if (user) {
+          await storage.updateUserPremiumStatus(user.id, true);
+          console.log(`Premium activated for user: ${user.id} (${email})`);
+        } else {
+          console.log(`User not found for email: ${email}`);
+        }
         
         res.status(200).send('OK');
       } else {
-        console.log('Webhook ignored - not an approved payment or missing referenceID');
+        console.log('Webhook ignored - not an approved payment or missing email');
         res.status(200).send('OK');
       }
     } catch (error) {
