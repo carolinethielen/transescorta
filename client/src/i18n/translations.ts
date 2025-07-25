@@ -755,6 +755,44 @@ export const translations: Record<string, Translations> = {
     locationDisplayInfo: 'Your location will be shown on homepage with distance',
     profileUpdatedSuccess: 'Your profile has been successfully updated!',
     
+    // Additional Missing Keys
+    years: 'years',
+    bioPlaceholder: 'Tell us something about yourself...',
+    selectOption: 'Select...',
+    hours: 'hours',
+    profileSaved: 'Profile Saved',
+    errorSaving: 'Error Saving',
+    profileUpdateError: 'Profile could not be updated.',
+    aboutMe: 'About Me',
+    
+    // FAQ Translations
+    faqVerifyProfile: 'How can I verify my profile?',
+    faqVerifyProfileAnswer: 'Premium members can verify their profile by uploading documents. This increases trust and visibility.',
+    faq24hAlbum: 'How does the 24h album sharing work?',
+    faq24hAlbumAnswer: 'Trans-Escorts can share private albums in chat. The recipient then has 24 hours access to the photos.',
+    faqPremiumBenefits: 'What are the benefits of Premium?',
+    faqPremiumBenefitsAnswer: 'Premium members have unlimited private albums, better visibility, advanced filters and profile verification.',
+    faqReportContent: 'How can I report inappropriate content?',
+    faqReportContentAnswer: 'Use the report function in profiles or chats. Our team reviews all reports within 24 hours.',
+    faqDataSafety: 'Is my data safe?',
+    faqDataSafetyAnswer: 'Yes, we use end-to-end encryption for messages and do not store sensitive data longer than necessary.',
+    faqCancelPremium: 'How do I cancel my Premium subscription?',
+    faqCancelPremiumAnswer: 'Premium subscriptions can be cancelled anytime through settings or directly via Stripe.',
+    profileVisits: 'Profile Visits',
+    
+    // Circumcision Options
+    circumcised: 'Circumcised',
+    uncircumcised: 'Uncircumcised',
+    partial: 'Partial',
+    
+    // Position Options
+    topActive: 'Top/Active',
+    bottomPassive: 'Bottom/Passive',
+    versatileSwitch: 'Versatile/Switch',
+    
+    // Additional Form Options
+    cancel: 'Cancel',
+    
     // Push notifications
     pushNotificationsEnabled: 'Push notifications enabled',
     pushNotificationsEnabledDesc: 'You will now receive notifications for new messages',
@@ -1176,6 +1214,44 @@ export const translations: Record<string, Translations> = {
     locationDisplayInfo: 'Sua localização será mostrada na página inicial com distância',
     profileUpdatedSuccess: 'Seu perfil foi atualizado com sucesso!',
     
+    // Additional Missing Keys
+    years: 'anos',
+    bioPlaceholder: 'Conte-nos algo sobre você...',
+    selectOption: 'Selecionar...',
+    hours: 'horas',
+    profileSaved: 'Perfil Salvo',
+    errorSaving: 'Erro ao Salvar',
+    profileUpdateError: 'Perfil não pôde ser atualizado.',
+    aboutMe: 'Sobre Mim',
+    
+    // FAQ Translations
+    faqVerifyProfile: 'Como posso verificar meu perfil?',
+    faqVerifyProfileAnswer: 'Membros Premium podem verificar seu perfil enviando documentos. Isso aumenta a confiança e a visibilidade.',
+    faq24hAlbum: 'Como funciona o compartilhamento de álbuns de 24h?',
+    faq24hAlbumAnswer: 'Trans-Escorts podem compartilhar álbuns privados no chat. O destinatário tem então 24 horas de acesso às fotos.',
+    faqPremiumBenefits: 'Quais são os benefícios do Premium?',
+    faqPremiumBenefitsAnswer: 'Membros Premium têm álbuns privados ilimitados, melhor visibilidade, filtros avançados e verificação de perfil.',
+    faqReportContent: 'Como posso denunciar conteúdo inadequado?',
+    faqReportContentAnswer: 'Use a função denunciar em perfis ou chats. Nossa equipe revisa todas as denúncias em 24 horas.',
+    faqDataSafety: 'Meus dados estão seguros?',
+    faqDataSafetyAnswer: 'Sim, usamos criptografia ponta a ponta para mensagens e não armazenamos dados sensíveis por mais tempo que o necessário.',
+    faqCancelPremium: 'Como cancelo minha assinatura Premium?',
+    faqCancelPremiumAnswer: 'Assinaturas Premium podem ser canceladas a qualquer momento através das configurações ou diretamente via Stripe.',
+    profileVisits: 'Visitas ao Perfil',
+    
+    // Circumcision Options
+    circumcised: 'Circuncidado',
+    uncircumcised: 'Não Circuncidado',
+    partial: 'Parcial',
+    
+    // Position Options
+    topActive: 'Top/Ativo',
+    bottomPassive: 'Bottom/Passivo',
+    versatileSwitch: 'Versátil/Switch',
+    
+    // Additional Form Options
+    cancel: 'Cancelar',
+    
     // Push notifications
     pushNotificationsEnabled: 'Notificações push ativadas',
     pushNotificationsEnabledDesc: 'Você agora receberá notificações para novas mensagens',
@@ -1527,6 +1603,44 @@ export const translations: Record<string, Translations> = {
     locationDisplayInfo: 'Tu ubicación se mostrará en la página de inicio con distancia',
     profileUpdatedSuccess: '¡Tu perfil ha sido actualizado exitosamente!',
     
+    // Additional Missing Keys
+    years: 'años',
+    bioPlaceholder: 'Cuéntanos algo sobre ti...',
+    selectOption: 'Seleccionar...',
+    hours: 'horas',
+    profileSaved: 'Perfil Guardado',
+    errorSaving: 'Error al Guardar',
+    profileUpdateError: 'El perfil no pudo ser actualizado.',
+    aboutMe: 'Acerca de Mí',
+    
+    // FAQ Translations
+    faqVerifyProfile: '¿Cómo puedo verificar mi perfil?',
+    faqVerifyProfileAnswer: 'Los miembros Premium pueden verificar su perfil subiendo documentos. Esto aumenta la confianza y la visibilidad.',
+    faq24hAlbum: '¿Cómo funciona el intercambio de álbumes de 24h?',
+    faq24hAlbumAnswer: 'Las Trans-Escorts pueden compartir álbumes privados en el chat. El destinatario tiene entonces 24 horas de acceso a las fotos.',
+    faqPremiumBenefits: '¿Cuáles son los beneficios de Premium?',
+    faqPremiumBenefitsAnswer: 'Los miembros Premium tienen álbumes privados ilimitados, mejor visibilidad, filtros avanzados y verificación de perfil.',
+    faqReportContent: '¿Cómo puedo reportar contenido inapropiado?',
+    faqReportContentAnswer: 'Usa la función reportar en perfiles o chats. Nuestro equipo revisa todos los reportes en 24 horas.',
+    faqDataSafety: '¿Están seguros mis datos?',
+    faqDataSafetyAnswer: 'Sí, usamos encriptación de extremo a extremo para mensajes y no almacenamos datos sensibles más tiempo del necesario.',
+    faqCancelPremium: '¿Cómo cancelo mi suscripción Premium?',
+    faqCancelPremiumAnswer: 'Las suscripciones Premium pueden cancelarse en cualquier momento a través de configuraciones o directamente vía Stripe.',
+    profileVisits: 'Visitas al Perfil',
+    
+    // Circumcision Options
+    circumcised: 'Circuncidado',
+    uncircumcised: 'No Circuncidado',
+    partial: 'Parcial',
+    
+    // Position Options
+    topActive: 'Top/Activo',
+    bottomPassive: 'Bottom/Pasivo',
+    versatileSwitch: 'Versátil/Switch',
+    
+    // Additional Form Options
+    cancel: 'Cancelar',
+    
     // Push notifications
     pushNotificationsEnabled: 'Notificaciones push activadas',
     pushNotificationsEnabledDesc: 'Ahora recibirás notificaciones para nuevos mensajes',
@@ -1877,6 +1991,44 @@ export const translations: Record<string, Translations> = {
     showOnlineStatusDesc: 'Montrer aux autres quand vous êtes en ligne',
     locationDisplayInfo: 'Votre localisation sera affichée sur la page d\'accueil avec la distance',
     profileUpdatedSuccess: 'Votre profil a été mis à jour avec succès!',
+    
+    // Additional Missing Keys
+    years: 'ans',
+    bioPlaceholder: 'Parlez-nous de vous...',
+    selectOption: 'Sélectionner...',
+    hours: 'heures',
+    profileSaved: 'Profil Sauvegardé',
+    errorSaving: 'Erreur de Sauvegarde',
+    profileUpdateError: 'Le profil n\'a pas pu être mis à jour.',
+    aboutMe: 'À Propos de Moi',
+    
+    // FAQ Translations
+    faqVerifyProfile: 'Comment puis-je vérifier mon profil?',
+    faqVerifyProfileAnswer: 'Les membres Premium peuvent vérifier leur profil en téléchargeant des documents. Cela augmente la confiance et la visibilité.',
+    faq24hAlbum: 'Comment fonctionne le partage d\'albums 24h?',
+    faq24hAlbumAnswer: 'Les Trans-Escorts peuvent partager des albums privés dans le chat. Le destinataire a alors 24 heures d\'accès aux photos.',
+    faqPremiumBenefits: 'Quels sont les avantages de Premium?',
+    faqPremiumBenefitsAnswer: 'Les membres Premium ont des albums privés illimités, une meilleure visibilité, des filtres avancés et la vérification de profil.',
+    faqReportContent: 'Comment puis-je signaler du contenu inapproprié?',
+    faqReportContentAnswer: 'Utilisez la fonction signaler dans les profils ou chats. Notre équipe examine tous les signalements dans les 24 heures.',
+    faqDataSafety: 'Mes données sont-elles sécurisées?',
+    faqDataSafetyAnswer: 'Oui, nous utilisons un chiffrement de bout en bout pour les messages et ne stockons pas de données sensibles plus longtemps que nécessaire.',
+    faqCancelPremium: 'Comment annuler mon abonnement Premium?',
+    faqCancelPremiumAnswer: 'Les abonnements Premium peuvent être annulés à tout moment via les paramètres ou directement via Stripe.',
+    profileVisits: 'Visites de Profil',
+    
+    // Circumcision Options
+    circumcised: 'Circoncis',
+    uncircumcised: 'Non Circoncis',
+    partial: 'Partiel',
+    
+    // Position Options
+    topActive: 'Top/Actif',
+    bottomPassive: 'Bottom/Passif',
+    versatileSwitch: 'Versatile/Switch',
+    
+    // Additional Form Options
+    cancel: 'Annuler',
     
     // Push notifications
     pushNotificationsEnabled: 'Notifications push activées',

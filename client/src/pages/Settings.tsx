@@ -155,28 +155,28 @@ export default function Settings() {
 
   const faqItems = [
     {
-      question: "Wie kann ich mein Profil verifizieren?",
-      answer: "Premium-Mitglieder können ihr Profil durch Dokumentenupload verifizieren lassen. Dies erhöht das Vertrauen und die Sichtbarkeit."
+      question: t?.faqVerifyProfile || "Wie kann ich mein Profil verifizieren?",
+      answer: t?.faqVerifyProfileAnswer || "Premium-Mitglieder können ihr Profil durch Dokumentenupload verifizieren lassen. Dies erhöht das Vertrauen und die Sichtbarkeit."
     },
     {
-      question: "Wie funktioniert die 24h Album-Freigabe?",
-      answer: "Trans-Escorts können private Alben im Chat teilen. Der Empfänger hat dann 24 Stunden Zugriff auf die Fotos."
+      question: t?.faq24hAlbum || "Wie funktioniert die 24h Album-Freigabe?",
+      answer: t?.faq24hAlbumAnswer || "Trans-Escorts können private Alben im Chat teilen. Der Empfänger hat dann 24 Stunden Zugriff auf die Fotos."
     },
     {
-      question: "Was sind die Vorteile von Premium?",
-      answer: "Premium-Mitglieder haben unbegrenzte private Alben, bessere Sichtbarkeit, erweiterte Filter und Profilverifizierung."
+      question: t?.faqPremiumBenefits || "Was sind die Vorteile von Premium?",
+      answer: t?.faqPremiumBenefitsAnswer || "Premium-Mitglieder haben unbegrenzte private Alben, bessere Sichtbarkeit, erweiterte Filter und Profilverifizierung."
     },
     {
-      question: "Wie kann ich unangemessene Inhalte melden?",
-      answer: "Verwende die Melden-Funktion in Profilen oder Chats. Unser Team prüft alle Meldungen innerhalb von 24 Stunden."
+      question: t?.faqReportContent || "Wie kann ich unangemessene Inhalte melden?",
+      answer: t?.faqReportContentAnswer || "Verwende die Melden-Funktion in Profilen oder Chats. Unser Team prüft alle Meldungen innerhalb von 24 Stunden."
     },
     {
-      question: "Sind meine Daten sicher?",
-      answer: "Ja, wir verwenden Ende-zu-Ende-Verschlüsselung für Nachrichten und speichern keine sensiblen Daten länger als nötig."
+      question: t?.faqDataSafety || "Sind meine Daten sicher?",
+      answer: t?.faqDataSafetyAnswer || "Ja, wir verwenden Ende-zu-Ende-Verschlüsselung für Nachrichten und speichern keine sensiblen Daten länger als nötig."
     },
     {
-      question: "Wie kündige ich mein Premium-Abo?",
-      answer: "Premium-Abos können jederzeit über die Einstellungen oder direkt über Stripe gekündigt werden."
+      question: t?.faqCancelPremium || "Wie kündige ich mein Premium-Abo?",
+      answer: t?.faqCancelPremiumAnswer || "Premium-Abos können jederzeit über die Einstellungen oder direkt über Stripe gekündigt werden."
     }
   ];
 
@@ -353,7 +353,7 @@ export default function Settings() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <Eye className="w-5 h-5 text-muted-foreground" />
-                      <span className="font-medium">Profilbesuche</span>
+                      <span className="font-medium">{t?.profileVisits || "Profilbesuche"}</span>
                     </div>
                     <Switch 
                       checked={settings.profileViewNotifications}

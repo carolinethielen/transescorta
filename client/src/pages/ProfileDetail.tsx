@@ -204,7 +204,7 @@ export default function ProfileDetail() {
               <div className="flex items-center justify-center gap-4 text-muted-foreground mb-4">
                 <div className="flex items-center gap-1">
                   <User className="w-4 h-4" />
-                  {profile.age} Jahre
+                  {profile.age} {t?.years || "Jahre"}
                 </div>
                 <div className="flex items-center gap-1">
                   <MapPin className="w-4 h-4" />

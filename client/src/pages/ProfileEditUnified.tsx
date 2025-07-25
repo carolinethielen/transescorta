@@ -203,7 +203,7 @@ export default function ProfileEditUnified() {
       await refreshProfile();
       
       toast({
-        title: "Profil gespeichert",
+        title: t?.profileSaved || "Profil gespeichert",
         description: t?.profileUpdatedSuccess || "Dein Profil wurde erfolgreich aktualisiert!",
       });
       setTimeout(() => {
@@ -213,7 +213,7 @@ export default function ProfileEditUnified() {
     onError: (error: Error) => {
       toast({
         title: t.errorSaving || "Fehler beim Speichern",
-        description: error.message || "Profil konnte nicht aktualisiert werden.",
+        description: error.message || t?.profileUpdateError || "Profil konnte nicht aktualisiert werden.",
         variant: "destructive",
       });
     },
@@ -344,10 +344,10 @@ export default function ProfileEditUnified() {
                   name="bio"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Über mich</FormLabel>
+                      <FormLabel>{t?.aboutMe || "Über mich"}</FormLabel>
                       <FormControl>
                         <Textarea 
-                          placeholder="Erzähle etwas über dich..."
+                          placeholder={t?.bioPlaceholder || "Erzähle etwas über dich..."}
                           className="min-h-[100px]"
                           maxLength={500}
                           {...field}
@@ -488,13 +488,13 @@ export default function ProfileEditUnified() {
                           <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Auswählen..." />
+                                <SelectValue placeholder={t?.selectOption || "Auswählen..."} />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="beschnitten">Beschnitten</SelectItem>
-                              <SelectItem value="unbeschnitten">Unbeschnitten</SelectItem>
-                              <SelectItem value="teilweise">Teilweise</SelectItem>
+                              <SelectItem value="beschnitten">{t?.circumcised || "Beschnitten"}</SelectItem>
+                              <SelectItem value="unbeschnitten">{t?.uncircumcised || "Unbeschnitten"}</SelectItem>
+                              <SelectItem value="teilweise">{t?.partial || "Teilweise"}</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -513,13 +513,13 @@ export default function ProfileEditUnified() {
                           <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Auswählen..." />
+                                <SelectValue placeholder={t?.selectOption || "Auswählen..."} />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="top">Top/Aktiv</SelectItem>
-                              <SelectItem value="bottom">Bottom/Passiv</SelectItem>
-                              <SelectItem value="versatile">Versatile/Switch</SelectItem>
+                              <SelectItem value="top">{t?.topActive || "Top/Aktiv"}</SelectItem>
+                              <SelectItem value="bottom">{t?.bottomPassive || "Bottom/Passiv"}</SelectItem>
+                              <SelectItem value="versatile">{t?.versatileSwitch || "Versatile/Switch"}</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -535,7 +535,7 @@ export default function ProfileEditUnified() {
                           <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Auswählen..." />
+                                <SelectValue placeholder={t?.selectOption || "Auswählen..."} />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -559,7 +559,7 @@ export default function ProfileEditUnified() {
                         <Select onValueChange={field.onChange} value={field.value}>
                           <FormControl>
                             <SelectTrigger>
-                              <SelectValue placeholder="Auswählen..." />
+                              <SelectValue placeholder={t?.selectOption || "Auswählen..."} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -683,7 +683,7 @@ export default function ProfileEditUnified() {
                 variant="outline"
                 onClick={() => navigate('/profile')}
               >
-                Abbrechen
+                {t?.cancel || "Abbrechen"}
               </Button>
               <Button
                 type="submit"
