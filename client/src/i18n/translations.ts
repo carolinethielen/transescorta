@@ -217,6 +217,69 @@ export interface Translations {
   all: string;
   onlineOnly: string;
   premiumOnly: string;
+
+  // Navigation & Chat
+  chats: string;
+  newMessage: string;
+  noChatsYet: string;
+  typeMessage: string;
+  sendMessage: string;
+  online: string;
+  offline: string;
+  lastSeen: string;
+  typing: string;
+  messageNotSent: string;
+  unauthorized: string;
+  notLoggedIn: string;
+  redirecting: string;
+
+  // Profile
+  profileNotAvailable: string;
+  myProfile: string;
+  editProfile: string;
+  personalInfo: string;
+  physicalDetails: string;
+  servicesOffered: string;
+  availableServices: string;
+  selectServices: string;
+  pricePerHour: string;
+  location: string;
+  interests: string;
+  addInterest: string;
+  profileUpdated: string;
+  profileUpdateError: string;
+  uploadPhoto: string;
+  deletePhoto: string;
+  mainPhoto: string;
+  additionalPhotos: string;
+
+  // Settings
+  settings: string;
+  account: string;
+  privacy: string;
+  notifications: string;
+  appearance: string;
+  support: string;
+  darkMode: string;
+  lightMode: string;
+  language: string;
+  changePassword: string;
+  deleteAccount: string;
+  contactSupport: string;
+  faq: string;
+  logout: string;
+  pushNotifications: string;
+  soundNotifications: string;
+  vibrationNotifications: string;
+  chatNotifications: string;
+  profileViewNotifications: string;
+  matchNotifications: string;
+  profileVisibility: string;
+  showOnlineStatus: string;
+  showLastSeen: string;
+  allowMessagePreviews: string;
+  twoFactorAuth: string;
+  dataExport: string;
   
   // Status & Nachrichten
   loading: string;
@@ -398,6 +461,69 @@ export const translations: Record<string, Translations> = {
     all: 'Alle',
     onlineOnly: 'Nur Online-Escorts',
     premiumOnly: 'Nur Premium-Escorts',
+
+    // Navigation & Chat
+    chats: 'Chats',
+    newMessage: 'Neue Nachricht',
+    noChatsYet: 'Noch keine Chats',
+    typeMessage: 'Nachricht eingeben...',
+    sendMessage: 'Senden',
+    online: 'Online',
+    offline: 'Offline',
+    lastSeen: 'Zuletzt gesehen',
+    typing: 'tippt...',
+    messageNotSent: 'Nachricht konnte nicht gesendet werden',
+    unauthorized: 'Nicht autorisiert',
+    notLoggedIn: 'Du bist nicht mehr angemeldet. Leite weiter...',
+    redirecting: 'Weiterleitung...',
+
+    // Profile
+    profileNotAvailable: 'Profil nicht verfügbar',
+    myProfile: 'Mein Profil',
+    editProfile: 'Profil bearbeiten',
+    personalInfo: 'Persönliche Informationen',
+    physicalDetails: 'Körperliche Merkmale',
+    servicesOffered: 'Angebotene Services',
+    availableServices: 'Verfügbare Services',
+    selectServices: 'Services auswählen',
+    pricePerHour: 'Preis pro Stunde',
+    location: 'Standort',
+    interests: 'Interessen',
+    addInterest: 'Interesse hinzufügen',
+    profileUpdated: 'Profil aktualisiert',
+    profileUpdateError: 'Fehler beim Aktualisieren des Profils',
+    uploadPhoto: 'Foto hochladen',
+    deletePhoto: 'Foto löschen',
+    mainPhoto: 'Hauptfoto',
+    additionalPhotos: 'Zusätzliche Fotos',
+
+    // Settings
+    settings: 'Einstellungen',
+    account: 'Konto',
+    privacy: 'Privatsphäre',
+    notifications: 'Benachrichtigungen',
+    appearance: 'Darstellung',
+    support: 'Support',
+    darkMode: 'Dunkler Modus',
+    lightMode: 'Heller Modus',
+    language: 'Sprache',
+    changePassword: 'Passwort ändern',
+    deleteAccount: 'Konto löschen',
+    contactSupport: 'Support kontaktieren',
+    faq: 'Häufige Fragen',
+    logout: 'Abmelden',
+    pushNotifications: 'Push-Benachrichtigungen',
+    soundNotifications: 'Ton-Benachrichtigungen',
+    vibrationNotifications: 'Vibrations-Benachrichtigungen',
+    chatNotifications: 'Chat-Benachrichtigungen',
+    profileViewNotifications: 'Profilansicht-Benachrichtigungen',
+    matchNotifications: 'Match-Benachrichtigungen',
+    profileVisibility: 'Profil-Sichtbarkeit',
+    showOnlineStatus: 'Online-Status anzeigen',
+    showLastSeen: 'Zuletzt gesehen anzeigen',
+    allowMessagePreviews: 'Nachrichten-Vorschau erlauben',
+    twoFactorAuth: 'Zwei-Faktor-Authentifizierung',
+    dataExport: 'Datenexport',
     
     // Registrierung
     iAm: 'Ich bin',
@@ -648,6 +774,69 @@ export const translations: Record<string, Translations> = {
     all: 'All',
     onlineOnly: 'Online Only',
     premiumOnly: 'Premium Only',
+
+    // Navigation & Chat
+    chats: 'Chats',
+    newMessage: 'New Message',
+    noChatsYet: 'No chats yet',
+    typeMessage: 'Type a message...',
+    sendMessage: 'Send',
+    online: 'Online',
+    offline: 'Offline',
+    lastSeen: 'Last seen',
+    typing: 'typing...',
+    messageNotSent: 'Message could not be sent',
+    unauthorized: 'Unauthorized',
+    notLoggedIn: 'You are no longer logged in. Redirecting...',
+    redirecting: 'Redirecting...',
+
+    // Profile
+    profileNotAvailable: 'Profile not available',
+    myProfile: 'My Profile',
+    editProfile: 'Edit Profile',
+    personalInfo: 'Personal Information',
+    physicalDetails: 'Physical Details',
+    servicesOffered: 'Services Offered',
+    availableServices: 'Available Services',
+    selectServices: 'Select Services',
+    pricePerHour: 'Price per Hour',
+    location: 'Location',
+    interests: 'Interests',
+    addInterest: 'Add Interest',
+    profileUpdated: 'Profile Updated',
+    profileUpdateError: 'Error updating profile',
+    uploadPhoto: 'Upload Photo',
+    deletePhoto: 'Delete Photo',
+    mainPhoto: 'Main Photo',
+    additionalPhotos: 'Additional Photos',
+
+    // Settings
+    settings: 'Settings',
+    account: 'Account',
+    privacy: 'Privacy',
+    notifications: 'Notifications',
+    appearance: 'Appearance',
+    support: 'Support',
+    darkMode: 'Dark Mode',
+    lightMode: 'Light Mode',
+    language: 'Language',
+    changePassword: 'Change Password',
+    deleteAccount: 'Delete Account',
+    contactSupport: 'Contact Support',
+    faq: 'FAQ',
+    logout: 'Logout',
+    pushNotifications: 'Push Notifications',
+    soundNotifications: 'Sound Notifications',
+    vibrationNotifications: 'Vibration Notifications',
+    chatNotifications: 'Chat Notifications',
+    profileViewNotifications: 'Profile View Notifications',
+    matchNotifications: 'Match Notifications',
+    profileVisibility: 'Profile Visibility',
+    showOnlineStatus: 'Show Online Status',
+    showLastSeen: 'Show Last Seen',
+    allowMessagePreviews: 'Allow Message Previews',
+    twoFactorAuth: 'Two-Factor Authentication',
+    dataExport: 'Data Export',
     
     // Registrierung
     iAm: 'I am',
@@ -958,6 +1147,69 @@ export const translations: Record<string, Translations> = {
     all: 'Todos',
     onlineOnly: 'Apenas Online',
     premiumOnly: 'Apenas Premium',
+
+    // Navigation & Chat
+    chats: 'Chats',
+    newMessage: 'Nova Mensagem',
+    noChatsYet: 'Ainda sem chats',
+    typeMessage: 'Digite uma mensagem...',
+    sendMessage: 'Enviar',
+    online: 'Online',
+    offline: 'Offline',
+    lastSeen: 'Visto por último',
+    typing: 'digitando...',
+    messageNotSent: 'Mensagem não pôde ser enviada',
+    unauthorized: 'Não autorizado',
+    notLoggedIn: 'Você não está mais logado. Redirecionando...',
+    redirecting: 'Redirecionando...',
+
+    // Profile
+    profileNotAvailable: 'Perfil não disponível',
+    myProfile: 'Meu Perfil',
+    editProfile: 'Editar Perfil',
+    personalInfo: 'Informações Pessoais',
+    physicalDetails: 'Detalhes Físicos',
+    servicesOffered: 'Serviços Oferecidos',
+    availableServices: 'Serviços Disponíveis',
+    selectServices: 'Selecionar Serviços',
+    pricePerHour: 'Preço por Hora',
+    location: 'Localização',
+    interests: 'Interesses',
+    addInterest: 'Adicionar Interesse',
+    profileUpdated: 'Perfil Atualizado',
+    profileUpdateError: 'Erro ao atualizar perfil',
+    uploadPhoto: 'Enviar Foto',
+    deletePhoto: 'Excluir Foto',
+    mainPhoto: 'Foto Principal',
+    additionalPhotos: 'Fotos Adicionais',
+
+    // Settings
+    settings: 'Configurações',
+    account: 'Conta',
+    privacy: 'Privacidade',
+    notifications: 'Notificações',
+    appearance: 'Aparência',
+    support: 'Suporte',
+    darkMode: 'Modo Escuro',
+    lightMode: 'Modo Claro',
+    language: 'Idioma',
+    changePassword: 'Alterar Senha',
+    deleteAccount: 'Excluir Conta',
+    contactSupport: 'Contatar Suporte',
+    faq: 'Perguntas Frequentes',
+    logout: 'Sair',
+    pushNotifications: 'Notificações Push',
+    soundNotifications: 'Notificações Sonoras',
+    vibrationNotifications: 'Notificações Vibratórias',
+    chatNotifications: 'Notificações de Chat',
+    profileViewNotifications: 'Notificações de Visualização de Perfil',
+    matchNotifications: 'Notificações de Match',
+    profileVisibility: 'Visibilidade do Perfil',
+    showOnlineStatus: 'Mostrar Status Online',
+    showLastSeen: 'Mostrar Última Visualização',
+    allowMessagePreviews: 'Permitir Pré-visualizações de Mensagem',
+    twoFactorAuth: 'Autenticação de Dois Fatores',
+    dataExport: 'Exportação de Dados',
     
     // Premium
     premium: 'Premium',
@@ -1210,6 +1462,69 @@ export const translations: Record<string, Translations> = {
     all: 'Todos',
     onlineOnly: 'Solo en Línea',
     premiumOnly: 'Solo Premium',
+
+    // Navigation & Chat
+    chats: 'Chats',
+    newMessage: 'Nuevo Mensaje',
+    noChatsYet: 'Aún sin chats',
+    typeMessage: 'Escribe un mensaje...',
+    sendMessage: 'Enviar',
+    online: 'En línea',
+    offline: 'Desconectado',
+    lastSeen: 'Visto por última vez',
+    typing: 'escribiendo...',
+    messageNotSent: 'No se pudo enviar el mensaje',
+    unauthorized: 'No autorizado',
+    notLoggedIn: 'Ya no estás conectado. Redirigiendo...',
+    redirecting: 'Redirigiendo...',
+
+    // Profile
+    profileNotAvailable: 'Perfil no disponible',
+    myProfile: 'Mi Perfil',
+    editProfile: 'Editar Perfil',
+    personalInfo: 'Información Personal',
+    physicalDetails: 'Detalles Físicos',
+    servicesOffered: 'Servicios Ofrecidos',
+    availableServices: 'Servicios Disponibles',
+    selectServices: 'Seleccionar Servicios',
+    pricePerHour: 'Precio por Hora',
+    location: 'Ubicación',
+    interests: 'Intereses',
+    addInterest: 'Añadir Interés',
+    profileUpdated: 'Perfil Actualizado',
+    profileUpdateError: 'Error al actualizar perfil',
+    uploadPhoto: 'Subir Foto',
+    deletePhoto: 'Eliminar Foto',
+    mainPhoto: 'Foto Principal',
+    additionalPhotos: 'Fotos Adicionales',
+
+    // Settings
+    settings: 'Configuración',
+    account: 'Cuenta',
+    privacy: 'Privacidad',
+    notifications: 'Notificaciones',
+    appearance: 'Apariencia',
+    support: 'Soporte',
+    darkMode: 'Modo Oscuro',
+    lightMode: 'Modo Claro',
+    language: 'Idioma',
+    changePassword: 'Cambiar Contraseña',
+    deleteAccount: 'Eliminar Cuenta',
+    contactSupport: 'Contactar Soporte',
+    faq: 'Preguntas Frecuentes',
+    logout: 'Cerrar Sesión',
+    pushNotifications: 'Notificaciones Push',
+    soundNotifications: 'Notificaciones de Sonido',
+    vibrationNotifications: 'Notificaciones de Vibración',
+    chatNotifications: 'Notificaciones de Chat',
+    profileViewNotifications: 'Notificaciones de Vista de Perfil',
+    matchNotifications: 'Notificaciones de Match',
+    profileVisibility: 'Visibilidad del Perfil',
+    showOnlineStatus: 'Mostrar Estado en Línea',
+    showLastSeen: 'Mostrar Última Vez Visto',
+    allowMessagePreviews: 'Permitir Vistas Previas de Mensajes',
+    twoFactorAuth: 'Autenticación de Dos Factores',
+    dataExport: 'Exportación de Datos',
     
     // Premium
     premium: 'Premium',
@@ -1462,6 +1777,69 @@ export const translations: Record<string, Translations> = {
     all: 'Tous',
     onlineOnly: 'En Ligne Seulement',
     premiumOnly: 'Premium Seulement',
+
+    // Navigation & Chat
+    chats: 'Chats',
+    newMessage: 'Nouveau Message',
+    noChatsYet: 'Pas encore de chats',
+    typeMessage: 'Tapez un message...',
+    sendMessage: 'Envoyer',
+    online: 'En ligne',
+    offline: 'Hors ligne',
+    lastSeen: 'Vu pour la dernière fois',
+    typing: 'tape...',
+    messageNotSent: 'Le message n\'a pas pu être envoyé',
+    unauthorized: 'Non autorisé',
+    notLoggedIn: 'Vous n\'êtes plus connecté. Redirection...',
+    redirecting: 'Redirection...',
+
+    // Profile
+    profileNotAvailable: 'Profil non disponible',
+    myProfile: 'Mon Profil',
+    editProfile: 'Modifier le Profil',
+    personalInfo: 'Informations Personnelles',
+    physicalDetails: 'Détails Physiques',
+    servicesOffered: 'Services Offerts',
+    availableServices: 'Services Disponibles',
+    selectServices: 'Sélectionner Services',
+    pricePerHour: 'Prix par Heure',
+    location: 'Emplacement',
+    interests: 'Intérêts',
+    addInterest: 'Ajouter Intérêt',
+    profileUpdated: 'Profil Mis à Jour',
+    profileUpdateError: 'Erreur lors de la mise à jour du profil',
+    uploadPhoto: 'Télécharger Photo',
+    deletePhoto: 'Supprimer Photo',
+    mainPhoto: 'Photo Principale',
+    additionalPhotos: 'Photos Supplémentaires',
+
+    // Settings
+    settings: 'Paramètres',
+    account: 'Compte',
+    privacy: 'Confidentialité',
+    notifications: 'Notifications',
+    appearance: 'Apparence',
+    support: 'Support',
+    darkMode: 'Mode Sombre',
+    lightMode: 'Mode Clair',
+    language: 'Langue',
+    changePassword: 'Changer le Mot de Passe',
+    deleteAccount: 'Supprimer le Compte',
+    contactSupport: 'Contacter le Support',
+    faq: 'FAQ',
+    logout: 'Se Déconnecter',
+    pushNotifications: 'Notifications Push',
+    soundNotifications: 'Notifications Sonores',
+    vibrationNotifications: 'Notifications Vibratoires',
+    chatNotifications: 'Notifications de Chat',
+    profileViewNotifications: 'Notifications de Vue de Profil',
+    matchNotifications: 'Notifications de Match',
+    profileVisibility: 'Visibilité du Profil',
+    showOnlineStatus: 'Afficher le Statut En Ligne',
+    showLastSeen: 'Afficher Dernière Vue',
+    allowMessagePreviews: 'Autoriser les Aperçus de Messages',
+    twoFactorAuth: 'Authentification à Deux Facteurs',
+    dataExport: 'Exportation de Données',
     
     // Premium
     premium: 'Premium',

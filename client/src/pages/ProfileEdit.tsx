@@ -19,6 +19,7 @@ import { updateProfileSchema } from '@shared/schema';
 import { ArrowLeft, Save, MapPin, Euro, User, Heart } from 'lucide-react';
 import { useLocation } from 'wouter';
 import { z } from 'zod';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 type ProfileFormData = z.infer<typeof updateProfileSchema>;
 
@@ -49,6 +50,7 @@ export default function ProfileEdit() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  const { t } = useLanguage();
 
   // Fetch current user data
   const { data: currentUser, isLoading } = useQuery({

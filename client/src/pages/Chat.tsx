@@ -13,6 +13,7 @@ import { isUnauthorizedError } from '@/lib/authUtils';
 import { apiRequest } from '@/lib/queryClient';
 import { Send, Phone, Video, ArrowLeft } from 'lucide-react';
 import { type User, type Message, type ChatRoom } from '@shared/schema';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Chat() {
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
@@ -20,6 +21,7 @@ export default function Chat() {
   const [ws, setWs] = useState<WebSocket | null>(null);
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -59,8 +61,8 @@ export default function Chat() {
         return;
       }
       toast({
-        title: "Fehler",
-        description: "Nachricht konnte nicht gesendet werden",
+        title: t?.error || "Fehler",
+        description: t?.messageNotSent || "Nachricht konnte nicht gesendet werden",
         variant: "destructive",
       });
     },
@@ -142,14 +144,14 @@ export default function Chat() {
         <div className="flex-1">
           {/* Header */}
           <div className="p-4 border-b border-border">
-            <h2 className="text-xl font-bold">Nachrichten</h2>
+            <h2 className="text-xl font-bold">{t?.chats || 'Nachrichten'}</h2>
           </div>
 
           {/* Chat Rooms */}
           <div className="flex-1">
             {chatRooms.length === 0 ? (
               <div className="p-8 text-center">
-                <p className="text-muted-foreground">Noch keine Nachrichten</p>
+                <p className="text-muted-foreground">{t?.noChatsYet || 'Noch keine Nachrichten'}</p>
               </div>
             ) : (
               chatRooms.map((room: any) => (
@@ -190,7 +192,7 @@ export default function Chat() {
                       )}
                     </div>
                     <p className="text-sm text-muted-foreground truncate">
-                      {room.lastMessage?.content || 'Neue Unterhaltung'}
+                      {room.lastMessage?.content || t?.newMessage || 'Neue Unterhaltung'}
                     </p>
                   </div>
                   

@@ -5,10 +5,12 @@ import { useProfile } from '@/hooks/useProfile';
 import { type Match } from '@shared/schema';
 import { EscortProfileView } from '@/components/EscortProfileView';
 import { useLocation } from 'wouter';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function Profile() {
   const { profile, isLoading } = useProfile();
   const [, navigate] = useLocation();
+  const { t } = useLanguage();
 
   // Fetch user matches for stats
   const { data: matches = [] } = useQuery<(Match & { user: any })[]>({
@@ -28,8 +30,8 @@ export default function Profile() {
     return (
       <div className="h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Profil nicht verfügbar</h2>
-          <Button onClick={() => navigate('/login')}>Anmelden</Button>
+          <h2 className="text-xl font-semibold mb-2">{t?.profileNotAvailable || 'Profil nicht verfügbar'}</h2>
+          <Button onClick={() => navigate('/login')}>{t?.login || 'Anmelden'}</Button>
         </div>
       </div>
     );
