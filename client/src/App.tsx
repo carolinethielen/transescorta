@@ -6,7 +6,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { Layout } from "@/components/Layout";
 import { useAuth } from "@/hooks/useAuth";
-import { useOnlineStatus } from "@/hooks/useOnlineStatus";
 
 import NotFound from "@/pages/not-found";
 import Landing from "@/pages/Landing";
@@ -28,9 +27,6 @@ import PrivateAlbums from "@/pages/PrivateAlbums";
 
 function Router() {
   const { isAuthenticated, isLoading } = useAuth();
-  
-  // Initialize online status tracking for authenticated users
-  useOnlineStatus();
 
   // Don't show loading for unauthenticated users - just show the app
   if (isLoading && isAuthenticated) {

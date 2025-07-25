@@ -11,7 +11,6 @@ import { useAuth } from '@/hooks/useAuth';
 import AuthModalNew from '@/components/AuthModalNew';
 
 import { PlaceholderImage } from '@/components/PlaceholderImage';
-import { OnlineIndicator } from '@/components/OnlineIndicator';
 import { useToast } from '@/hooks/use-toast';
 import { useGeolocation } from '@/hooks/useGeolocation';
 import { MapPin, Moon, Sun, MessageCircle, Crown, Star } from 'lucide-react';
@@ -185,9 +184,9 @@ export default function Home() {
         )}
         
         {/* Online Status - Top Left */}
-        <div className="absolute top-2 left-2">
-          <OnlineIndicator isOnline={escort.isOnline} variant="dot" />
-        </div>
+        {escort.isOnline && (
+          <div className="absolute top-2 left-2 w-3 h-3 bg-green-500 border-2 border-white rounded-full shadow-sm animate-pulse"></div>
+        )}
         
         {/* Premium Badge - Top Right */}
         {escort.isPremium && (

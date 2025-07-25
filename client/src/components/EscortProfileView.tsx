@@ -17,7 +17,6 @@ import {
   ArrowLeft,
   Star
 } from 'lucide-react';
-import { OnlineIndicator } from '@/components/OnlineIndicator';
 import type { User } from '@shared/schema';
 
 interface EscortProfileViewProps {
@@ -103,22 +102,14 @@ export function EscortProfileView({
                 {user.isPremium && (
                   <Crown className="w-6 h-6 text-yellow-500" />
                 )}
-                <OnlineIndicator isOnline={user.isOnline} variant="badge" />
               </div>
 
-              <div className="flex items-center justify-between mb-3">
-                {user.location && (
-                  <div className="flex items-center text-muted-foreground">
-                    <MapPin className="w-4 h-4 mr-2" />
-                    {user.location}
-                  </div>
-                )}
-                <OnlineIndicator 
-                  isOnline={user.isOnline} 
-                  lastSeen={user.lastSeen} 
-                  variant="text"
-                />
-              </div>
+              {user.location && (
+                <div className="flex items-center text-muted-foreground mb-3">
+                  <MapPin className="w-4 h-4 mr-2" />
+                  {user.location}
+                </div>
+              )}
 
               {user.bio && (
                 <p className="text-base leading-relaxed">{user.bio}</p>
