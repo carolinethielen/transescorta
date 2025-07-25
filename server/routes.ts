@@ -1020,6 +1020,61 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Create Verotel payment URL with proper signature
+  app.post('/api/payments/create-verotel-url', isAuthenticated, async (req: any, res) => {
+    try {
+      const { userId, amount, description } = req.body;
+      const baseUrl = process.env.REPL_ID ? 
+        `https://${process.env.REPL_ID}-00-3bp6ijuj765eh.kirk.replit.dev` :
+        `${req.protocol}://${req.get('host')}`;
+
+      // Verotel configuration
+      const shopID = '134573';
+      const signatureKey = 's5QJKf2XBEDQXJgKccRDXHg7Ps6RFr';
+      
+      // Parameters for Verotel
+      const params = {
+        description: description,
+        priceAmount: amount.toString(),
+        priceCurrency: 'EUR',
+        shopID: shopID,
+        type: 'purchase',
+        version: '4',
+        referenceID: userId,
+        successURL: `${baseUrl}/premium-success`,
+        declineURL: `${baseUrl}/premium-declined`,
+        cancelURL: `${baseUrl}/premium`
+      };
+
+      // Create signature string (alphabetically sorted parameters)
+      const sortedParams = Object.keys(params).sort().map(key => 
+        `${key}=${encodeURIComponent((params as any)[key])}`
+      ).join('&');
+      
+      // Generate SHA256 signature with signatureKey
+      const crypto = await import('crypto');
+      const signature = crypto
+        .createHmac('sha256', signatureKey)
+        .update(sortedParams)
+        .digest('hex');
+
+      // Create payment URL
+      const paymentParams = new URLSearchParams({
+        ...params,
+        signature
+      });
+
+      const paymentUrl = `https://secure.verotel.com/startorder?${paymentParams.toString()}`;
+      
+      console.log('Generated Verotel payment URL:', paymentUrl);
+      
+      res.json({ paymentUrl });
+    } catch (error) {
+      console.error('Verotel URL creation error:', error);
+      res.status(500).json({ message: 'Failed to create payment URL' });
+    }
+  });
+
   // Verotel webhook handler for premium subscription
   app.post('/api/webhooks/verotel', express.raw({ type: 'application/x-www-form-urlencoded' }), async (req, res) => {
     try {

@@ -1,6 +1,6 @@
 # Verotel FlexPay Setup Instructions
 
-## Verotel Configuration für TransEscorta Premium (€9.99/Monat)
+## Verotel Configuration für TransEscorta Premium (€9.99 einmalig für 1 Monat)
 
 ### FlexPay Setup in Verotel Dashboard
 
@@ -26,15 +26,15 @@
    https://your-domain.replit.app/premium
    ```
 
-### Gegebene Verotel Daten:
+### Verotel Konfiguration:
 - **shopID:** 134573
 - **signatureKey:** s5QJKf2XBEDQXJgKccRDXHg7Ps6RFr
-- **Signature:** 2f500af84981e6c2919f0e0a885d40d8c552ab127b9e511b32630bf6823e410d
 
-### Zahlungslink:
-```
-https://secure.verotel.com/startorder?description=TransEscorta+Premium+Abo&priceAmount=9.99&priceCurrency=EUR&shopID=134573&type=purchase&version=4&signature=2f500af84981e6c2919f0e0a885d40d8c552ab127b9e511b32630bf6823e410d
-```
+### Automatische URL-Generierung:
+Das System generiert jetzt automatisch korrekte Verotel-URLs mit:
+- Dynamischer Signatur-Berechnung mit SHA256 HMAC
+- Benutzer-spezifischer referenceID
+- Korrekte Callback-URLs basierend auf aktueller Domain
 
 ## Wie Premium funktioniert:
 

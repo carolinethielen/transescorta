@@ -24,26 +24,27 @@ export default function Premium() {
     setIsProcessing(true);
 
     try {
-      // Generate Verotel payment URL with user reference
-      const verotelParams = new URLSearchParams({
-        description: 'TransEscorta Premium Abo',
-        priceAmount: '9.99',
-        priceCurrency: 'EUR',
-        shopID: '134573',
-        type: 'purchase',
-        version: '4',
-        signature: '2f500af84981e6c2919f0e0a885d40d8c552ab127b9e511b32630bf6823e410d',
-        // Add user reference for tracking
-        referenceID: user.id,
-        successURL: `${window.location.origin}/premium-success`,
-        declineURL: `${window.location.origin}/premium-declined`,
-        cancelURL: `${window.location.origin}/premium`
+      // Send request to backend to generate proper Verotel URL with signature
+      const response = await fetch('/api/payments/create-verotel-url', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          amount: 9.99,
+          description: 'TransEscorta Premium - 1 Monat'
+        }),
       });
 
-      const verotelUrl = `https://secure.verotel.com/startorder?${verotelParams.toString()}`;
+      if (!response.ok) {
+        throw new Error('Failed to create payment URL');
+      }
+
+      const { paymentUrl } = await response.json();
       
       // Open in new tab
-      window.open(verotelUrl, '_blank');
+      window.open(paymentUrl, '_blank');
 
       toast({
         title: "Weiterleitung zu Verotel",
@@ -136,7 +137,7 @@ export default function Premium() {
                 {user.isPremium && (
                   <div className="text-right">
                     <p className="text-sm text-muted-foreground">Premium aktiv</p>
-                    <p className="text-xs text-green-600">Verlängert automatisch</p>
+                    <p className="text-xs text-green-600">1 Monat aktiv</p>
                   </div>
                 )}
               </div>
@@ -154,10 +155,10 @@ export default function Premium() {
             <div className="space-y-2">
               <div className="flex items-center justify-center gap-1">
                 <span className="text-4xl font-bold text-[#FF007F]">€9,99</span>
-                <span className="text-muted-foreground">/Monat</span>
+                <span className="text-muted-foreground">einmalig</span>
               </div>
               <CardDescription>
-                Jederzeit kündbar • Sichere Zahlung über Verotel
+                1 Monat Premium-Zugang • Sichere Zahlung über Verotel
               </CardDescription>
             </div>
           </CardHeader>
