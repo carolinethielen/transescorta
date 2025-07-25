@@ -363,7 +363,7 @@ export default function ChatMainNew() {
 
         {/* Chat List */}
         <div className="flex-1 overflow-hidden">
-          <ScrollArea className="h-full">
+          <div className="h-full overflow-y-auto custom-scrollbar">
             {roomsLoading ? (
               <div className="p-4">
                 <div className="space-y-3">
@@ -441,7 +441,7 @@ export default function ChatMainNew() {
                 ))}
               </div>
             )}
-          </ScrollArea>
+          </div>
         </div>
       </div>
     );
@@ -489,7 +489,7 @@ export default function ChatMainNew() {
 
       {/* Messages Area - Fixed height, only scroll when needed */}
       <div className="flex-1 bg-gray-50 dark:bg-gray-900 flex flex-col" style={{ height: 'calc(100vh - 200px)' }}>
-        <div className="flex-1 overflow-y-auto" ref={messagesEndRef}>
+        <div className="flex-1 overflow-y-auto custom-scrollbar" ref={messagesEndRef}>
           <div className="p-4 pb-4 flex flex-col justify-end min-h-full">
             {messagesLoading ? (
               <div className="space-y-4">
@@ -515,7 +515,7 @@ export default function ChatMainNew() {
             ) : (
               <div className="space-y-2 flex-1 flex flex-col justify-start">
                 {messages.map((message, index) => {
-                  const isFromMe = message.senderId === user.id;
+                  const isFromMe = message.senderId === user?.id;
                   const showAvatar = !isFromMe && (index === 0 || messages[index - 1]?.senderId !== message.senderId);
                   const nextMessageFromSameUser = messages[index + 1]?.senderId === message.senderId;
                   
