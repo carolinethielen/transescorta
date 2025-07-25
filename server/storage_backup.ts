@@ -975,5 +975,6 @@ export class DatabaseStorage implements IStorage {
   }
 }
 
-
+export const storage = new DatabaseStorage();
+        if (moderationRecord.imageType === 'profile' && user.profileImageUrl === moderationRecord.imageUrl) {
 export const storage = new DatabaseStorage();

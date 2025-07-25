@@ -41,7 +41,17 @@ const requireAdmin = async (req: any, res: any, next: any) => {
 // Statistics
 router.get("/stats", requireAdmin, async (req, res) => {
   try {
-    const stats = await storage.getUserStats();
+    const userStats = await storage.getUserStats();
+    const pendingImagesCount = await storage.getPendingImages(1, 1);
+    
+    const stats = {
+      ...userStats,
+      manUsers: userStats.customers, // Map customers to manUsers for frontend compatibility
+      blockedUsers: 0, // TODO: implement blocked users count
+      pendingImages: pendingImagesCount.total,
+      activeChats: 0 // TODO: implement active chats count
+    };
+    
     res.json(stats);
   } catch (error) {
     console.error("Error fetching user stats:", error);
