@@ -24,7 +24,7 @@ export function ProfileImageUploadNew({
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  // Upload mutation
+  // Upload mutation using Cloudinary
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
       const formData = new FormData();
@@ -37,7 +37,7 @@ export function ProfileImageUploadNew({
       });
       
       if (!response.ok) {
-        throw new Error('Upload failed');
+        throw new Error('Cloudinary upload failed');
       }
       
       return response.json();
@@ -58,7 +58,7 @@ export function ProfileImageUploadNew({
       
       toast({
         title: "Bild erfolgreich hochgeladen",
-        description: "Das Bild wurde zu deinem Profil hinzugefügt",
+        description: "Das Bild wurde über Cloudinary zu deinem Profil hinzugefügt",
       });
       
       // Invalidate user profile cache
@@ -67,8 +67,8 @@ export function ProfileImageUploadNew({
     onError: (error) => {
       console.error('Upload error:', error);
       toast({
-        title: "Upload fehlgeschlagen",
-        description: "Das Bild konnte nicht hochgeladen werden. Versuche es erneut.",
+        title: "Cloudinary Upload fehlgeschlagen",
+        description: "Das Bild konnte nicht zu Cloudinary hochgeladen werden. Versuche es erneut.",
         variant: "destructive",
       });
     },

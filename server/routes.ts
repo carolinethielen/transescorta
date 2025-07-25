@@ -2,14 +2,11 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import express from "express";
-import multer from "multer";
-import path from "path";
-import fs from "fs";
-import { nanoid } from "nanoid";
 import { storage } from "./storage";
 import { setupCustomAuth, isAuthenticated } from "./customAuth";
 import { sendMessageSchema, createMatchSchema, updateProfileSchema } from "@shared/schema";
 import { z } from "zod";
+import { uploadProfile, uploadChat, uploadGeneral } from "./cloudinary";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
@@ -17,38 +14,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   
   // WebSocket connection tracking
   const connectedClients = new Map<WebSocket, string>();
-  
-  // Ensure upload directory exists
-  const uploadDir = path.join(process.cwd(), 'uploads', 'profile-images');
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-  }
-
-  // Configure multer for image uploads
-  const storage_multer = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-      const uniqueName = `${nanoid()}-${Date.now()}${path.extname(file.originalname)}`;
-      cb(null, uniqueName);
-    }
-  });
-
-  const upload = multer({
-    storage: storage_multer,
-    limits: {
-      fileSize: 5 * 1024 * 1024, // 5MB limit
-    },
-    fileFilter: (req, file, cb) => {
-      const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-      if (allowedTypes.includes(file.mimetype)) {
-        cb(null, true);
-      } else {
-        cb(new Error('Invalid file type. Only JPEG, PNG and GIF are allowed.'));
-      }
-    },
-  });
   
   // Public routes (must come before authentication middleware)
   app.get('/api/users/public', async (req, res) => {
@@ -64,29 +29,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Upload routes
-  app.post('/api/upload/profile-image', isAuthenticated, upload.single('image'), async (req: any, res) => {
+  // Upload routes - using Cloudinary
+  app.post('/api/upload/profile-image', isAuthenticated, uploadProfile.single('image'), async (req: any, res) => {
     try {
       if (!req.file) {
         return res.status(400).json({ message: 'No file uploaded' });
       }
 
-      // Generate public URL for the uploaded image
-      const imageUrl = `/uploads/profile-images/${req.file.filename}`;
+      // Cloudinary provides the secure URL directly
+      const imageUrl = req.file.path;
+      const publicId = req.file.filename;
       
-      console.log('Image uploaded successfully:', {
+      console.log('Image uploaded to Cloudinary:', {
         userId: req.user.id,
-        filename: req.file.filename,
+        publicId,
         imageUrl
       });
 
       res.json({
         success: true,
         imageUrl,
-        filename: req.file.filename
+        publicId
       });
     } catch (error) {
-      console.error('Upload error:', error);
+      console.error('Cloudinary upload error:', error);
       res.status(500).json({ 
         message: 'Upload failed',
         error: error instanceof Error ? error.message : 'Unknown error'
@@ -94,8 +60,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Serve uploaded images
-  app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+  // Multiple image upload for galleries
+  app.post('/api/upload/profile-gallery', isAuthenticated, uploadProfile.array('images', 5), async (req: any, res) => {
+    try {
+      if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ message: 'No files uploaded' });
+      }
+
+      const uploadedImages = req.files.map((file: any) => ({
+        imageUrl: file.path,
+        publicId: file.filename
+      }));
+      
+      console.log(`${req.files.length} images uploaded to Cloudinary for user ${req.user.id}`);
+
+      res.json({
+        success: true,
+        images: uploadedImages
+      });
+    } catch (error) {
+      console.error('Cloudinary gallery upload error:', error);
+      res.status(500).json({ 
+        message: 'Gallery upload failed',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  });
 
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
@@ -407,8 +397,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Image message endpoint
-  app.post('/api/chat/messages/image', isAuthenticated, upload.single('image'), async (req: any, res) => {
+  // Image message endpoint - using Cloudinary
+  app.post('/api/chat/messages/image', isAuthenticated, uploadChat.single('image'), async (req: any, res) => {
     try {
       const senderId = req.user.id;
       const { receiverId, content = '' } = req.body;
@@ -417,9 +407,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: 'No image file provided' });
       }
 
-      // Convert image to base64 data URL for simple storage
-      const imageData = req.file.buffer.toString('base64');
-      const imageUrl = `data:${req.file.mimetype};base64,${imageData}`;
+      // Cloudinary provides the secure URL directly
+      const imageUrl = req.file.path;
 
       // Create message with image
       const messageData = {
@@ -433,7 +422,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       await storage.getOrCreateChatRoom(senderId, receiverId);
       
       const message = await storage.sendMessage(senderId, messageData);
-      console.log(`Image message sent from ${senderId} to ${receiverId}`);
+      console.log(`Image message sent from ${senderId} to ${receiverId} via Cloudinary`);
       
       // Broadcast to WebSocket clients
       const notifyUsers = [senderId, receiverId];
@@ -450,7 +439,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       res.json(message);
     } catch (error) {
-      console.error('Error sending image message:', error);
+      console.error('Error sending image message via Cloudinary:', error);
       res.status(500).json({ message: 'Failed to send image message' });
     }
   });
