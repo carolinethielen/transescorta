@@ -241,6 +241,9 @@ export interface Translations {
   changesSaved: string;
   errorSaving: string;
   profileUpdateFailed: string;
+  back: string;
+  profilePhotos: string;
+  basicInfo: string;
   editProfile: string;
   personalInfo: string;
   physicalDetails: string;
@@ -493,6 +496,9 @@ export const translations: Record<string, Translations> = {
     changesSaved: 'Deine Änderungen wurden erfolgreich gespeichert.',
     errorSaving: 'Fehler beim Speichern',
     profileUpdateFailed: 'Profil konnte nicht aktualisiert werden.',
+    back: 'Zurück',
+    profilePhotos: 'Profilbilder',
+    basicInfo: 'Grundinformationen',
     editProfile: 'Profil bearbeiten',
     personalInfo: 'Persönliche Informationen',
     physicalDetails: 'Körperliche Merkmale',
@@ -814,6 +820,9 @@ export const translations: Record<string, Translations> = {
     changesSaved: 'Your changes have been saved successfully.',
     errorSaving: 'Error Saving',
     profileUpdateFailed: 'Profile could not be updated.',
+    back: 'Back',
+    profilePhotos: 'Profile Photos',
+    basicInfo: 'Basic Information',
     editProfile: 'Edit Profile',
     personalInfo: 'Personal Information',
     physicalDetails: 'Physical Details',
@@ -1195,6 +1204,9 @@ export const translations: Record<string, Translations> = {
     changesSaved: 'Suas alterações foram salvas com sucesso.',
     errorSaving: 'Erro ao Salvar',
     profileUpdateFailed: 'Perfil não pôde ser atualizado.',
+    back: 'Voltar',
+    profilePhotos: 'Fotos do Perfil',
+    basicInfo: 'Informações Básicas',
     editProfile: 'Editar Perfil',
     personalInfo: 'Informações Pessoais',
     physicalDetails: 'Detalhes Físicos',
@@ -1518,6 +1530,9 @@ export const translations: Record<string, Translations> = {
     changesSaved: 'Tus cambios han sido guardados exitosamente.',
     errorSaving: 'Error al Guardar',
     profileUpdateFailed: 'El perfil no pudo ser actualizado.',
+    back: 'Atrás',
+    profilePhotos: 'Fotos del Perfil',
+    basicInfo: 'Información Básica',
     editProfile: 'Editar Perfil',
     personalInfo: 'Información Personal',
     physicalDetails: 'Detalles Físicos',
@@ -1841,6 +1856,9 @@ export const translations: Record<string, Translations> = {
     changesSaved: 'Vos modifications ont été sauvegardées avec succès.',
     errorSaving: 'Erreur de Sauvegarde',
     profileUpdateFailed: 'Le profil n\'a pas pu être mis à jour.',
+    back: 'Retour',
+    profilePhotos: 'Photos de Profil',
+    basicInfo: 'Informations de Base',
     editProfile: 'Modifier le Profil',
     personalInfo: 'Informations Personnelles',
     physicalDetails: 'Détails Physiques',
@@ -1892,7 +1910,6 @@ export const translations: Record<string, Translations> = {
     // Premium
     premium: 'Premium',
     upgradePremium: 'Mise à Niveau Premium',
-    premiumActive: 'Premium Actif',
 
     
     // Aktionen

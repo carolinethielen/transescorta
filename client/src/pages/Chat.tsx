@@ -51,8 +51,8 @@ export default function Chat() {
     onError: (error) => {
       if (isUnauthorizedError(error as Error)) {
         toast({
-          title: "Unauthorized",
-          description: "Du bist nicht mehr angemeldet. Leite weiter...",
+          title: t?.unauthorized || "Unauthorized",
+          description: t?.notLoggedIn || "Du bist nicht mehr angemeldet. Leite weiter...",
           variant: "destructive",
         });
         setTimeout(() => {

@@ -237,9 +237,9 @@ export default function ProfileEdit() {
         <div className="flex items-center justify-between mb-6">
           <Button variant="ghost" onClick={() => navigate('/profile')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Zurück
+            {t?.back || 'Zurück'}
           </Button>
-          <h1 className="text-2xl font-bold">Profil bearbeiten</h1>
+          <h1 className="text-2xl font-bold">{t?.editProfile || 'Profil bearbeiten'}</h1>
           <div className="w-20" /> {/* Spacer */}
         </div>
 
@@ -250,7 +250,7 @@ export default function ProfileEdit() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Heart className="w-5 h-5 text-[#FF007F]" />
-                  Profilbilder
+{t?.profilePhotos || 'Profilbilder'}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -269,7 +269,7 @@ export default function ProfileEdit() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <User className="w-5 h-5 text-[#FF007F]" />
-                  Grundinformationen
+{t?.basicInfo || 'Grundinformationen'}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -279,7 +279,7 @@ export default function ProfileEdit() {
                     name="firstName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Vorname *</FormLabel>
+                        <FormLabel>{t?.firstName || 'Vorname'} *</FormLabel>
                         <FormControl>
                           <Input {...field} placeholder="Dein Vorname" />
                         </FormControl>
@@ -293,7 +293,7 @@ export default function ProfileEdit() {
                     name="lastName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nachname</FormLabel>
+                        <FormLabel>{t?.lastName || 'Nachname'}</FormLabel>
                         <FormControl>
                           <Input {...field} placeholder="Dein Nachname (optional)" />
                         </FormControl>
@@ -309,7 +309,7 @@ export default function ProfileEdit() {
                     name="age"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Alter *</FormLabel>
+                        <FormLabel>{t?.age || 'Alter'} *</FormLabel>
                         <FormControl>
                           <Input 
                             type="number" 

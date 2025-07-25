@@ -232,14 +232,14 @@ export default function Settings() {
                 </h3>
                 <div className="flex items-center gap-2">
                   <p className="text-sm text-muted-foreground">
-                    {user?.userType === 'trans' ? t.transEscort : t.customer}
+                    {user?.userType === 'trans' ? (t?.transEscort || 'Trans Escort') : (t?.customer || 'Kunde')}
                   </p>
-                  {user?.isPremium && <Badge className="bg-[#FF007F] text-white">{t.premium}</Badge>}
+                  {user?.isPremium && <Badge className="bg-[#FF007F] text-white">{t?.premium || 'Premium'}</Badge>}
                 </div>
               </div>
               <Button variant="outline" size="sm" onClick={() => navigate('/my-profile')}>
                 <User className="w-4 h-4 mr-2" />
-                {t.edit}
+                {t?.edit || 'Bearbeiten'}
               </Button>
             </div>
           </CardContent>
