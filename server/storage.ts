@@ -41,6 +41,7 @@ export interface IStorage {
   updatePassword(userId: string, passwordHash: string): Promise<void>;
   setPasswordResetToken(userId: string, token: string, expires: Date): Promise<void>;
   verifyUserEmail(userId: string): Promise<void>;
+  deleteUser(userId: string): Promise<void>;
   
   // Discovery operations
   getNearbyUsers(userId: string, latitude: number, longitude: number, radius: number, limit: number): Promise<User[]>;
@@ -376,6 +377,16 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  async updatePassword(userId: string, passwordHash: string): Promise<void> {
+    await db
+      .update(users)
+      .set({
+        passwordHash,
+        updatedAt: new Date(),
+      })
+      .where(eq(users.id, userId));
+  }
+
   // Discovery operations
   async getNearbyUsers(userId: string, latitude: number, longitude: number, radius: number, limit: number): Promise<User[]> {
     // Using basic distance calculation (for production, consider PostGIS)
@@ -694,6 +705,30 @@ export class DatabaseStorage implements IStorage {
       .returning();
 
     return updatedUser;
+  }
+
+  async deleteUser(userId: string): Promise<void> {
+    // Delete user's album access records
+    await db.delete(albumAccess).where(eq(albumAccess.userId, userId));
+    
+    // Delete user's private albums and their access records
+    const userAlbums = await db.select().from(privateAlbums).where(eq(privateAlbums.ownerId, userId));
+    for (const album of userAlbums) {
+      await db.delete(albumAccess).where(eq(albumAccess.albumId, album.id));
+    }
+    await db.delete(privateAlbums).where(eq(privateAlbums.ownerId, userId));
+    
+    // Delete user's messages
+    await db.delete(messages).where(or(eq(messages.senderId, userId), eq(messages.receiverId, userId)));
+    
+    // Delete user's matches
+    await db.delete(matches).where(or(eq(matches.userId, userId), eq(matches.targetUserId, userId)));
+    
+    // Delete user's chat rooms
+    await db.delete(chatRooms).where(or(eq(chatRooms.user1Id, userId), eq(chatRooms.user2Id, userId)));
+    
+    // Finally delete the user
+    await db.delete(users).where(eq(users.id, userId));
   }
 
 

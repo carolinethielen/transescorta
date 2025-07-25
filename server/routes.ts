@@ -895,5 +895,99 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Settings routes
+  app.put('/api/auth/change-password', isAuthenticated, async (req: any, res) => {
+    try {
+      const { currentPassword, newPassword } = req.body;
+      const userId = req.user.id;
+
+      if (!currentPassword || !newPassword) {
+        return res.status(400).json({ message: 'Aktuelles und neues Passwort sind erforderlich' });
+      }
+
+      if (newPassword.length < 8) {
+        return res.status(400).json({ message: 'Neues Passwort muss mindestens 8 Zeichen lang sein' });
+      }
+
+      // Verify current password
+      const bcrypt = await import('bcryptjs');
+      const user = await storage.getUser(userId);
+      if (!user || !await bcrypt.compare(currentPassword, user.passwordHash)) {
+        return res.status(400).json({ message: 'Aktuelles Passwort ist falsch' });
+      }
+
+      // Hash new password
+      const newPasswordHash = await bcrypt.hash(newPassword, 12);
+      await storage.updatePassword(userId, newPasswordHash);
+
+      res.json({ message: 'Passwort erfolgreich geändert' });
+    } catch (error) {
+      console.error('Change password error:', error);
+      res.status(500).json({ message: 'Fehler beim Ändern des Passworts' });
+    }
+  });
+
+  app.delete('/api/auth/delete-account', isAuthenticated, async (req: any, res) => {
+    try {
+      const { password, confirmation } = req.body;
+      const userId = req.user.id;
+
+      if (!password || confirmation !== 'LÖSCHEN') {
+        return res.status(400).json({ message: 'Passwort und Bestätigung sind erforderlich' });
+      }
+
+      // Verify password
+      const bcrypt = await import('bcryptjs');
+      const user = await storage.getUser(userId);
+      if (!user || !await bcrypt.compare(password, user.passwordHash)) {
+        return res.status(400).json({ message: 'Passwort ist falsch' });
+      }
+
+      // Delete user account and all related data
+      await storage.deleteUser(userId);
+
+      // Destroy session
+      req.session.destroy((err: any) => {
+        if (err) {
+          console.error('Session destroy error:', err);
+        }
+      });
+
+      res.json({ message: 'Konto erfolgreich gelöscht' });
+    } catch (error) {
+      console.error('Delete account error:', error);
+      res.status(500).json({ message: 'Fehler beim Löschen des Kontos' });
+    }
+  });
+
+  app.post('/api/support/contact', isAuthenticated, async (req: any, res) => {
+    try {
+      const { subject, category, message, email } = req.body;
+      const userId = req.user.id;
+
+      if (!subject || !category || !message) {
+        return res.status(400).json({ message: 'Alle Felder sind erforderlich' });
+      }
+
+      // In a real app, you would send this to your support system
+      // For now, we'll just log it and return success
+      console.log('Support request:', {
+        userId,
+        email,
+        category,
+        subject,
+        message,
+        timestamp: new Date().toISOString()
+      });
+
+      // TODO: Integrate with email service (SendGrid) to send support emails
+      
+      res.json({ message: 'Support-Anfrage erfolgreich gesendet' });
+    } catch (error) {
+      console.error('Contact support error:', error);
+      res.status(500).json({ message: 'Fehler beim Senden der Support-Anfrage' });
+    }
+  });
+
   return httpServer;
 }

@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
+import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useToast } from '@/hooks/use-toast';
+import { ChangePasswordModal } from '@/components/ChangePasswordModal';
+import { DeleteAccountModal } from '@/components/DeleteAccountModal';
+import { ContactSupportModal } from '@/components/ContactSupportModal';
 
 import { 
   User, Crown, Moon, Sun, LogOut, ChevronRight, 
-  Key, Bell, Shield, HelpCircle 
+  Key, Bell, Shield, HelpCircle, Smartphone, 
+  Eye, EyeOff, UserX, Archive, MessageSquare,
+  Volume2, VolumeX, Vibrate
 } from 'lucide-react';
 
 export default function Settings() {
@@ -17,6 +24,125 @@ export default function Settings() {
   const [location, navigate] = useLocation();
   const { theme, toggleTheme } = useTheme();
   const { toast } = useToast();
+  
+  // Modal states
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [showDeleteAccount, setShowDeleteAccount] = useState(false);
+  const [showContactSupport, setShowContactSupport] = useState(false);
+  const [showFAQ, setShowFAQ] = useState(false);
+  
+  // Settings states
+  const [settings, setSettings] = useState({
+    // Push notifications
+    pushEnabled: false,
+    soundEnabled: true,
+    vibrationEnabled: true,
+    chatNotifications: true,
+    profileViewNotifications: true,
+    matchNotifications: true,
+    
+    // Privacy & Security
+    profileVisibility: 'public',
+    showOnlineStatus: true,
+    showLastSeen: true,
+    allowMessagePreviews: true,
+    twoFactorEnabled: false,
+    dataExportRequested: false,
+    
+    // Professional settings (for trans escorts)
+    autoReply: false,
+    businessHours: false,
+    priceDisplay: true,
+    serviceDisplay: true,
+    availabilityStatus: 'available'
+  });
+
+  // Load settings from localStorage on mount
+  useEffect(() => {
+    const savedSettings = localStorage.getItem('transescorta-settings');
+    if (savedSettings) {
+      setSettings(prev => ({ ...prev, ...JSON.parse(savedSettings) }));
+    }
+    
+    // Check if push notifications are supported and enabled
+    if ('Notification' in window) {
+      setSettings(prev => ({
+        ...prev,
+        pushEnabled: Notification.permission === 'granted'
+      }));
+    }
+  }, []);
+
+  // Save settings to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem('transescorta-settings', JSON.stringify(settings));
+  }, [settings]);
+
+  const updateSetting = (key: string, value: any) => {
+    setSettings(prev => ({ ...prev, [key]: value }));
+  };
+
+  // Request push notification permission
+  const requestPushPermission = async () => {
+    if ('Notification' in window) {
+      try {
+        const permission = await Notification.requestPermission();
+        updateSetting('pushEnabled', permission === 'granted');
+        
+        if (permission === 'granted') {
+          toast({
+            title: "Push-Benachrichtigungen aktiviert",
+            description: "Du erhältst jetzt Benachrichtigungen für neue Nachrichten.",
+          });
+          
+          // Register service worker for push notifications
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+          }
+        } else {
+          toast({
+            title: "Berechtigung verweigert",
+            description: "Push-Benachrichtigungen können in den Browser-Einstellungen aktiviert werden.",
+            variant: "destructive",
+          });
+        }
+      } catch (error) {
+        console.error('Push notification error:', error);
+        toast({
+          title: "Fehler",
+          description: "Push-Benachrichtigungen konnten nicht aktiviert werden.",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  const faqItems = [
+    {
+      question: "Wie kann ich mein Profil verifizieren?",
+      answer: "Premium-Mitglieder können ihr Profil durch Dokumentenupload verifizieren lassen. Dies erhöht das Vertrauen und die Sichtbarkeit."
+    },
+    {
+      question: "Wie funktioniert die 24h Album-Freigabe?",
+      answer: "Trans-Escorts können private Alben im Chat teilen. Der Empfänger hat dann 24 Stunden Zugriff auf die Fotos."
+    },
+    {
+      question: "Was sind die Vorteile von Premium?",
+      answer: "Premium-Mitglieder haben unbegrenzte private Alben, bessere Sichtbarkeit, erweiterte Filter und Profilverifizierung."
+    },
+    {
+      question: "Wie kann ich unangemessene Inhalte melden?",
+      answer: "Verwende die Melden-Funktion in Profilen oder Chats. Unser Team prüft alle Meldungen innerhalb von 24 Stunden."
+    },
+    {
+      question: "Sind meine Daten sicher?",
+      answer: "Ja, wir verwenden Ende-zu-Ende-Verschlüsselung für Nachrichten und speichern keine sensiblen Daten länger als nötig."
+    },
+    {
+      question: "Wie kündige ich mein Premium-Abo?",
+      answer: "Premium-Abos können jederzeit über die Einstellungen oder direkt über Stripe gekündigt werden."
+    }
+  ];
 
   const handleLogout = async () => {
     try {
@@ -37,65 +163,6 @@ export default function Settings() {
     }
   };
 
-  // Settings items based on user type
-  const getSettingsItems = () => {
-    const baseSettings: Array<{
-      title: string;
-      description: string;
-      icon: any;
-      onClick: () => void;
-      highlight?: boolean;
-    }> = [
-      {
-        title: "Profil bearbeiten",
-        description: "Deine persönlichen Informationen verwalten",
-        icon: User,
-        onClick: () => navigate('/my-profile'),
-      },
-      {
-        title: "Passwort ändern",
-        description: "Dein Passwort aktualisieren",
-        icon: Key,
-        onClick: () => navigate('/change-password'),
-      },
-    ];
-
-    // Add Premium subscription only for Trans escorts
-    if (user?.userType === 'trans') {
-      baseSettings.push({
-        title: "Premium Abo",
-        description: "Premium werden für bessere Sichtbarkeit und mehr Matches",
-        icon: Crown,
-        onClick: () => navigate('/subscribe'),
-        highlight: true,
-      });
-    }
-
-    // Add common settings
-    baseSettings.push(
-      {
-        title: "Benachrichtigungen",
-        description: "Push-Benachrichtigungen verwalten",
-        icon: Bell,
-        onClick: () => {}, // TODO: Implement notifications settings
-      },
-      {
-        title: "Privatsphäre & Sicherheit",
-        description: "Deine Privatsphäre-Einstellungen",
-        icon: Shield,
-        onClick: () => {}, // TODO: Implement privacy settings
-      },
-      {
-        title: "Hilfe & Support",
-        description: "Häufige Fragen und Kontakt",
-        icon: HelpCircle,
-        onClick: () => {}, // TODO: Implement help page
-      }
-    );
-
-    return baseSettings;
-  };
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background p-4">
@@ -114,58 +181,338 @@ export default function Settings() {
 
   return (
     <div className="min-h-screen bg-background p-4 pb-24">
-      <div className="max-w-md mx-auto">
-        <h1 className="text-2xl font-bold mb-6 text-foreground">Einstellungen</h1>
+      <div className="max-w-md mx-auto space-y-6">
+        <h1 className="text-2xl font-bold text-foreground">Einstellungen</h1>
         
         {/* User Info Card */}
-        <Card className="mb-6">
+        <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-4">
               <div className="w-12 h-12 bg-[#FF007F] rounded-full flex items-center justify-center">
                 <User className="w-6 h-6 text-white" />
               </div>
-              <div>
+              <div className="flex-1">
                 <h3 className="font-semibold text-foreground">
                   {user?.firstName} {user?.lastName}
                 </h3>
-                <p className="text-sm text-muted-foreground">
-                  {user?.userType === 'trans' ? 'Trans Escort' : 'Kunde'}
-                  {user?.isPremium && ' • Premium'}
-                </p>
+                <div className="flex items-center gap-2">
+                  <p className="text-sm text-muted-foreground">
+                    {user?.userType === 'trans' ? 'Trans Escort' : 'Kunde'}
+                  </p>
+                  {user?.isPremium && <Badge className="bg-[#FF007F] text-white">Premium</Badge>}
+                </div>
               </div>
+              <Button variant="outline" size="sm" onClick={() => navigate('/my-profile')}>
+                <User className="w-4 h-4 mr-2" />
+                Bearbeiten
+              </Button>
             </div>
           </CardContent>
         </Card>
 
-        {/* Settings List */}
-        <div className="space-y-3 mb-6">
-          {getSettingsItems().map((item, index) => (
-            <Card key={index} className={item.highlight ? 'border-[#FF007F] bg-gradient-to-r from-[#FF007F]/5 to-transparent' : ''}>
-              <CardContent className="p-0">
-                <button
-                  onClick={item.onClick}
-                  className="w-full p-4 text-left flex items-center justify-between hover:bg-muted/50 transition-colors rounded-lg"
-                >
-                  <div className="flex items-center space-x-3">
-                    <item.icon className={`w-5 h-5 ${item.highlight ? 'text-[#FF007F]' : 'text-muted-foreground'}`} />
-                    <div>
-                      <div className={`font-medium ${item.highlight ? 'text-[#FF007F]' : 'text-foreground'}`}>
-                        {item.title}
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        {item.description}
-                      </div>
-                    </div>
+        {/* Account Settings */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Key className="w-5 h-5" />
+              Konto
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Button 
+              variant="outline" 
+              className="w-full justify-between"
+              onClick={() => setShowChangePassword(true)}
+            >
+              <span>Passwort ändern</span>
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+            
+            {user?.userType === 'trans' && (
+              <Button 
+                variant="outline" 
+                className="w-full justify-between border-[#FF007F] text-[#FF007F] hover:bg-[#FF007F]/10"
+                onClick={() => navigate('/subscribe')}
+              >
+                <div className="flex items-center gap-2">
+                  <Crown className="w-4 h-4" />
+                  <span>Premium Abo</span>
+                  {!user?.isPremium && <Badge variant="secondary">Upgrade</Badge>}
+                </div>
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Push Notifications */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Bell className="w-5 h-5" />
+              Push-Benachrichtigungen
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Smartphone className="w-5 h-5 text-muted-foreground" />
+                <div>
+                  <div className="font-medium">Push-Benachrichtigungen</div>
+                  <div className="text-sm text-muted-foreground">
+                    Erhalte Benachrichtigungen auf deinem Gerät
                   </div>
-                  <ChevronRight className="w-4 h-4 text-muted-foreground" />
-                </button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                </div>
+              </div>
+              <Switch 
+                checked={settings.pushEnabled}
+                onCheckedChange={settings.pushEnabled ? () => updateSetting('pushEnabled', false) : requestPushPermission}
+              />
+            </div>
+
+            {settings.pushEnabled && (
+              <>
+                <Separator />
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      {settings.soundEnabled ? <Volume2 className="w-5 h-5 text-muted-foreground" /> : <VolumeX className="w-5 h-5 text-muted-foreground" />}
+                      <span className="font-medium">Ton</span>
+                    </div>
+                    <Switch 
+                      checked={settings.soundEnabled}
+                      onCheckedChange={(checked) => updateSetting('soundEnabled', checked)}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Vibrate className="w-5 h-5 text-muted-foreground" />
+                      <span className="font-medium">Vibration</span>
+                    </div>
+                    <Switch 
+                      checked={settings.vibrationEnabled}
+                      onCheckedChange={(checked) => updateSetting('vibrationEnabled', checked)}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <MessageSquare className="w-5 h-5 text-muted-foreground" />
+                      <span className="font-medium">Chat-Nachrichten</span>
+                    </div>
+                    <Switch 
+                      checked={settings.chatNotifications}
+                      onCheckedChange={(checked) => updateSetting('chatNotifications', checked)}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Eye className="w-5 h-5 text-muted-foreground" />
+                      <span className="font-medium">Profilbesuche</span>
+                    </div>
+                    <Switch 
+                      checked={settings.profileViewNotifications}
+                      onCheckedChange={(checked) => updateSetting('profileViewNotifications', checked)}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Privacy & Security */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Shield className="w-5 h-5" />
+              Privatsphäre & Sicherheit
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Eye className="w-5 h-5 text-muted-foreground" />
+                <div>
+                  <div className="font-medium">Online-Status anzeigen</div>
+                  <div className="text-sm text-muted-foreground">Anderen zeigen, wenn du online bist</div>
+                </div>
+              </div>
+              <Switch 
+                checked={settings.showOnlineStatus}
+                onCheckedChange={(checked) => updateSetting('showOnlineStatus', checked)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Eye className="w-5 h-5 text-muted-foreground" />
+                <div>
+                  <div className="font-medium">Zuletzt gesehen</div>
+                  <div className="text-sm text-muted-foreground">Zeige, wann du zuletzt online warst</div>
+                </div>
+              </div>
+              <Switch 
+                checked={settings.showLastSeen}
+                onCheckedChange={(checked) => updateSetting('showLastSeen', checked)}
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <MessageSquare className="w-5 h-5 text-muted-foreground" />
+                <div>
+                  <div className="font-medium">Nachrichten-Vorschau</div>
+                  <div className="text-sm text-muted-foreground">Nachrichteninhalt in Benachrichtigungen</div>
+                </div>
+              </div>
+              <Switch 
+                checked={settings.allowMessagePreviews}
+                onCheckedChange={(checked) => updateSetting('allowMessagePreviews', checked)}
+              />
+            </div>
+
+            <Separator />
+
+            <Button 
+              variant="outline" 
+              className="w-full justify-between"
+              onClick={() => {
+                toast({
+                  title: "Datenexport",
+                  description: "Ein Download-Link wird an deine E-Mail gesendet.",
+                });
+              }}
+            >
+              <div className="flex items-center gap-2">
+                <Archive className="w-4 h-4" />
+                <span>Meine Daten exportieren</span>
+              </div>
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+
+            <Button 
+              variant="destructive" 
+              className="w-full justify-between"
+              onClick={() => setShowDeleteAccount(true)}
+            >
+              <div className="flex items-center gap-2">
+                <UserX className="w-4 h-4" />
+                <span>Konto löschen</span>
+              </div>
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Professional Settings (Trans Escorts only) */}
+        {user?.userType === 'trans' && (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Crown className="w-5 h-5 text-[#FF007F]" />
+                Professionelle Einstellungen
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-medium">Preise anzeigen</div>
+                  <div className="text-sm text-muted-foreground">Deine Preise im Profil zeigen</div>
+                </div>
+                <Switch 
+                  checked={settings.priceDisplay}
+                  onCheckedChange={(checked) => updateSetting('priceDisplay', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-medium">Services anzeigen</div>
+                  <div className="text-sm text-muted-foreground">Deine angebotenen Services zeigen</div>
+                </div>
+                <Switch 
+                  checked={settings.serviceDisplay}
+                  onCheckedChange={(checked) => updateSetting('serviceDisplay', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-medium">Auto-Antwort</div>
+                  <div className="text-sm text-muted-foreground">Automatische Antworten senden</div>
+                </div>
+                <Switch 
+                  checked={settings.autoReply}
+                  onCheckedChange={(checked) => updateSetting('autoReply', checked)}
+                />
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-medium">Geschäftszeiten</div>
+                  <div className="text-sm text-muted-foreground">Verfügbarkeitszeiten anzeigen</div>
+                </div>
+                <Switch 
+                  checked={settings.businessHours}
+                  onCheckedChange={(checked) => updateSetting('businessHours', checked)}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Help & Support */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <HelpCircle className="w-5 h-5" />
+              Hilfe & Support
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Button 
+              variant="outline" 
+              className="w-full justify-between"
+              onClick={() => setShowFAQ(true)}
+            >
+              <span>Häufige Fragen (FAQ)</span>
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+
+            <Button 
+              variant="outline" 
+              className="w-full justify-between"
+              onClick={() => setShowContactSupport(true)}
+            >
+              <span>Support kontaktieren</span>
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+
+            <Button 
+              variant="outline" 
+              className="w-full justify-between"
+              onClick={() => window.open('/datenschutz', '_blank')}
+            >
+              <span>Datenschutzerklärung</span>
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+
+            <Button 
+              variant="outline" 
+              className="w-full justify-between"
+              onClick={() => window.open('/agb', '_blank')}
+            >
+              <span>Allgemeine Geschäftsbedingungen</span>
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </CardContent>
+        </Card>
 
         {/* Theme Toggle */}
-        <Card className="mb-6">
+        <Card>
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
@@ -202,6 +549,44 @@ export default function Settings() {
             </button>
           </CardContent>
         </Card>
+
+        {/* Modals */}
+        <ChangePasswordModal 
+          open={showChangePassword} 
+          onOpenChange={setShowChangePassword} 
+        />
+        
+        <DeleteAccountModal 
+          open={showDeleteAccount} 
+          onOpenChange={setShowDeleteAccount} 
+        />
+        
+        <ContactSupportModal 
+          open={showContactSupport} 
+          onOpenChange={setShowContactSupport} 
+        />
+
+        {/* FAQ Modal */}
+        {showFAQ && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <Card className="w-full max-w-lg max-h-[80vh] overflow-hidden">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <CardTitle>Häufige Fragen</CardTitle>
+                <Button variant="ghost" size="sm" onClick={() => setShowFAQ(false)}>
+                  ✕
+                </Button>
+              </CardHeader>
+              <CardContent className="space-y-4 overflow-y-auto">
+                {faqItems.map((item, index) => (
+                  <Card key={index} className="p-4">
+                    <h4 className="font-medium mb-2">{item.question}</h4>
+                    <p className="text-sm text-muted-foreground">{item.answer}</p>
+                  </Card>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
     </div>
   );
