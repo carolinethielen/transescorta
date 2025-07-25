@@ -83,7 +83,7 @@ export default function EscortProfile() {
       isOwnProfile={isOwnProfile}
       onBack={handleBack}
       onContact={!isOwnProfile ? handleContactEscort : undefined}
-      onEdit={isOwnProfile ? () => navigate('/profile-edit') : undefined}
+      onEdit={isOwnProfile ? () => navigate('/my-profile/edit') : undefined}
     />
   );
 }
