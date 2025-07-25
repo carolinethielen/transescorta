@@ -156,24 +156,7 @@ export class DatabaseStorage implements IStorage {
         profileImageUrl: 'https://i.postimg.cc/cCDY20G8/photo-1698251127457-38da75299c05.avif',
         isOnline: true,
         isPremium: false,
-        languages: ['Deutsch', 'Englisch', 'Spanisch'],
-        tattoos: 'Wenige',
-        piercings: 'Sonstige',
-        smoking: false,
-        drinking: 'Sozial',
-        availability: '24/7',
-        outcall: true,
-        incall: true,
-        travel: true,
-        rates: {
-          '1h': 250,
-          '2h': 450,
-          'overnight': 1500,
-          'weekend': 3000
-        },
-        aboutMe: 'Ich bin Maya, eine exklusive Trans-Escort aus München. Mit meiner sportlichen Figur und asiatischen Schönheit biete ich dir unvergessliche Momente voller Leidenschaft und Intimität. Diskret, professionell und immer für neue Abenteuer bereit.',
-        whatILike: 'Ich liebe es, neue Menschen kennenzulernen und ihnen besondere Momente zu schenken. Fitness hält mich in Form, und beim Kochen kann ich wunderbar entspannen.',
-        whatIExpect: 'Respekt, Hygiene und Diskretion sind mir sehr wichtig. Ich erwarte von meinen Kunden, dass sie gepflegt sind und mich mit Respekt behandeln.',
+
       },
       {
         id: 'demo_trans_4',
@@ -200,23 +183,7 @@ export class DatabaseStorage implements IStorage {
         profileImageUrl: 'https://i.postimg.cc/FzF3T184/photo-1575186083127-03641b958f61.avif',
         isOnline: false,
         isPremium: false,
-        languages: ['Deutsch', 'Englisch'],
-        tattoos: 'Keine',
-        piercings: 'Ohren',
-        smoking: false,
-        drinking: 'Gelegentlich',
-        availability: 'Abends',
-        outcall: true,
-        incall: false,
-        travel: false,
-        rates: {
-          '1h': 170,
-          '2h': 300,
-          'overnight': 800
-        },
-        aboutMe: 'Hallo! Ich bin Zara, eine junge und leidenschaftliche Trans-Escort aus Köln. Als neue Escort bringe ich frische Energie und viel Enthusiasmus mit.',
-        whatILike: 'Ich liebe es zu reisen und neue Kulturen kennenzulernen. Tanzen ist meine Leidenschaft - es hält mich fit und macht mich glücklich.',
-        whatIExpect: 'Höflichkeit und ein respektvoller Umgang sind mir wichtig. Ich freue mich auf nette Gespräche und gemeinsame schöne Stunden.',
+
       },
       {
         id: 'demo_trans_5',
@@ -243,24 +210,7 @@ export class DatabaseStorage implements IStorage {
         profileImageUrl: 'https://i.postimg.cc/P50bdXpW/photo-1583900985737-6d0495555783.avif',
         isOnline: true,
         isPremium: true,
-        languages: ['Deutsch', 'Italienisch', 'Englisch'],
-        tattoos: 'Viele',
-        piercings: 'Sonstige',
-        smoking: true,
-        drinking: 'Regelmäßig',
-        availability: 'Flexibel',
-        outcall: true,
-        incall: true,
-        travel: true,
-        rates: {
-          '1h': 220,
-          '2h': 400,
-          'overnight': 1200,
-          'weekend': 2500
-        },
-        aboutMe: 'Ciao Belli! Ich bin Lucia, eine temperamentvolle italienische Trans-Escort in Frankfurt. Mit meiner kurvigen Figur und meinem südländischen Charme verzaubere ich meine Kunden.',
-        whatILike: 'Ich bin eine Genießerin - gutes Essen, Kultur und aufregende Gespräche sind meine Leidenschaft. Als Premium-Escort biete ich exklusive Services.',
-        whatIExpect: 'Ich schätze Kunden, die Qualität zu würdigen wissen. Gepflegte Erscheinung und ein gewisses Niveau sind mir wichtig.',
+
       },
     ];
 

@@ -28,6 +28,7 @@ export const users = pgTable("users", {
   id: varchar("id").primaryKey().notNull(),
   email: varchar("email").unique().notNull(),
   passwordHash: varchar("password_hash").notNull(),
+  username: varchar("username"),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
@@ -202,10 +203,21 @@ export const shareAlbumSchema = z.object({
 });
 
 // Insert schemas
+export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertMatchSchema = createInsertSchema(matches).omit({ id: true, createdAt: true });
+export const insertMessageSchema = createInsertSchema(messages).omit({ id: true, createdAt: true });
+export const insertChatRoomSchema = createInsertSchema(chatRooms).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertPrivateAlbumSchema = createInsertSchema(privateAlbums).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertAlbumAccessSchema = createInsertSchema(albumAccess).omit({ id: true, createdAt: true });
 
-// Additional type exports for private albums
+// Additional type exports
+export type InsertUser = typeof users.$inferInsert;
+export type UpsertUser = Partial<InsertUser> & { id?: string };
+export type InsertMatch = typeof matches.$inferInsert;
+export type InsertMessage = typeof messages.$inferInsert;
+export type InsertChatRoom = typeof chatRooms.$inferInsert;
+export type InsertPrivateAlbum = typeof privateAlbums.$inferInsert;
+export type InsertAlbumAccess = typeof albumAccess.$inferInsert;
 export type PrivateAlbumType = typeof privateAlbums.$inferSelect;
 export type InsertPrivateAlbumType = typeof privateAlbums.$inferInsert;
 export type AlbumAccessType = typeof albumAccess.$inferSelect;
@@ -213,7 +225,6 @@ export type InsertAlbumAccessType = typeof albumAccess.$inferInsert;
 
 // Type definitions
 export type User = typeof users.$inferSelect;
-export type InsertUser = typeof users.$inferInsert;
 export type RegisterUser = z.infer<typeof registerUserSchema>;
 export type LoginUser = z.infer<typeof loginUserSchema>;
 export type UpdateProfile = z.infer<typeof updateProfileSchema>;
