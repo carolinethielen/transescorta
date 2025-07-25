@@ -135,16 +135,16 @@ export default function ProfileEdit() {
     },
     onSuccess: () => {
       toast({
-        title: "Profil aktualisiert",
-        description: "Deine Änderungen wurden erfolgreich gespeichert.",
+        title: t?.profileUpdated || "Profil aktualisiert",
+        description: t?.changesSaved || "Deine Änderungen wurden erfolgreich gespeichert.",
       });
       queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
       navigate('/profile');
     },
     onError: (error: any) => {
       toast({
-        title: "Fehler beim Speichern",
-        description: error.message || "Profil konnte nicht aktualisiert werden.",
+        title: t?.errorSaving || "Fehler beim Speichern",
+        description: error.message || t?.profileUpdateFailed || "Profil konnte nicht aktualisiert werden.",
         variant: "destructive",
       });
     },

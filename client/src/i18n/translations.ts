@@ -232,10 +232,15 @@ export interface Translations {
   unauthorized: string;
   notLoggedIn: string;
   redirecting: string;
+  anonymousUser: string;
 
   // Profile
   profileNotAvailable: string;
   myProfile: string;
+  profileUpdated: string;
+  changesSaved: string;
+  errorSaving: string;
+  profileUpdateFailed: string;
   editProfile: string;
   personalInfo: string;
   physicalDetails: string;
@@ -255,6 +260,9 @@ export interface Translations {
 
   // Settings
   settings: string;
+  premiumActive: string;
+  premiumUpgrade: string;
+  upgrade: string;
   account: string;
   privacy: string;
   notifications: string;
@@ -476,10 +484,15 @@ export const translations: Record<string, Translations> = {
     unauthorized: 'Nicht autorisiert',
     notLoggedIn: 'Du bist nicht mehr angemeldet. Leite weiter...',
     redirecting: 'Weiterleitung...',
+    anonymousUser: 'Anonymer Nutzer',
 
     // Profile
     profileNotAvailable: 'Profil nicht verfügbar',
     myProfile: 'Mein Profil',
+    profileUpdated: 'Profil aktualisiert',
+    changesSaved: 'Deine Änderungen wurden erfolgreich gespeichert.',
+    errorSaving: 'Fehler beim Speichern',
+    profileUpdateFailed: 'Profil konnte nicht aktualisiert werden.',
     editProfile: 'Profil bearbeiten',
     personalInfo: 'Persönliche Informationen',
     physicalDetails: 'Körperliche Merkmale',
@@ -499,6 +512,9 @@ export const translations: Record<string, Translations> = {
 
     // Settings
     settings: 'Einstellungen',
+    premiumActive: 'Premium aktiv',
+    premiumUpgrade: 'Premium Upgrade',
+    upgrade: 'Upgrade',
     account: 'Konto',
     privacy: 'Privatsphäre',
     notifications: 'Benachrichtigungen',
@@ -789,10 +805,15 @@ export const translations: Record<string, Translations> = {
     unauthorized: 'Unauthorized',
     notLoggedIn: 'You are no longer logged in. Redirecting...',
     redirecting: 'Redirecting...',
+    anonymousUser: 'Anonymous User',
 
     // Profile
     profileNotAvailable: 'Profile not available',
     myProfile: 'My Profile',
+    profileUpdated: 'Profile Updated',
+    changesSaved: 'Your changes have been saved successfully.',
+    errorSaving: 'Error Saving',
+    profileUpdateFailed: 'Profile could not be updated.',
     editProfile: 'Edit Profile',
     personalInfo: 'Personal Information',
     physicalDetails: 'Physical Details',
@@ -812,6 +833,9 @@ export const translations: Record<string, Translations> = {
 
     // Settings
     settings: 'Settings',
+    premiumActive: 'Premium Active',
+    premiumUpgrade: 'Premium Upgrade',
+    upgrade: 'Upgrade',
     account: 'Account',
     privacy: 'Privacy',
     notifications: 'Notifications',
@@ -1162,10 +1186,15 @@ export const translations: Record<string, Translations> = {
     unauthorized: 'Não autorizado',
     notLoggedIn: 'Você não está mais logado. Redirecionando...',
     redirecting: 'Redirecionando...',
+    anonymousUser: 'Usuário Anônimo',
 
     // Profile
     profileNotAvailable: 'Perfil não disponível',
     myProfile: 'Meu Perfil',
+    profileUpdated: 'Perfil Atualizado',
+    changesSaved: 'Suas alterações foram salvas com sucesso.',
+    errorSaving: 'Erro ao Salvar',
+    profileUpdateFailed: 'Perfil não pôde ser atualizado.',
     editProfile: 'Editar Perfil',
     personalInfo: 'Informações Pessoais',
     physicalDetails: 'Detalhes Físicos',
@@ -1185,6 +1214,9 @@ export const translations: Record<string, Translations> = {
 
     // Settings
     settings: 'Configurações',
+    premiumActive: 'Premium Ativo',
+    premiumUpgrade: 'Upgrade Premium',
+    upgrade: 'Upgrade',
     account: 'Conta',
     privacy: 'Privacidade',
     notifications: 'Notificações',
@@ -1477,10 +1509,15 @@ export const translations: Record<string, Translations> = {
     unauthorized: 'No autorizado',
     notLoggedIn: 'Ya no estás conectado. Redirigiendo...',
     redirecting: 'Redirigiendo...',
+    anonymousUser: 'Usuario Anónimo',
 
     // Profile
     profileNotAvailable: 'Perfil no disponible',
     myProfile: 'Mi Perfil',
+    profileUpdated: 'Perfil Actualizado',
+    changesSaved: 'Tus cambios han sido guardados exitosamente.',
+    errorSaving: 'Error al Guardar',
+    profileUpdateFailed: 'El perfil no pudo ser actualizado.',
     editProfile: 'Editar Perfil',
     personalInfo: 'Información Personal',
     physicalDetails: 'Detalles Físicos',
@@ -1500,6 +1537,9 @@ export const translations: Record<string, Translations> = {
 
     // Settings
     settings: 'Configuración',
+    premiumActive: 'Premium Activo',
+    premiumUpgrade: 'Upgrade Premium',
+    upgrade: 'Upgrade',
     account: 'Cuenta',
     privacy: 'Privacidad',
     notifications: 'Notificaciones',
@@ -1792,10 +1832,15 @@ export const translations: Record<string, Translations> = {
     unauthorized: 'Non autorisé',
     notLoggedIn: 'Vous n\'êtes plus connecté. Redirection...',
     redirecting: 'Redirection...',
+    anonymousUser: 'Utilisateur Anonyme',
 
     // Profile
     profileNotAvailable: 'Profil non disponible',
     myProfile: 'Mon Profil',
+    profileUpdated: 'Profil Mis à Jour',
+    changesSaved: 'Vos modifications ont été sauvegardées avec succès.',
+    errorSaving: 'Erreur de Sauvegarde',
+    profileUpdateFailed: 'Le profil n\'a pas pu être mis à jour.',
     editProfile: 'Modifier le Profil',
     personalInfo: 'Informations Personnelles',
     physicalDetails: 'Détails Physiques',
@@ -1815,6 +1860,9 @@ export const translations: Record<string, Translations> = {
 
     // Settings
     settings: 'Paramètres',
+    premiumActive: 'Premium Actif',
+    premiumUpgrade: 'Upgrade Premium',
+    upgrade: 'Upgrade',
     account: 'Compte',
     privacy: 'Confidentialité',
     notifications: 'Notifications',

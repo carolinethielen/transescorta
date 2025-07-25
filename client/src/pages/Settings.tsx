@@ -250,7 +250,7 @@ export default function Settings() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Key className="w-5 h-5" />
-              Konto
+{t?.account || 'Konto'}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -259,7 +259,7 @@ export default function Settings() {
               className="w-full justify-between"
               onClick={() => setShowChangePassword(true)}
             >
-              <span>Passwort ändern</span>
+              <span>{t?.changePassword || 'Passwort ändern'}</span>
               <ChevronRight className="w-4 h-4" />
             </Button>
             
@@ -275,8 +275,8 @@ export default function Settings() {
               >
                 <div className="flex items-center gap-2">
                   <Crown className="w-4 h-4" />
-                  <span>{user?.isPremium ? 'Premium aktiv' : 'Premium Upgrade'}</span>
-                  {!user?.isPremium && <Badge variant="secondary">Upgrade</Badge>}
+                  <span>{user?.isPremium ? (t?.premiumActive || 'Premium aktiv') : (t?.premiumUpgrade || 'Premium Upgrade')}</span>
+                  {!user?.isPremium && <Badge variant="secondary">{t?.upgrade || 'Upgrade'}</Badge>}
                 </div>
                 <ChevronRight className="w-4 h-4" />
               </Button>
@@ -292,7 +292,7 @@ export default function Settings() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Bell className="w-5 h-5" />
-              Push-Benachrichtigungen
+{t?.pushNotifications || 'Push-Benachrichtigungen'}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">

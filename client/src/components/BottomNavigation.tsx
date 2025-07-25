@@ -13,18 +13,18 @@ const getNavItems = (userType?: string, t?: any) => {
     // Trans Escort Navigation
     return [
       { path: '/', icon: Home, label: t?.home || 'Home' },
-      { path: '/chat', icon: MessageCircle, label: t?.chat || 'Chat' },
-      { path: '/my-profile', icon: User, label: t?.profile || 'Profil' },
+      { path: '/chat', icon: MessageCircle, label: t?.chats || 'Chat' },
+      { path: '/my-profile', icon: User, label: t?.myProfile || 'Profil' },
       { path: '/premium', icon: Crown, label: t?.premium || 'Premium' },
-      { path: '/settings', icon: Settings, label: t?.more || 'Mehr' },
+      { path: '/settings', icon: Settings, label: t?.settings || 'Mehr' },
     ];
   } else {
     // Customer Navigation (no albums, no premium subscription needed)
     return [
       { path: '/', icon: Home, label: t?.home || 'Home' },
-      { path: '/chat', icon: MessageCircle, label: t?.chat || 'Chat' },
-      { path: '/my-profile', icon: User, label: t?.profile || 'Profil' },
-      { path: '/settings', icon: Settings, label: t?.more || 'Mehr' },
+      { path: '/chat', icon: MessageCircle, label: t?.chats || 'Chat' },
+      { path: '/my-profile', icon: User, label: t?.myProfile || 'Profil' },
+      { path: '/settings', icon: Settings, label: t?.settings || 'Mehr' },
     ];
   }
 };

@@ -180,7 +180,7 @@ export default function Chat() {
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-center">
                       <h3 className="font-semibold truncate">
-                        {room.otherUser.firstName || 'Anonymer Nutzer'}
+                        {room.otherUser.firstName || t?.anonymousUser || 'Anonymer Nutzer'}
                       </h3>
                       {room.lastMessage && (
                         <span className="text-xs text-muted-foreground">
@@ -233,10 +233,10 @@ export default function Chat() {
             
             <div className="flex-1">
               <h3 className="font-semibold">
-                {selectedChatRoom?.otherUser.firstName || 'Anonymer Nutzer'}
+                {selectedChatRoom?.otherUser.firstName || t?.anonymousUser || 'Anonymer Nutzer'}
               </h3>
               <p className="text-xs text-green-500">
-                {selectedChatRoom?.otherUser.isOnline ? 'Online' : 'Offline'}
+                {selectedChatRoom?.otherUser.isOnline ? (t?.online || 'Online') : (t?.offline || 'Offline')}
               </p>
             </div>
             
@@ -276,7 +276,7 @@ export default function Chat() {
             <div className="flex items-center space-x-2">
               <Input
                 type="text"
-                placeholder="Nachricht schreiben..."
+                placeholder={t?.typeMessage || "Nachricht schreiben..."}
                 value={messageText}
                 onChange={(e) => setMessageText(e.target.value)}
                 className="flex-1 rounded-full"
