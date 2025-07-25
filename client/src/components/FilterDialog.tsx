@@ -19,18 +19,21 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
     position: '',
     bodyType: '',
     ethnicity: '',
+    circumcision: '',
     services: [] as string[],
     onlineOnly: false,
     premiumOnly: false,
   });
 
+  // Synchronisiert mit ProfileEditUnified.tsx
   const services = [
-    'GF6', 'Anal aktiv', 'Anal passiv', 'Oral ohne', 'Küssen', 
-    'Massage', 'Dominanz', 'Roleplay', 'Fetisch', 'Toys'
+    'Begleitung', 'Massage', 'Dinner Date', 'Overnights', 'Travel Companion',
+    'Fetish', 'Domination', 'Submission', 'Role Play', 'BDSM',
+    'Aktiv', 'Passiv', 'Versatile', 'Oral', 'Anal'
   ];
 
   const positions = ['top', 'bottom', 'versatile'];
-  const bodyTypes = ['Schlank', 'Sportlich', 'Kurvig', 'Zierlich', 'Durchschnittlich'];
+  const bodyTypes = ['Schlank', 'Athletisch', 'Durchschnittlich', 'Kurvig', 'Plus Size', 'Muskulös'];
   const ethnicities = ['Europäisch', 'Lateinamerikanisch', 'Asiatisch', 'Afrikanisch', 'Arabisch', 'Gemischt'];
 
   const handleServiceToggle = (service: string) => {
@@ -53,6 +56,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
       position: '',
       bodyType: '',
       ethnicity: '',
+      circumcision: '',
       services: [],
       onlineOnly: false,
       premiumOnly: false,
@@ -77,8 +81,11 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
     if (filters.bodyType) {
       active.push(filters.bodyType);
     }
-    if (filters.ethnicity) {
+    if (filters.ethnicity && filters.ethnicity !== 'all') {
       active.push(filters.ethnicity);
+    }
+    if (filters.circumcision && filters.circumcision !== 'all') {
+      active.push(filters.circumcision);
     }
     if (filters.services.length > 0) {
       active.push(`${filters.services.length} Service${filters.services.length > 1 ? 's' : ''}`);
@@ -159,7 +166,9 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
                 <SelectItem value="all">Alle</SelectItem>
                 {positions.map((position) => (
                   <SelectItem key={position} value={position}>
-                    {position.charAt(0).toUpperCase() + position.slice(1)}
+                    {position === 'top' ? 'Top/Aktiv' : 
+                     position === 'bottom' ? 'Bottom/Passiv' : 
+                     'Versatile/Switch'}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -219,6 +228,22 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Circumcision Filter - Additional for Trans escorts */}
+          <div>
+            <label className="text-sm font-medium mb-2 block">Beschneidung</label>
+            <Select value={filters.circumcision || ''} onValueChange={(value) => setFilters({ ...filters, circumcision: value })}>
+              <SelectTrigger>
+                <SelectValue placeholder="Beschneidung wählen..." />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Alle</SelectItem>
+                <SelectItem value="beschnitten">Beschnitten</SelectItem>
+                <SelectItem value="unbeschnitten">Unbeschnitten</SelectItem>
+                <SelectItem value="teilweise">Teilweise</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Status Filters */}
