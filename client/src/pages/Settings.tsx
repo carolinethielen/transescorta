@@ -47,21 +47,24 @@ export default function Settings() {
     showLastSeen: true,
     allowMessagePreviews: true,
     twoFactorEnabled: false,
-    dataExportRequested: false,
-    
-    // Professional settings (for trans escorts)
-    autoReply: false,
-    businessHours: false,
-    priceDisplay: true,
-    serviceDisplay: true,
-    availabilityStatus: 'available'
+    dataExportRequested: false
   });
 
-  // Load settings from localStorage on mount
+  // Load settings from localStorage and user data on mount
   useEffect(() => {
     const savedSettings = localStorage.getItem('transescorta-settings');
     if (savedSettings) {
       setSettings(prev => ({ ...prev, ...JSON.parse(savedSettings) }));
+    }
+    
+    // Load user's privacy settings from backend
+    if (user) {
+      setSettings(prev => ({
+        ...prev,
+        showOnlineStatus: user.showOnlineStatus !== false, // Default to true if not set
+        showLastSeen: user.showLastSeen !== false, // Default to true if not set
+        allowMessagePreviews: user.allowMessagePreviews !== false // Default to true if not set
+      }));
     }
     
     // Check if push notifications are supported and enabled
@@ -71,15 +74,43 @@ export default function Settings() {
         pushEnabled: Notification.permission === 'granted'
       }));
     }
-  }, []);
+  }, [user]);
 
   // Save settings to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem('transescorta-settings', JSON.stringify(settings));
   }, [settings]);
 
-  const updateSetting = (key: string, value: any) => {
+  const updateSetting = async (key: string, value: any) => {
     setSettings(prev => ({ ...prev, [key]: value }));
+    
+    // Save privacy settings to backend
+    if (['showOnlineStatus', 'showLastSeen', 'allowMessagePreviews'].includes(key)) {
+      try {
+        await fetch('/api/auth/update-privacy-settings', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({ [key]: value }),
+        });
+        
+        toast({
+          title: "Einstellung gespeichert",
+          description: "Deine Privatsphäre-Einstellung wurde aktualisiert.",
+        });
+      } catch (error) {
+        console.error('Error updating privacy setting:', error);
+        toast({
+          title: "Fehler",
+          description: "Einstellung konnte nicht gespeichert werden.",
+          variant: "destructive",
+        });
+        // Revert the setting on error
+        setSettings(prev => ({ ...prev, [key]: !value }));
+      }
+    }
   };
 
   // Request push notification permission
@@ -407,62 +438,7 @@ export default function Settings() {
           </CardContent>
         </Card>
 
-        {/* Professional Settings (Trans Escorts only) */}
-        {user?.userType === 'trans' && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Crown className="w-5 h-5 text-[#FF007F]" />
-                Professionelle Einstellungen
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium">Preise anzeigen</div>
-                  <div className="text-sm text-muted-foreground">Deine Preise im Profil zeigen</div>
-                </div>
-                <Switch 
-                  checked={settings.priceDisplay}
-                  onCheckedChange={(checked) => updateSetting('priceDisplay', checked)}
-                />
-              </div>
 
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium">Services anzeigen</div>
-                  <div className="text-sm text-muted-foreground">Deine angebotenen Services zeigen</div>
-                </div>
-                <Switch 
-                  checked={settings.serviceDisplay}
-                  onCheckedChange={(checked) => updateSetting('serviceDisplay', checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium">Auto-Antwort</div>
-                  <div className="text-sm text-muted-foreground">Automatische Antworten senden</div>
-                </div>
-                <Switch 
-                  checked={settings.autoReply}
-                  onCheckedChange={(checked) => updateSetting('autoReply', checked)}
-                />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div>
-                  <div className="font-medium">Geschäftszeiten</div>
-                  <div className="text-sm text-muted-foreground">Verfügbarkeitszeiten anzeigen</div>
-                </div>
-                <Switch 
-                  checked={settings.businessHours}
-                  onCheckedChange={(checked) => updateSetting('businessHours', checked)}
-                />
-              </div>
-            </CardContent>
-          </Card>
-        )}
 
         {/* Help & Support */}
         <Card>
@@ -569,14 +545,14 @@ export default function Settings() {
         {/* FAQ Modal */}
         {showFAQ && (
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <Card className="w-full max-w-lg max-h-[80vh] overflow-hidden">
-              <CardHeader className="flex flex-row items-center justify-between">
+            <Card className="w-full max-w-lg max-h-[80vh] flex flex-col">
+              <CardHeader className="flex flex-row items-center justify-between flex-shrink-0">
                 <CardTitle>Häufige Fragen</CardTitle>
                 <Button variant="ghost" size="sm" onClick={() => setShowFAQ(false)}>
                   ✕
                 </Button>
               </CardHeader>
-              <CardContent className="space-y-4 overflow-y-auto">
+              <CardContent className="flex-1 overflow-y-auto space-y-4">
                 {faqItems.map((item, index) => (
                   <Card key={index} className="p-4">
                     <h4 className="font-medium mb-2">{item.question}</h4>

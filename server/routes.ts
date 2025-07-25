@@ -989,5 +989,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.put('/api/auth/update-privacy-settings', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const { showOnlineStatus, showLastSeen, allowMessagePreviews } = req.body;
+
+      // Prepare update data - only update provided settings
+      const updateData: any = {};
+      
+      if (typeof showOnlineStatus === 'boolean') {
+        updateData.showOnlineStatus = showOnlineStatus;
+      }
+      if (typeof showLastSeen === 'boolean') {
+        updateData.showLastSeen = showLastSeen;
+      }
+      if (typeof allowMessagePreviews === 'boolean') {
+        updateData.allowMessagePreviews = allowMessagePreviews;
+      }
+
+      if (Object.keys(updateData).length === 0) {
+        return res.status(400).json({ message: 'Keine gültigen Einstellungen gefunden' });
+      }
+
+      await storage.updateUserPrivacySettings(userId, updateData);
+
+      res.json({ message: 'Privatsphäre-Einstellungen erfolgreich aktualisiert' });
+    } catch (error) {
+      console.error('Update privacy settings error:', error);
+      res.status(500).json({ message: 'Fehler beim Aktualisieren der Privatsphäre-Einstellungen' });
+    }
+  });
+
   return httpServer;
 }

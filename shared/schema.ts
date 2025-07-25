@@ -64,6 +64,12 @@ export const users = pgTable("users", {
   userType: varchar("user_type").$type<'trans' | 'man'>().default('trans'),
   isOnline: boolean("is_online").default(false),
   lastSeen: timestamp("last_seen"),
+  
+  // Privacy settings
+  showOnlineStatus: boolean("show_online_status").default(true),
+  showLastSeen: boolean("show_last_seen").default(true),
+  allowMessagePreviews: boolean("allow_message_previews").default(true),
+  
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });

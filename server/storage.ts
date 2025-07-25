@@ -42,6 +42,7 @@ export interface IStorage {
   setPasswordResetToken(userId: string, token: string, expires: Date): Promise<void>;
   verifyUserEmail(userId: string): Promise<void>;
   deleteUser(userId: string): Promise<void>;
+  updateUserPrivacySettings(userId: string, settings: { showOnlineStatus?: boolean; showLastSeen?: boolean; allowMessagePreviews?: boolean }): Promise<void>;
   
   // Discovery operations
   getNearbyUsers(userId: string, latitude: number, longitude: number, radius: number, limit: number): Promise<User[]>;
@@ -729,6 +730,18 @@ export class DatabaseStorage implements IStorage {
     
     // Finally delete the user
     await db.delete(users).where(eq(users.id, userId));
+  }
+
+  async updateUserPrivacySettings(userId: string, settings: { showOnlineStatus?: boolean; showLastSeen?: boolean; allowMessagePreviews?: boolean }): Promise<void> {
+    const updateData: any = {
+      ...settings,
+      updatedAt: new Date(),
+    };
+
+    await db
+      .update(users)
+      .set(updateData)
+      .where(eq(users.id, userId));
   }
 
 
