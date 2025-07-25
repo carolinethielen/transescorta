@@ -200,7 +200,7 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
               <Heart className="w-8 h-8 text-white" />
             </div>
           </div>
-          <DialogTitle className="text-2xl font-bold">TransConnect</DialogTitle>
+          <DialogTitle className="text-2xl font-bold">TransEscorta</DialogTitle>
         </DialogHeader>
 
         <Tabs defaultValue={defaultTab} className="w-full">

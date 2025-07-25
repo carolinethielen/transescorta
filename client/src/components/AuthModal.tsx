@@ -167,7 +167,7 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'login' }: Aut
             </div>
           </div>
           <DialogTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-            TransConnect
+            TransEscorta
           </DialogTitle>
           <DialogDescription>
             Melde dich an oder erstelle ein Konto
