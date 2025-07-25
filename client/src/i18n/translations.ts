@@ -145,6 +145,62 @@ export interface Translations {
   invalidCredentials: string;
   escortsIn: string;
   noEscortsFound: string;
+  
+  // Premium page translations
+  loginRequired: string;
+  loginRequiredDesc: string;
+  redirectingToVerotel: string;
+  redirectingToVerotelDesc: string;
+  premiumBadge: string;
+  premiumBadgeDesc: string;
+  premiumSection: string;
+  premiumSectionDesc: string;
+  priority: string;
+  priorityDesc: string;
+  moreVisibility: string;
+  moreVisibilityDesc: string;
+  chatPriority: string;
+  chatPriorityDesc: string;
+  extendedReach: string;
+  extendedReachDesc: string;
+  
+  // Register page translations  
+  registerSuccess: string;
+  registerFailed: string;
+  confirmEmail: string;
+  errorOccurred: string;
+  invalidEmail: string;
+  passwordMinLength: string;
+  usernameRequired: string;
+  userTypeRequired: string;
+  passwordMismatch: string;
+  
+  // Register Form Labels
+  iAm: string;
+  transEscortOption: string;
+  customerOption: string;
+  firstName: string;
+  lastName: string;
+  emailAddress: string;
+  password: string;
+  confirmPassword: string;
+  createAccount: string;
+  alreadyHaveAccount: string;
+  
+  // Filter Dialog
+  filters: string;
+  ageRange: string;
+  priceRange: string;
+  cockSizeRange: string;
+  position: string;
+  bodyType: string;
+  ethnicity: string;
+  circumcision: string;
+  services: string;
+  onlineOnly: string;
+  premiumOnly: string;
+  applyFilters: string;
+  clearFilters: string;
 }
 
 export const supportedLanguages = [
@@ -302,6 +358,62 @@ export const translations: Record<string, Translations> = {
     invalidCredentials: 'Ungültige E-Mail oder Passwort',
     escortsIn: 'Escorts in',
     noEscortsFound: 'Keine Escorts gefunden',
+    
+    // Premium page translations
+    loginRequired: 'Anmeldung erforderlich',
+    loginRequiredDesc: 'Bitte melde dich an, um Premium zu aktivieren.',
+    redirectingToVerotel: 'Weiterleitung zu Verotel',
+    redirectingToVerotelDesc: 'Du wirst zur sicheren Zahlungsseite weitergeleitet.',
+    premiumBadge: 'Premium Badge',
+    premiumBadgeDesc: 'Goldene Krone in deinem Profil für bessere Sichtbarkeit',
+    premiumSection: 'Premium Sektion',
+    premiumSectionDesc: 'Erscheine in der separaten Premium Escorts Sektion',
+    priority: 'Priorität',
+    priorityDesc: 'Höhere Platzierung in Suchergebnissen',
+    moreVisibility: 'Mehr Sichtbarkeit',
+    moreVisibilityDesc: 'Dein Profil wird häufiger angezeigt',
+    chatPriority: 'Chat Priorität',
+    chatPriorityDesc: 'Deine Nachrichten werden bevorzugt angezeigt',
+    extendedReach: 'Erweiterte Reichweite',
+    extendedReachDesc: 'Sichtbar in größerem Umkreis',
+    
+    // Register page translations  
+    registerSuccess: 'Registrierung erfolgreich!',
+    registerFailed: 'Registrierung fehlgeschlagen',
+    confirmEmail: 'Bitte bestätige deine E-Mail-Adresse.',
+    errorOccurred: 'Ein Fehler ist aufgetreten.',
+    invalidEmail: 'Ungültige E-Mail-Adresse',
+    passwordMinLength: 'Passwort muss mindestens 8 Zeichen lang sein',
+    usernameRequired: 'Benutzername ist erforderlich',
+    userTypeRequired: 'Benutzertyp ist erforderlich',
+    passwordMismatch: 'Passwörter stimmen nicht überein',
+    
+    // Register Form Labels
+    iAm: 'Ich bin...',
+    transEscortOption: 'Trans* Escort',
+    customerOption: 'Kunde (Mann)',
+    firstName: 'Vorname',
+    lastName: 'Nachname',
+    emailAddress: 'E-Mail-Adresse',
+    password: 'Passwort',
+    confirmPassword: 'Passwort bestätigen',
+    createAccount: 'Konto erstellen',
+    alreadyHaveAccount: 'Bereits ein Konto?',
+    
+    // Filter Dialog
+    filters: 'Filter',
+    ageRange: 'Altersbereich',
+    priceRange: 'Preisbereich',
+    cockSizeRange: 'Schwanzgröße',
+    position: 'Position',
+    bodyType: 'Körpertyp',
+    ethnicity: 'Ethnizität',
+    circumcision: 'Beschneidung',
+    services: 'Services',
+    onlineOnly: 'Nur Online',
+    premiumOnly: 'Nur Premium',
+    applyFilters: 'Filter anwenden',
+    clearFilters: 'Filter löschen',
   },
   
   en: {
@@ -450,6 +562,62 @@ export const translations: Record<string, Translations> = {
     invalidCredentials: 'Invalid Email or Password',
     escortsIn: 'Escorts in',
     noEscortsFound: 'No Escorts Found',
+    
+    // Premium page translations
+    loginRequired: 'Login Required',
+    loginRequiredDesc: 'Please login to activate Premium.',
+    redirectingToVerotel: 'Redirecting to Verotel',
+    redirectingToVerotelDesc: 'You will be redirected to the secure payment page.',
+    premiumBadge: 'Premium Badge',
+    premiumBadgeDesc: 'Golden crown in your profile for better visibility',
+    premiumSection: 'Premium Section',
+    premiumSectionDesc: 'Appear in the separate Premium Escorts section',
+    priority: 'Priority',
+    priorityDesc: 'Higher ranking in search results',
+    moreVisibility: 'More Visibility',
+    moreVisibilityDesc: 'Your profile will be shown more often',
+    chatPriority: 'Chat Priority',
+    chatPriorityDesc: 'Your messages will be displayed preferentially',
+    extendedReach: 'Extended Reach',
+    extendedReachDesc: 'Visible in larger radius',
+    
+    // Register page translations  
+    registerSuccess: 'Registration Successful!',
+    registerFailed: 'Registration Failed',
+    confirmEmail: 'Please confirm your email address.',
+    errorOccurred: 'An error occurred.',
+    invalidEmail: 'Invalid email address',
+    passwordMinLength: 'Password must be at least 8 characters long',
+    usernameRequired: 'Username is required',
+    userTypeRequired: 'User type is required',
+    passwordMismatch: 'Passwords do not match',
+    
+    // Register Form Labels
+    iAm: 'I am...',
+    transEscortOption: 'Trans* Escort',
+    customerOption: 'Customer (Man)',
+    firstName: 'First Name',
+    lastName: 'Last Name',
+    emailAddress: 'Email Address',
+    password: 'Password',
+    confirmPassword: 'Confirm Password',
+    createAccount: 'Create Account',
+    alreadyHaveAccount: 'Already have an account?',
+    
+    // Filter Dialog
+    filters: 'Filters',
+    ageRange: 'Age Range',
+    priceRange: 'Price Range',
+    cockSizeRange: 'Size Range',
+    position: 'Position',
+    bodyType: 'Body Type',
+    ethnicity: 'Ethnicity',
+    circumcision: 'Circumcision',
+    services: 'Services',
+    onlineOnly: 'Online Only',
+    premiumOnly: 'Premium Only',
+    applyFilters: 'Apply Filters',
+    clearFilters: 'Clear Filters',
   },
   
   pt: {
@@ -598,6 +766,62 @@ export const translations: Record<string, Translations> = {
     invalidCredentials: 'Email ou Senha Inválidos',
     escortsIn: 'Escorts em',
     noEscortsFound: 'Nenhum Escort Encontrado',
+    
+    // Premium page translations
+    loginRequired: 'Login Necessário',
+    loginRequiredDesc: 'Por favor, faça login para ativar o Premium.',
+    redirectingToVerotel: 'Redirecionando para Verotel',
+    redirectingToVerotelDesc: 'Você será redirecionado para a página de pagamento seguro.',
+    premiumBadge: 'Distintivo Premium',
+    premiumBadgeDesc: 'Coroa dourada no seu perfil para melhor visibilidade',
+    premiumSection: 'Seção Premium',
+    premiumSectionDesc: 'Apareça na seção separada de Escorts Premium',
+    priority: 'Prioridade',
+    priorityDesc: 'Classificação mais alta nos resultados de busca',
+    moreVisibility: 'Mais Visibilidade',
+    moreVisibilityDesc: 'Seu perfil será exibido mais frequentemente',
+    chatPriority: 'Prioridade de Chat',
+    chatPriorityDesc: 'Suas mensagens serão exibidas preferencialmente',
+    extendedReach: 'Alcance Estendido',
+    extendedReachDesc: 'Visível em raio maior',
+    
+    // Register page translations  
+    registerSuccess: 'Registro Bem-sucedido!',
+    registerFailed: 'Falha no Registro',
+    confirmEmail: 'Por favor, confirme seu endereço de email.',
+    errorOccurred: 'Ocorreu um erro.',
+    invalidEmail: 'Endereço de email inválido',
+    passwordMinLength: 'A senha deve ter pelo menos 8 caracteres',
+    usernameRequired: 'Nome de usuário é obrigatório',
+    userTypeRequired: 'Tipo de usuário é obrigatório',
+    passwordMismatch: 'As senhas não coincidem',
+    
+    // Register Form Labels
+    iAm: 'Eu sou...',
+    transEscortOption: 'Trans* Escort',
+    customerOption: 'Cliente (Homem)',
+    firstName: 'Primeiro Nome',
+    lastName: 'Sobrenome',
+    emailAddress: 'Endereço de Email',
+    password: 'Senha',
+    confirmPassword: 'Confirmar Senha',
+    createAccount: 'Criar Conta',
+    alreadyHaveAccount: 'Já tem uma conta?',
+    
+    // Filter Dialog
+    filters: 'Filtros',
+    ageRange: 'Faixa Etária',
+    priceRange: 'Faixa de Preço',
+    cockSizeRange: 'Faixa de Tamanho',
+    position: 'Posição',
+    bodyType: 'Tipo de Corpo',
+    ethnicity: 'Etnia',
+    circumcision: 'Circuncisão',
+    services: 'Serviços',
+    onlineOnly: 'Apenas Online',
+    premiumOnly: 'Apenas Premium',
+    applyFilters: 'Aplicar Filtros',
+    clearFilters: 'Limpar Filtros',
   },
   
   es: {
@@ -746,6 +970,62 @@ export const translations: Record<string, Translations> = {
     invalidCredentials: 'Email o Contraseña Inválidos',
     escortsIn: 'Escorts en',
     noEscortsFound: 'No se Encontraron Escorts',
+    
+    // Premium page translations
+    loginRequired: 'Inicio de Sesión Requerido',
+    loginRequiredDesc: 'Por favor inicia sesión para activar Premium.',
+    redirectingToVerotel: 'Redirigiendo a Verotel',
+    redirectingToVerotelDesc: 'Serás redirigido a la página de pago seguro.',
+    premiumBadge: 'Insignia Premium',
+    premiumBadgeDesc: 'Corona dorada en tu perfil para mejor visibilidad',
+    premiumSection: 'Sección Premium',
+    premiumSectionDesc: 'Aparece en la sección separada de Escorts Premium',
+    priority: 'Prioridad',
+    priorityDesc: 'Mayor clasificación en resultados de búsqueda',
+    moreVisibility: 'Más Visibilidad',
+    moreVisibilityDesc: 'Tu perfil se mostrará más frecuentemente',
+    chatPriority: 'Prioridad de Chat',
+    chatPriorityDesc: 'Tus mensajes se mostrarán preferencialmente',
+    extendedReach: 'Alcance Extendido',
+    extendedReachDesc: 'Visible en radio mayor',
+    
+    // Register page translations  
+    registerSuccess: 'Registro Exitoso!',
+    registerFailed: 'Fallo en el Registro',
+    confirmEmail: 'Por favor confirma tu dirección de correo.',
+    errorOccurred: 'Ocurrió un error.',
+    invalidEmail: 'Dirección de correo inválida',
+    passwordMinLength: 'La contraseña debe tener al menos 8 caracteres',
+    usernameRequired: 'El nombre de usuario es requerido',
+    userTypeRequired: 'El tipo de usuario es requerido',
+    passwordMismatch: 'Las contraseñas no coinciden',
+    
+    // Register Form Labels
+    iAm: 'Soy...',
+    transEscortOption: 'Trans* Escort',
+    customerOption: 'Cliente (Hombre)',
+    firstName: 'Nombre',
+    lastName: 'Apellido',
+    emailAddress: 'Dirección de Correo',
+    password: 'Contraseña',
+    confirmPassword: 'Confirmar Contraseña',
+    createAccount: 'Crear Cuenta',
+    alreadyHaveAccount: '¿Ya tienes una cuenta?',
+    
+    // Filter Dialog
+    filters: 'Filtros',
+    ageRange: 'Rango de Edad',
+    priceRange: 'Rango de Precio',
+    cockSizeRange: 'Rango de Tamaño',
+    position: 'Posición',
+    bodyType: 'Tipo de Cuerpo',
+    ethnicity: 'Etnia',
+    circumcision: 'Circuncisión',
+    services: 'Servicios',
+    onlineOnly: 'Solo En Línea',
+    premiumOnly: 'Solo Premium',
+    applyFilters: 'Aplicar Filtros',
+    clearFilters: 'Limpiar Filtros',
   },
   
   fr: {
@@ -894,5 +1174,61 @@ export const translations: Record<string, Translations> = {
     invalidCredentials: 'Email ou Mot de Passe Invalide',
     escortsIn: 'Escorts à',
     noEscortsFound: 'Aucun Escort Trouvé',
+    
+    // Premium page translations
+    loginRequired: 'Connexion Requise',
+    loginRequiredDesc: 'Veuillez vous connecter pour activer Premium.',
+    redirectingToVerotel: 'Redirection vers Verotel',
+    redirectingToVerotelDesc: 'Vous serez redirigé vers la page de paiement sécurisée.',
+    premiumBadge: 'Badge Premium',
+    premiumBadgeDesc: 'Couronne dorée dans votre profil pour une meilleure visibilité',
+    premiumSection: 'Section Premium',
+    premiumSectionDesc: 'Apparaître dans la section séparée des Escorts Premium',
+    priority: 'Priorité',
+    priorityDesc: 'Classement plus élevé dans les résultats de recherche',
+    moreVisibility: 'Plus de Visibilité',
+    moreVisibilityDesc: 'Votre profil sera affiché plus souvent',
+    chatPriority: 'Priorité de Chat',
+    chatPriorityDesc: 'Vos messages seront affichés de manière préférentielle',
+    extendedReach: 'Portée Étendue',
+    extendedReachDesc: 'Visible dans un rayon plus large',
+    
+    // Register page translations  
+    registerSuccess: 'Inscription Réussie!',
+    registerFailed: 'Échec de l\'Inscription',
+    confirmEmail: 'Veuillez confirmer votre adresse email.',
+    errorOccurred: 'Une erreur s\'est produite.',
+    invalidEmail: 'Adresse email invalide',
+    passwordMinLength: 'Le mot de passe doit contenir au moins 8 caractères',
+    usernameRequired: 'Le nom d\'utilisateur est requis',
+    userTypeRequired: 'Le type d\'utilisateur est requis',
+    passwordMismatch: 'Les mots de passe ne correspondent pas',
+    
+    // Register Form Labels
+    iAm: 'Je suis...',
+    transEscortOption: 'Trans* Escort',
+    customerOption: 'Client (Homme)',
+    firstName: 'Prénom',
+    lastName: 'Nom de Famille',
+    emailAddress: 'Adresse Email',
+    password: 'Mot de Passe',
+    confirmPassword: 'Confirmer le Mot de Passe',
+    createAccount: 'Créer un Compte',
+    alreadyHaveAccount: 'Vous avez déjà un compte?',
+    
+    // Filter Dialog
+    filters: 'Filtres',
+    ageRange: 'Tranche d\'Âge',
+    priceRange: 'Gamme de Prix',
+    cockSizeRange: 'Gamme de Taille',
+    position: 'Position',
+    bodyType: 'Type de Corps',
+    ethnicity: 'Ethnie',
+    circumcision: 'Circoncision',
+    services: 'Services',
+    onlineOnly: 'En Ligne Seulement',
+    premiumOnly: 'Premium Seulement',
+    applyFilters: 'Appliquer les Filtres',
+    clearFilters: 'Effacer les Filtres',
   },
 };

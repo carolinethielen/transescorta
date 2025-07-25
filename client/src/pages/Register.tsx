@@ -13,6 +13,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { Heart, UserPlus, Eye, EyeOff } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const registerSchema = z.object({
   email: z.string().email('Ungültige E-Mail-Adresse'),
@@ -31,6 +32,7 @@ type RegisterForm = z.infer<typeof registerSchema>;
 export default function Register() {
   const [, navigate] = useLocation();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -53,15 +55,15 @@ export default function Register() {
     },
     onSuccess: (data) => {
       toast({
-        title: "Registrierung erfolgreich!",
-        description: data.message || "Bitte bestätige deine E-Mail-Adresse.",
+        title: t?.registerSuccess || "Registrierung erfolgreich!",
+        description: data.message || t?.confirmEmail || "Bitte bestätige deine E-Mail-Adresse.",
       });
       navigate('/');
     },
     onError: (error: any) => {
       toast({
-        title: "Registrierung fehlgeschlagen",
-        description: error.message || "Ein Fehler ist aufgetreten.",
+        title: t?.registerFailed || "Registrierung fehlgeschlagen",
+        description: error.message || t?.errorOccurred || "Ein Fehler ist aufgetreten.",
         variant: "destructive",
       });
     },
@@ -81,10 +83,10 @@ export default function Register() {
             </div>
           </div>
           <CardTitle className="text-2xl font-bold text-gray-900 dark:text-white">
-            Registrierung
+            {t?.registerTitle || 'Registrierung'}
           </CardTitle>
           <CardDescription>
-            Erstelle dein TransConnect-Konto
+            Erstelle dein TransEscorta-Konto
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -96,7 +98,7 @@ export default function Register() {
                 name="userType"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Ich bin...</FormLabel>
+                    <FormLabel>{t?.iAm || 'Ich bin...'}</FormLabel>
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}
@@ -105,11 +107,11 @@ export default function Register() {
                       >
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem value="trans" id="trans" />
-                          <Label htmlFor="trans">Trans* Escort</Label>
+                          <Label htmlFor="trans">{t?.transEscortOption || 'Trans* Escort'}</Label>
                         </div>
                         <div className="flex items-center space-x-2">
                           <RadioGroupItem value="man" id="man" />
-                          <Label htmlFor="man">Kunde (Mann)</Label>
+                          <Label htmlFor="man">{t?.customerOption || 'Kunde (Mann)'}</Label>
                         </div>
                       </RadioGroup>
                     </FormControl>
@@ -125,7 +127,7 @@ export default function Register() {
                   name="firstName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Vorname *</FormLabel>
+                      <FormLabel>{t?.firstName || 'Vorname'} *</FormLabel>
                       <FormControl>
                         <Input placeholder="Max" {...field} />
                       </FormControl>
@@ -138,7 +140,7 @@ export default function Register() {
                   name="lastName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Nachname</FormLabel>
+                      <FormLabel>{t?.lastName || 'Nachname'}</FormLabel>
                       <FormControl>
                         <Input placeholder="Mustermann" {...field} />
                       </FormControl>
@@ -154,7 +156,7 @@ export default function Register() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>E-Mail-Adresse *</FormLabel>
+                    <FormLabel>{t?.emailAddress || 'E-Mail-Adresse'} *</FormLabel>
                     <FormControl>
                       <Input 
                         type="email" 
@@ -173,7 +175,7 @@ export default function Register() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Passwort *</FormLabel>
+                    <FormLabel>{t?.password || 'Passwort'} *</FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Input 
@@ -207,7 +209,7 @@ export default function Register() {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Passwort bestätigen *</FormLabel>
+                    <FormLabel>{t?.confirmPassword || 'Passwort bestätigen'} *</FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Input 
