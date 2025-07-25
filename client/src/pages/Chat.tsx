@@ -144,14 +144,14 @@ export default function Chat() {
         <div className="flex-1">
           {/* Header */}
           <div className="p-4 border-b border-border">
-            <h2 className="text-xl font-bold">{t?.chats || 'Nachrichten'}</h2>
+            <h2 className="text-xl font-bold">{t?.messages || 'Nachrichten'}</h2>
           </div>
 
           {/* Chat Rooms */}
           <div className="flex-1">
             {chatRooms.length === 0 ? (
               <div className="p-8 text-center">
-                <p className="text-muted-foreground">{t?.noChatsYet || 'Noch keine Nachrichten'}</p>
+                <p className="text-muted-foreground">{t?.noChatsYet || 'Noch keine Chats'}</p>
               </div>
             ) : (
               chatRooms.map((room: any) => (
@@ -259,10 +259,10 @@ export default function Chat() {
             ) : (
               <div className="space-y-4">
                 {messages.map((message: any) => (
-                  <ChatMessage
+                  <ChatBubble
                     key={message.id}
                     message={message}
-                    currentUserId={user?.id || ''}
+                    isOwn={message.senderId === user?.id}
                     senderImage={selectedChatRoom?.otherUser.profileImageUrl || undefined}
                   />
                 ))}

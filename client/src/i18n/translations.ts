@@ -219,9 +219,12 @@ export interface Translations {
   premiumOnly: string;
 
   // Navigation & Chat
+  chat: string;
   chats: string;
+  messages: string;
   newMessage: string;
   noChatsYet: string;
+  messageInputPlaceholder: string;
   typeMessage: string;
   sendMessage: string;
   online: string;
@@ -474,9 +477,12 @@ export const translations: Record<string, Translations> = {
     premiumOnly: 'Nur Premium-Escorts',
 
     // Navigation & Chat
+    chat: 'Chat',
     chats: 'Chats',
+    messages: 'Nachrichten',
     newMessage: 'Neue Nachricht',
     noChatsYet: 'Noch keine Chats',
+    messageInputPlaceholder: 'Nachricht eingeben...',
     typeMessage: 'Nachricht eingeben...',
     sendMessage: 'Senden',
     online: 'Online',
@@ -921,13 +927,24 @@ export const translations: Record<string, Translations> = {
     onlyPremium: 'Premium Only',
     
     // Chat
+    chat: 'Chat',
+    chats: 'Chats',
     messages: 'Messages',
+    newMessage: 'New Message',
+    noChatsYet: 'No chats yet',
+    messageInputPlaceholder: 'Type a message...',
     typeMessage: 'Type a message...',
     sendMessage: 'Send',
     photoMessage: 'Send Photo',
     online: 'Online',
     offline: 'Offline',
     lastSeen: 'Last seen',
+    typing: 'typing...',
+    messageNotSent: 'Message could not be sent',
+    unauthorized: 'Unauthorized',
+    notLoggedIn: 'You are no longer logged in. Redirecting...',
+    redirecting: 'Redirecting...',
+    anonymousUser: 'Anonymous User',
     
     // Premium
     premium: 'Premium',
@@ -1059,13 +1076,24 @@ export const translations: Record<string, Translations> = {
     onlyPremium: 'Apenas Premium',
     
     // Chat
+    chat: 'Chat',
+    chats: 'Chats',
     messages: 'Mensagens',
+    newMessage: 'Nova Mensagem',
+    noChatsYet: 'Ainda não há chats',
+    messageInputPlaceholder: 'Digite uma mensagem...',
     typeMessage: 'Digite uma mensagem...',
     sendMessage: 'Enviar',
     photoMessage: 'Enviar Foto',
     online: 'Online',
     offline: 'Offline',
     lastSeen: 'Visto por último',
+    typing: 'digitando...',
+    messageNotSent: 'Mensagem não pôde ser enviada',
+    unauthorized: 'Não autorizado',
+    notLoggedIn: 'Você não está mais logado. Redirecionando...',
+    redirecting: 'Redirecionando...',
+    anonymousUser: 'Usuário Anônimo',
     
     // Auth validation messages
     emailPlaceholder: 'seu@email.com',
@@ -1385,13 +1413,24 @@ export const translations: Record<string, Translations> = {
     onlyPremium: 'Solo Premium',
     
     // Chat
+    chat: 'Chat',
+    chats: 'Chats',
     messages: 'Mensajes',
+    newMessage: 'Nuevo Mensaje',
+    noChatsYet: 'Aún no hay chats',
+    messageInputPlaceholder: 'Escribe un mensaje...',
     typeMessage: 'Escribe un mensaje...',
     sendMessage: 'Enviar',
     photoMessage: 'Enviar Foto',
     online: 'En Línea',
     offline: 'Desconectado',
     lastSeen: 'Visto por última vez',
+    typing: 'escribiendo...',
+    messageNotSent: 'El mensaje no se pudo enviar',
+    unauthorized: 'No autorizado',
+    notLoggedIn: 'Ya no estás conectado. Redirigiendo...',
+    redirecting: 'Redirigiendo...',
+    anonymousUser: 'Usuario Anónimo',
     
     // Auth validation messages
     emailPlaceholder: 'tu@email.com',
@@ -1711,13 +1750,24 @@ export const translations: Record<string, Translations> = {
     onlyPremium: 'Premium Seulement',
     
     // Chat
+    chat: 'Chat',
+    chats: 'Chats',
     messages: 'Messages',
+    newMessage: 'Nouveau Message',
+    noChatsYet: 'Pas encore de chats',
+    messageInputPlaceholder: 'Tapez un message...',
     typeMessage: 'Tapez un message...',
     sendMessage: 'Envoyer',
     photoMessage: 'Envoyer une Photo',
     online: 'En Ligne',
     offline: 'Hors Ligne',
     lastSeen: 'Vu pour la dernière fois',
+    typing: 'tape...',
+    messageNotSent: 'Le message n\'a pas pu être envoyé',
+    unauthorized: 'Non autorisé',
+    notLoggedIn: 'Vous n\'êtes plus connecté. Redirection...',
+    redirecting: 'Redirection...',
+    anonymousUser: 'Utilisateur Anonyme',
     
     // Auth validation messages
     emailPlaceholder: 'votre@email.com',
@@ -1893,7 +1943,6 @@ export const translations: Record<string, Translations> = {
     deleteAccount: 'Supprimer le Compte',
     contactSupport: 'Contacter le Support',
     faq: 'FAQ',
-    logout: 'Se Déconnecter',
     pushNotifications: 'Notifications Push',
     soundNotifications: 'Notifications Sonores',
     vibrationNotifications: 'Notifications Vibratoires',
@@ -1917,7 +1966,6 @@ export const translations: Record<string, Translations> = {
     cancel: 'Annuler',
     delete: 'Supprimer',
     edit: 'Modifier',
-    back: 'Retour',
     next: 'Suivant',
     previous: 'Précédent',
     search: 'Rechercher',
