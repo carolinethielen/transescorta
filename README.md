@@ -1,6 +1,6 @@
-# TransConnect - Dating-Plattform für die Trans*-Community
+# TransEscorta - Premium TS-Escorts Platform
 
-Eine moderne, mobile-first Dating-Plattform speziell für die Trans*-Community mit Real-time Chat, Premium-Features und Tinder-style Swipe-Funktionalität.
+Eine moderne, mobile-first Escort-Plattform speziell für Trans-Escorts mit Real-time Chat, Premium-Features und professioneller Präsentation.
 
 ## 🌟 Features
 

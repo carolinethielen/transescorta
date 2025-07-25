@@ -13,7 +13,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'transconnect', // All uploads go to this folder
+    folder: 'transescorta', // All uploads go to this folder
     allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
     transformation: [
       { width: 1200, height: 1200, crop: 'limit' }, // Max size
@@ -27,7 +27,7 @@ const storage = new CloudinaryStorage({
 const profileStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'transconnect/profiles',
+    folder: 'transescorta/profiles',
     allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
     transformation: [
       { width: 800, height: 800, crop: 'fill', gravity: 'face' }, // Square profile images
@@ -41,7 +41,7 @@ const profileStorage = new CloudinaryStorage({
 const chatStorage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'transconnect/chat',
+    folder: 'transescorta/chat',
     allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
     transformation: [
       { width: 1000, height: 1000, crop: 'limit' },

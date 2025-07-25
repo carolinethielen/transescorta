@@ -135,7 +135,7 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="flex justify-between items-center p-4 border-b border-border">
-        <h1 className="text-2xl font-bold text-[#FF007F] font-['Poppins']">TransConnect</h1>
+        <h1 className="text-2xl font-bold text-[#FF007F] font-['Poppins']">TransEscorta</h1>
         <div className="flex items-center space-x-3">
           {/* Location Badge */}
           <div className="flex items-center bg-muted px-3 py-1 rounded-full text-sm">

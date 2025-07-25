@@ -101,11 +101,11 @@ export async function setupCustomAuth(app: Express) {
       // Send verification email (mock for now)
       try {
         await emailTransporter.sendMail({
-          from: process.env.EMAIL_FROM || 'noreply@transconnect.com',
+          from: process.env.EMAIL_FROM || 'noreply@transescorta.com',
           to: email,
-          subject: 'E-Mail-Adresse bestätigen - TransConnect',
+          subject: 'E-Mail-Adresse bestätigen - TransEscorta',
           html: `
-            <h2>Willkommen bei TransConnect!</h2>
+            <h2>Willkommen bei TransEscorta!</h2>
             <p>Hallo ${firstName},</p>
             <p>Bitte bestätige deine E-Mail-Adresse, indem du auf den folgenden Link klickst:</p>
             <a href="${req.protocol}://${req.get('host')}/verify-email?token=${emailVerificationToken}">

@@ -46,7 +46,7 @@ export default function UserTypeSelection() {
 
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-[#FF007F] mb-2 font-['Poppins']">
-            TransConnect
+            TransEscorta
           </h1>
           <p className="text-muted-foreground">
             Bist du Trans*-Escort oder suchst du Services?

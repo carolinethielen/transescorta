@@ -11,10 +11,10 @@ export default function Landing() {
         {/* Hero Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl font-bold text-[#FF007F] mb-4 font-['Poppins']">
-            TransConnect
+            TransEscorta
           </h1>
           <p className="text-xl text-muted-foreground mb-8">
-            Die Premium-Escort-Plattform für Trans*-Services
+            Premium TS-Escorts - Diskret & Professionell
           </p>
           <Button 
             size="lg"

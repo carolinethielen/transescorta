@@ -1,14 +1,30 @@
-# TransConnect - Trans* Escort Platform
+# TransEscorta - Premium TS-Escorts Platform
 
 ## Overview
 
-TransConnect is a modern, mobile-first escort platform specifically designed following the hunqz.com model. Trans* users serve as escorts/service providers whose profiles are displayed publicly in a browsable grid, while men register as customers to contact them. The platform features a one-way visibility system where only trans escorts appear in the browsing interface, real-time chat functionality, and location-based discovery.
+TransEscorta is a modern, mobile-first escort platform specifically designed following the hunqz.com model. Trans* users serve as escorts/service providers whose profiles are displayed publicly in a browsable grid, while men register as customers to contact them. The platform features a one-way visibility system where only trans escorts appear in the browsing interface, real-time chat functionality, and location-based discovery.
 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (January 2025)
+
+### Complete Brand Rebrand - TransConnect → TransEscorta (January 25, 2025)
+- **Brand Name Change**: All references changed from "TransConnect" to "TransEscorta" throughout application
+- **Title Update**: Changed to "TransEscorta - Premium TS-Escorts" for professional escort positioning
+- **Domain Ready**: Prepared for transescorta.com domain deployment with optimized SEO meta tags
+- **Cloudinary Folders**: Updated cloud storage organization to transescorta/* folder structure
+- **Email Templates**: Updated registration and verification emails with new TransEscorta branding
+- **README & Documentation**: Fully updated project description and technical documentation
+
+### Cloudinary Integration Complete (January 25, 2025) 
+- **Cloud Storage Migration**: All image uploads moved from local storage to Cloudinary cloud infrastructure
+- **Optimized Transformations**: Profile images auto-optimized to 800x800px with face detection cropping
+- **Chat Images Enhanced**: Chat photos optimized to 1000x1000px with automatic compression  
+- **Gallery Support**: Multiple image uploads for escort galleries with batch processing
+- **Format Optimization**: Automatic WebP/AVIF conversion for improved performance and faster loading
+- **Organized Structure**: Cloudinary folders: transescorta/profiles, transescorta/chat for clean asset management
 
 ### Profile System Complete Fix (January 24, 2025)
 - **Image Upload FULLY FIXED**: Profile images now save correctly to database and display properly
