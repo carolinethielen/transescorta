@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { queryClient } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
+import { executeRecaptcha } from '@/utils/recaptcha';
 import {
   Dialog,
   DialogContent,
@@ -78,9 +79,17 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
     },
   });
 
-  // Direct fetch implementation
+  // Direct fetch implementation with reCAPTCHA
   const loginMutation = useMutation({
     mutationFn: async (data: LoginForm) => {
+      // Get reCAPTCHA token first
+      let recaptchaToken;
+      try {
+        recaptchaToken = await executeRecaptcha('login');
+      } catch (error) {
+        throw new Error('reCAPTCHA-Verifikation fehlgeschlagen');
+      }
+
       // Use XMLHttpRequest as fallback to avoid any fetch conflicts
       return new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
@@ -110,7 +119,7 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
           reject(new Error('Network error'));
         };
         
-        xhr.send(JSON.stringify(data));
+        xhr.send(JSON.stringify({ ...data, recaptchaToken }));
       });
     },
     onSuccess: (data: any) => {
@@ -133,6 +142,14 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
   const registerMutation = useMutation({
     mutationFn: async (data: RegisterForm) => {
       const { confirmPassword, ...registerData } = data;
+      
+      // Get reCAPTCHA token first
+      let recaptchaToken;
+      try {
+        recaptchaToken = await executeRecaptcha('register');
+      } catch (error) {
+        throw new Error('reCAPTCHA-Verifikation fehlgeschlagen');
+      }
       
       // Use XMLHttpRequest as fallback to avoid any fetch conflicts
       return new Promise((resolve, reject) => {
@@ -163,13 +180,13 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
           reject(new Error('Network error'));
         };
         
-        xhr.send(JSON.stringify(registerData));
+        xhr.send(JSON.stringify({ ...registerData, recaptchaToken }));
       });
     },
     onSuccess: (data: any) => {
       toast({
         title: "Registrierung erfolgreich!",
-        description: data.message || "Willkommen bei TransConnect!",
+        description: data.message || "Willkommen bei TransEscorta!",
       });
       queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
       onClose();

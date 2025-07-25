@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
+import { executeRecaptcha } from '@/utils/recaptcha';
 import { apiRequest } from '@/lib/queryClient';
 import { Heart, LogIn, UserPlus, Eye, EyeOff } from 'lucide-react';
 

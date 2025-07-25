@@ -48,16 +48,45 @@ export async function setupCustomAuth(app: Express) {
   app.set("trust proxy", 1);
   app.use(getSession());
 
-  // Register endpoint
+  // Register endpoint with reCAPTCHA
   app.post('/api/auth/register', async (req, res) => {
     try {
-      const { email, password, firstName, lastName, userType } = req.body;
+      const { email, password, firstName, lastName, userType, recaptchaToken } = req.body;
 
       // Validate input
       if (!email || !password || !firstName || !userType) {
         return res.status(400).json({ 
           message: 'E-Mail, Passwort, Vorname und Benutzertyp sind erforderlich' 
         });
+      }
+
+      // Verify reCAPTCHA
+      if (recaptchaToken) {
+        try {
+          const secretKey = '6LeWxo4rAAAAAM_WkdIvA07SVVkjN7kHZroiKcJ9';
+          const verifyURL = 'https://www.google.com/recaptcha/api/siteverify';
+          
+          const response = await fetch(verifyURL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `secret=${secretKey}&response=${recaptchaToken}`,
+          });
+
+          const result = await response.json();
+          
+          if (!result.success || result.score < 0.5 || result.action !== 'register') {
+            return res.status(400).json({ 
+              message: 'reCAPTCHA-Verifikation fehlgeschlagen. Bitte versuche es erneut.' 
+            });
+          }
+        } catch (error) {
+          console.error('reCAPTCHA verification error:', error);
+          return res.status(400).json({ 
+            message: 'Sicherheitsüberprüfung fehlgeschlagen' 
+          });
+        }
       }
 
       if (password.length < 8) {
@@ -138,15 +167,44 @@ export async function setupCustomAuth(app: Express) {
     }
   });
 
-  // Login endpoint
+  // Login endpoint with reCAPTCHA
   app.post('/api/auth/login', async (req, res) => {
     try {
-      const { email, password } = req.body;
+      const { email, password, recaptchaToken } = req.body;
 
       if (!email || !password) {
         return res.status(400).json({ 
           message: 'E-Mail und Passwort sind erforderlich' 
         });
+      }
+
+      // Verify reCAPTCHA
+      if (recaptchaToken) {
+        try {
+          const secretKey = '6LeWxo4rAAAAAM_WkdIvA07SVVkjN7kHZroiKcJ9';
+          const verifyURL = 'https://www.google.com/recaptcha/api/siteverify';
+          
+          const response = await fetch(verifyURL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `secret=${secretKey}&response=${recaptchaToken}`,
+          });
+
+          const result = await response.json();
+          
+          if (!result.success || result.score < 0.5 || result.action !== 'login') {
+            return res.status(400).json({ 
+              message: 'reCAPTCHA-Verifikation fehlgeschlagen. Bitte versuche es erneut.' 
+            });
+          }
+        } catch (error) {
+          console.error('reCAPTCHA verification error:', error);
+          return res.status(400).json({ 
+            message: 'Sicherheitsüberprüfung fehlgeschlagen' 
+          });
+        }
       }
 
       // Find user

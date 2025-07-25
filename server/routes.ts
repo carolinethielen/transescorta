@@ -87,6 +87,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // reCAPTCHA verification endpoint
+  app.post('/api/auth/verify-recaptcha', async (req, res) => {
+    try {
+      const { token, action } = req.body;
+      
+      if (!token) {
+        return res.status(400).json({ success: false, message: 'reCAPTCHA token required' });
+      }
+
+      const secretKey = '6LeWxo4rAAAAAM_WkdIvA07SVVkjN7kHZroiKcJ9';
+      const verifyURL = 'https://www.google.com/recaptcha/api/siteverify';
+      
+      const response = await fetch(verifyURL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `secret=${secretKey}&response=${token}`,
+      });
+
+      const result = await response.json();
+      
+      // Check if the verification was successful and score is acceptable
+      if (result.success && result.score >= 0.5 && result.action === action) {
+        res.json({ success: true, score: result.score });
+      } else {
+        console.log('reCAPTCHA verification failed:', result);
+        res.status(400).json({ 
+          success: false, 
+          message: 'reCAPTCHA verification failed',
+          score: result.score 
+        });
+      }
+    } catch (error) {
+      console.error('reCAPTCHA verification error:', error);
+      res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  });
+
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
