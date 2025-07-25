@@ -4,35 +4,75 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ChatImproved } from '@/components/ChatImproved';
+import { ChatBubble } from '@/components/ChatBubble';
+import { ChatInput } from '@/components/ChatInput';
 import { PlaceholderImage } from '@/components/PlaceholderImage';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { isUnauthorizedError } from '@/lib/authUtils';
 import { apiRequest } from '@/lib/queryClient';
-import { Send, Phone, Video, ArrowLeft, MessageCircle, Clock } from 'lucide-react';
+import { Send, Phone, Video, ArrowLeft } from 'lucide-react';
 import { type User, type Message, type ChatRoom } from '@shared/schema';
 
 export default function Chat() {
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
+  const [messageText, setMessageText] = useState('');
+  const [ws, setWs] = useState<WebSocket | null>(null);
   const { user } = useAuth();
   const { toast } = useToast();
-  
-  // Get chat ID from URL parameters
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const chatId = urlParams.get('user');
-    if (chatId) {
-      setSelectedChat(chatId);
-    }
-  }, []);
+  const queryClient = useQueryClient();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Fetch chat rooms
   const { data: chatRooms = [], isLoading: roomsLoading } = useQuery<(ChatRoom & { otherUser: User; lastMessage: Message | null; unreadCount: number })[]>({
     queryKey: ['/api/chat/rooms'],
     retry: false,
   });
+
+  // Fetch messages for selected chat
+  const { data: messages = [], isLoading: messagesLoading } = useQuery<Message[]>({
+    queryKey: ['/api/chat', selectedChat, 'messages'],
+    enabled: !!selectedChat,
+    retry: false,
+  });
+
+  // Send message mutation
+  const sendMessageMutation = useMutation({
+    mutationFn: async ({ receiverId, content }: { receiverId: string; content: string }) => {
+      await apiRequest('POST', '/api/chat/messages', { receiverId, content });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/chat', selectedChat, 'messages'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/chat/rooms'] });
+      setMessageText('');
+    },
+    onError: (error) => {
+      if (isUnauthorizedError(error as Error)) {
+        toast({
+          title: "Unauthorized",
+          description: "Du bist nicht mehr angemeldet. Leite weiter...",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = "/api/login";
+        }, 500);
+        return;
+      }
+      toast({
+        title: "Fehler",
+        description: "Nachricht konnte nicht gesendet werden",
+        variant: "destructive",
+      });
+    },
+  });
+
+  // Setup WebSocket connection
+  useEffect(() => {
+    if (!user) return;
+
+    const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const wsUrl = `${protocol}//${window.location.host}/ws`;
+    const socket = new WebSocket(wsUrl);
 
     socket.onopen = () => {
       socket.send(JSON.stringify({ type: 'auth', userId: user.id }));
