@@ -77,7 +77,7 @@ export default function Admin() {
     refetchInterval: 30000, // Refresh every 30 seconds
   });
 
-  const { data: users = [] } = useQuery<User[]>({
+  const users = useQuery({
     queryKey: ['/api/admin/users'],
     refetchInterval: 10000, // Refresh every 10 seconds
   });
@@ -300,7 +300,7 @@ export default function Admin() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {users.map((user) => (
+                  {users.data?.users?.length > 0 ? users.data.users.map((user: User) => (
                     <div key={user.id} className="flex items-center justify-between p-4 border rounded-lg">
                       <div className="flex items-center space-x-4">
                         <img
@@ -362,7 +362,11 @@ export default function Admin() {
                         )}
                       </div>
                     </div>
-                  ))}
+                  )) : (
+                    <div className="text-center py-8 text-gray-500">
+                      Keine Benutzer gefunden
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -457,7 +461,7 @@ export default function Admin() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {logs.map((log) => (
+                  {logs.length > 0 ? logs.map((log: AdminLog) => (
                     <div key={log.id} className="flex items-start space-x-3 p-3 border rounded-lg">
                       <div className="flex-1">
                         <div className="flex items-center space-x-2">
@@ -472,7 +476,11 @@ export default function Admin() {
                         </p>
                       </div>
                     </div>
-                  ))}
+                  )) : (
+                    <div className="text-center py-8 text-gray-500">
+                      Keine Admin-Aktivitäten vorhanden
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
