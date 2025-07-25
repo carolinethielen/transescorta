@@ -162,6 +162,60 @@
   background: hsl(var(--accent-foreground));
 }
 
+/* Range Slider - Force both thumbs to appear */
+[data-radix-slider-root] {
+  position: relative;
+  display: flex;
+  width: 100%;
+  touch-action: none;
+  user-select: none;
+  align-items: center;
+}
+
+[data-radix-slider-track] {
+  position: relative;
+  height: 8px;
+  width: 100%;
+  flex-grow: 1;
+  overflow: hidden;
+  border-radius: 9999px;
+  background-color: hsl(var(--secondary));
+}
+
+[data-radix-slider-range] {
+  position: absolute;
+  height: 100%;
+  background-color: hsl(var(--primary));
+}
+
+[data-radix-slider-thumb] {
+  display: block !important;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  border: 2px solid hsl(var(--primary));
+  background-color: hsl(var(--background));
+  ring-offset-color: hsl(var(--background));
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+  position: relative;
+  z-index: 10;
+}
+
+[data-radix-slider-thumb]:focus-visible {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  ring-width: 2px;
+  ring-color: hsl(var(--ring));
+  ring-offset-width: 2px;
+}
+
+[data-radix-slider-thumb]:disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 /* Profile grid responsive layout */
 .profile-grid {
   display: grid;
