@@ -208,6 +208,16 @@ export interface Translations {
   enterOtherCity: string;
   enterCityOrZip: string;
   
+  // Filter Dialog
+  reset: string;
+  yearsShort: string;
+  price: string;
+  perHour: string;
+  selectPosition: string;
+  all: string;
+  onlineOnly: string;
+  premiumOnly: string;
+  
   // Status & Nachrichten
   loading: string;
   error: string;
@@ -379,6 +389,16 @@ export const translations: Record<string, Translations> = {
     enterOtherCity: 'Andere Stadt eingeben',
     enterCityOrZip: 'Stadt oder Postleitzahl eingeben...',
     
+    // Filter Dialog
+    reset: 'Zurücksetzen',
+    yearsShort: 'J',
+    price: 'Preis',
+    perHour: 'pro Stunde',
+    selectPosition: 'Position wählen...',
+    all: 'Alle',
+    onlineOnly: 'Nur Online-Escorts',
+    premiumOnly: 'Nur Premium-Escorts',
+    
     // Registrierung
     iAm: 'Ich bin',
     transEscort: 'Trans Escort',
@@ -441,7 +461,6 @@ export const translations: Record<string, Translations> = {
     premium: 'Premium',
     upgradePremium: 'Premium Upgrade',
     premiumActive: 'Premium aktiv',
-    nearbyEscorts: 'Escorts in der Nähe',
     
     // Aktionen
     save: 'Speichern',
@@ -620,6 +639,16 @@ export const translations: Record<string, Translations> = {
     enterOtherCity: 'Enter other city',
     enterCityOrZip: 'Enter city or zip code...',
     
+    // Filter Dialog
+    reset: 'Reset',
+    yearsShort: 'Y',
+    price: 'Price',
+    perHour: 'per hour',
+    selectPosition: 'Select position...',
+    all: 'All',
+    onlineOnly: 'Online Only',
+    premiumOnly: 'Premium Only',
+    
     // Registrierung
     iAm: 'I am',
     transEscort: 'Trans Escort',
@@ -683,7 +712,6 @@ export const translations: Record<string, Translations> = {
     upgradePremium: 'Upgrade Premium',
     premiumActive: 'Premium Active',
 
-    nearbyEscorts: 'Nearby Escorts',
     
     // Aktionen
     save: 'Save',
@@ -907,8 +935,7 @@ export const translations: Record<string, Translations> = {
     // Search & Filter
     searchAndFilter: 'Busca e Filtro',
     filterActive: 'Filtro ativo',
-    clearFilters: 'Limpar filtros',
-    applyFilters: 'Aplicar filtros',
+
     
     // Home Page specific
     nearbyEscorts: 'Escorts Próximas',
@@ -922,13 +949,21 @@ export const translations: Record<string, Translations> = {
     enterOtherCity: 'Inserir outra cidade',
     enterCityOrZip: 'Inserir cidade ou código postal...',
     
+    // Filter Dialog
+    reset: 'Redefinir',
+    yearsShort: 'A',
+    price: 'Preço',
+    perHour: 'por hora',
+    selectPosition: 'Selecionar posição...',
+    all: 'Todos',
+    onlineOnly: 'Apenas Online',
+    premiumOnly: 'Apenas Premium',
+    
     // Premium
     premium: 'Premium',
     upgradePremium: 'Upgrade Premium',
     premiumActive: 'Premium Ativo',
-    premiumEscorts: 'Escorts Premium',
-    newEscorts: 'Novos Escorts',
-    nearbyEscorts: 'Escorts Próximos',
+
     
     // Aktionen
     save: 'Salvar',
@@ -1152,8 +1187,7 @@ export const translations: Record<string, Translations> = {
     // Search & Filter
     searchAndFilter: 'Búsqueda y Filtro',
     filterActive: 'Filtro activo',
-    clearFilters: 'Limpiar filtros',
-    applyFilters: 'Aplicar filtros',
+
     
     // Home Page specific
     nearbyEscorts: 'Escorts Cercanas',
@@ -1167,13 +1201,21 @@ export const translations: Record<string, Translations> = {
     enterOtherCity: 'Ingresar otra ciudad',
     enterCityOrZip: 'Ingresar ciudad o código postal...',
     
+    // Filter Dialog
+    reset: 'Restablecer',
+    yearsShort: 'A',
+    price: 'Precio',
+    perHour: 'por hora',
+    selectPosition: 'Seleccionar posición...',
+    all: 'Todos',
+    onlineOnly: 'Solo en Línea',
+    premiumOnly: 'Solo Premium',
+    
     // Premium
     premium: 'Premium',
     upgradePremium: 'Actualizar Premium',
     premiumActive: 'Premium Activo',
-    premiumEscorts: 'Escorts Premium',
-    newEscorts: 'Nuevos Escorts',
-    nearbyEscorts: 'Escorts Cercanos',
+
     
     // Aktionen
     save: 'Guardar',
@@ -1397,8 +1439,7 @@ export const translations: Record<string, Translations> = {
     // Search & Filter
     searchAndFilter: 'Recherche et Filtre',
     filterActive: 'Filtre actif',
-    clearFilters: 'Effacer les filtres',
-    applyFilters: 'Appliquer les filtres',
+
     
     // Home Page specific
     nearbyEscorts: 'Escorts Proches',
@@ -1412,13 +1453,21 @@ export const translations: Record<string, Translations> = {
     enterOtherCity: 'Saisir autre ville',
     enterCityOrZip: 'Saisir ville ou code postal...',
     
+    // Filter Dialog
+    reset: 'Réinitialiser',
+    yearsShort: 'A',
+    price: 'Prix',
+    perHour: 'par heure',
+    selectPosition: 'Sélectionner position...',
+    all: 'Tous',
+    onlineOnly: 'En Ligne Seulement',
+    premiumOnly: 'Premium Seulement',
+    
     // Premium
     premium: 'Premium',
     upgradePremium: 'Mise à Niveau Premium',
     premiumActive: 'Premium Actif',
-    premiumEscorts: 'Escorts Premium',
-    newEscorts: 'Nouveaux Escorts',
-    nearbyEscorts: 'Escorts Proches',
+
     
     // Aktionen
     save: 'Sauvegarder',

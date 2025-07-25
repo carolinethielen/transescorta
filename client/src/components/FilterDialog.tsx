@@ -123,10 +123,10 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
       <DialogContent className="sm:max-w-md max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center justify-between">
-            Filter & Suche
+            {t?.searchAndFilter || 'Filter & Suche'}
             <Button variant="ghost" size="sm" onClick={clearFilters}>
               <X className="w-4 h-4 mr-1" />
-              Zurücksetzen
+              {t?.reset || 'Zurücksetzen'}
             </Button>
           </DialogTitle>
         </DialogHeader>
@@ -135,7 +135,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
           {/* 1. Age Range */}
           <div>
             <label className="text-sm font-medium mb-2 block">
-              Alter: {filters.ageRange[0]} - {filters.ageRange[1]} Jahre
+{t?.age || 'Alter'}: {filters.ageRange[0]} - {filters.ageRange[1]} {t?.years || 'Jahre'}
             </label>
             <Slider
               value={filters.ageRange}
@@ -150,7 +150,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
           {/* 2. Price Range */}
           <div>
             <label className="text-sm font-medium mb-2 block">
-              Preis: {filters.priceRange[0]}€ - {filters.priceRange[1]}€ pro Stunde
+{t?.price || 'Preis'}: {filters.priceRange[0]}€ - {filters.priceRange[1]}€ {t?.perHour || 'pro Stunde'}
             </label>
             <Slider
               value={filters.priceRange}
@@ -165,7 +165,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
           {/* 3. Cock Size Range */}
           <div>
             <label className="text-sm font-medium mb-2 block">
-              Schwanzgröße: {filters.cockSizeRange[0]} - {filters.cockSizeRange[1]} cm
+{t?.cockSize || 'Schwanzgröße'}: {filters.cockSizeRange[0]} - {filters.cockSizeRange[1]} cm
             </label>
             <Slider
               value={filters.cockSizeRange}
@@ -179,10 +179,10 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
 
           {/* 4. Position */}
           <div>
-            <label className="text-sm font-medium mb-2 block">Position</label>
+            <label className="text-sm font-medium mb-2 block">{t?.position || 'Position'}</label>
             <Select value={filters.position} onValueChange={(value) => setFilters({ ...filters, position: value })}>
               <SelectTrigger>
-                <SelectValue placeholder="Position wählen..." />
+                <SelectValue placeholder={t?.selectPosition || "Position wählen..."} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Alle</SelectItem>
@@ -199,7 +199,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
 
           {/* 5. Circumcision */}
           <div>
-            <label className="text-sm font-medium mb-2 block">Beschneidung</label>
+            <label className="text-sm font-medium mb-2 block">{t?.circumcision || 'Beschneidung'}</label>
             <Select value={filters.circumcision || ''} onValueChange={(value) => setFilters({ ...filters, circumcision: value })}>
               <SelectTrigger>
                 <SelectValue placeholder="Beschneidung wählen..." />
@@ -215,7 +215,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
 
           {/* 6. Body Type */}
           <div>
-            <label className="text-sm font-medium mb-2 block">Körpertyp</label>
+            <label className="text-sm font-medium mb-2 block">{t?.bodyType || 'Körpertyp'}</label>
             <Select value={filters.bodyType} onValueChange={(value) => setFilters({ ...filters, bodyType: value })}>
               <SelectTrigger>
                 <SelectValue placeholder="Körpertyp wählen..." />
@@ -233,7 +233,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
 
           {/* 7. Ethnicity */}
           <div>
-            <label className="text-sm font-medium mb-2 block">Ethnizität</label>
+            <label className="text-sm font-medium mb-2 block">{t?.ethnicity || 'Ethnizität'}</label>
             <Select value={filters.ethnicity} onValueChange={(value) => setFilters({ ...filters, ethnicity: value })}>
               <SelectTrigger>
                 <SelectValue placeholder="Ethnizität wählen..." />
@@ -251,7 +251,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
 
           {/* 8. Services */}
           <div>
-            <label className="text-sm font-medium mb-2 block">Services</label>
+            <label className="text-sm font-medium mb-2 block">{t?.services || 'Services'}</label>
             <div className="grid grid-cols-2 gap-2">
               {services.map((service) => (
                 <div key={service} className="flex items-center space-x-2">
@@ -277,7 +277,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
                 onCheckedChange={(checked) => setFilters({ ...filters, onlineOnly: !!checked })}
               />
               <label htmlFor="onlineOnly" className="text-sm cursor-pointer">
-                Nur Online-Escorts
+{t?.onlineOnly || 'Nur Online-Escorts'}
               </label>
             </div>
             
@@ -288,14 +288,14 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
                 onCheckedChange={(checked) => setFilters({ ...filters, premiumOnly: !!checked })}
               />
               <label htmlFor="premiumOnly" className="text-sm cursor-pointer">
-                Nur Premium-Escorts
+{t?.premiumOnly || 'Nur Premium-Escorts'}
               </label>
             </div>
           </div>
 
           {/* Apply Button */}
           <Button onClick={applyFilters} className="w-full bg-[#FF007F] hover:bg-[#FF007F]/90">
-            Filter anwenden
+            {t?.applyFilters || 'Filter anwenden'}
           </Button>
         </div>
       </DialogContent>
