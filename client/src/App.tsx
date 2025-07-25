@@ -63,7 +63,7 @@ function Router() {
         <>
           <Route path="/chat" component={ChatMainNew} />
           <Route path="/my-profile" component={Profile} />
-          <Route path="/profile/edit" component={ProfileEditUnified} />
+          <Route path="/my-profile/edit" component={ProfileEditUnified} />
           <Route path="/settings" component={Settings} />
           {/* Albums only for trans escorts */}
           <Route path="/albums" component={PrivateAlbums} />

@@ -100,7 +100,7 @@ export default function Profile() {
             variant="secondary"
             size="sm"
             className="absolute top-4 right-4 rounded-full"
-            onClick={() => navigate('/profile/edit')}
+            onClick={() => navigate('/my-profile/edit')}
           >
             <Edit className="w-4 h-4" />
           </Button>

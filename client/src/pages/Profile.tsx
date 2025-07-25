@@ -39,7 +39,7 @@ export default function Profile() {
     <EscortProfileView
       user={profile}
       isOwnProfile={true}
-      onEdit={() => navigate('/profile/edit')}
+      onEdit={() => navigate('/my-profile/edit')}
     />
   );
 }
