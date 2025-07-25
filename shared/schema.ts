@@ -152,7 +152,7 @@ export const verifyEmailSchema = z.object({
 
 // Profile update schema for both user types
 export const updateProfileSchema = z.object({
-  firstName: z.string().min(1, "Vorname ist erforderlich"),
+  firstName: z.string().min(1, "Vorname ist erforderlich").optional(),
   lastName: z.string().optional(),
   age: z.number().min(18, "Mindestens 18 Jahre").max(100, "Maximal 100 Jahre").optional(),
   bio: z.string().max(500, "Bio darf maximal 500 Zeichen lang sein").optional(),

@@ -20,6 +20,13 @@ export function ProfileImageUploadNew({
   const [uploading, setUploading] = useState(false);
   const [mainImage, setMainImage] = useState<string | null>(currentMainImage || null);
   const [additionalImages, setAdditionalImages] = useState<string[]>(currentImages);
+
+  // Update state when props change
+  React.useEffect(() => {
+    console.log('ProfileImageUploadNew props updated:', { currentMainImage, currentImages });
+    setMainImage(currentMainImage || null);
+    setAdditionalImages(currentImages || []);
+  }, [currentMainImage, currentImages]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -42,27 +49,54 @@ export function ProfileImageUploadNew({
       
       return response.json();
     },
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       const imageUrl = data.imageUrl;
+      console.log('Image upload successful:', imageUrl);
+      
+      let newMainImage = mainImage;
+      let newAdditionalImages = [...additionalImages];
       
       if (!mainImage) {
         // If no main image, set this as main image
-        setMainImage(imageUrl);
-        onImageUpdate?.(imageUrl, additionalImages);
+        newMainImage = imageUrl;
       } else if (additionalImages.length < 4) {
         // Add to additional images (max 4 additional + 1 main = 5 total)
-        const newAdditionalImages = [...additionalImages, imageUrl];
-        setAdditionalImages(newAdditionalImages);
-        onImageUpdate?.(mainImage, newAdditionalImages);
+        newAdditionalImages = [...additionalImages, imageUrl];
       }
       
-      toast({
+      // Update local state
+      setMainImage(newMainImage);
+      setAdditionalImages(newAdditionalImages);
+      
+      // Update parent component
+      onImageUpdate?.(newMainImage, newAdditionalImages);
+      
+      // Save to backend immediately
+      try {
+        const response = await fetch('/api/auth/profile', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            profileImageUrl: newMainImage,
+            profileImages: newAdditionalImages,
+          }),
+        });
+        
+        if (response.ok) {
+          console.log('Profile images saved to backend');
+          queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
+        }
+      } catch (error) {
+        console.error('Failed to save profile images:', error);
+      }
+      
+      toast ({
         title: "Bild erfolgreich hochgeladen",
         description: "Das Bild wurde über Cloudinary zu deinem Profil hinzugefügt",
       });
-      
-      // Invalidate user profile cache
-      queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
     },
     onError: (error) => {
       console.error('Upload error:', error);

@@ -266,9 +266,10 @@ export default function ProfileEditUnified() {
                 </CardHeader>
                 <CardContent>
                   <ProfileImageUploadNew
-                    currentMainImage={form.watch('profileImageUrl') || user?.profileImageUrl || undefined}
-                    currentImages={form.watch('profileImages') || user?.profileImages || []}
+                    currentMainImage={currentUser?.profileImageUrl || undefined}
+                    currentImages={Array.isArray(currentUser?.profileImages) ? currentUser.profileImages : []}
                     onImageUpdate={(mainImage, additionalImages) => {
+                      console.log('Image update callback:', { mainImage, additionalImages });
                       form.setValue('profileImageUrl', mainImage || '', { shouldDirty: true });
                       form.setValue('profileImages', additionalImages, { shouldDirty: true });
                     }}

@@ -174,8 +174,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Extract image data separately
       const { profileImageUrl, profileImages, ...profileData } = requestData;
       
-      // Validate main profile data
-      const validatedProfile = updateProfileSchema.parse(profileData);
+      // Validate main profile data only if present - allow partial updates
+      const validatedProfile = profileData && Object.keys(profileData).length > 0 
+        ? updateProfileSchema.partial().parse(profileData) 
+        : {};
       
       // Add image data back
       const fullProfileData = {
