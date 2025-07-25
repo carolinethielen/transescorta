@@ -101,14 +101,14 @@ export default function Settings() {
         });
         
         toast({
-          title: "Einstellung gespeichert",
-          description: "Deine Privatsphäre-Einstellung wurde aktualisiert.",
+          title: t?.settingSaved || "Einstellung gespeichert",
+          description: t?.privacySettingUpdated || "Deine Privatsphäre-Einstellung wurde aktualisiert.",
         });
       } catch (error) {
         console.error('Error updating privacy setting:', error);
         toast({
-          title: "Fehler",
-          description: "Einstellung konnte nicht gespeichert werden.",
+          title: t?.error || "Fehler",
+          description: t?.settingNotSaved || "Einstellung konnte nicht gespeichert werden.",
           variant: "destructive",
         });
         // Revert the setting on error

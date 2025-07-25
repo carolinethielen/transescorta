@@ -31,12 +31,12 @@ function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: numbe
 }
 
 export default function Home() {
-  const [selectedLocation, setSelectedLocation] = useState('Mein Standort');
-  const [userCoordinates, setUserCoordinates] = useState<{ lat: number; lon: number } | null>(null);
-  const [filters, setFilters] = useState<any>(null);
   const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated } = useAuth();
   const { t } = useLanguage();
+  const [selectedLocation, setSelectedLocation] = useState(t?.location || 'Mein Standort');
+  const [userCoordinates, setUserCoordinates] = useState<{ lat: number; lon: number } | null>(null);
+  const [filters, setFilters] = useState<any>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
   const { toast } = useToast();

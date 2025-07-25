@@ -103,6 +103,28 @@ export interface Translations {
   previous: string;
   search: string;
   
+  // Auth validation messages
+  emailPlaceholder: string;
+  passwordPlaceholder: string;
+  invalidEmail: string;
+  passwordMinLength: string;
+  usernameRequired: string;
+  selectUserType: string;
+  acceptTermsRequired: string;
+  passwordsNoMatch: string;
+  
+  // Auth feedback messages  
+  loginSuccess: string;
+  loginFailed: string;
+  welcomeBack: string;
+  invalidCredentials: string;
+  
+  // Settings page
+  manageAccount: string;
+  settingSaved: string;
+  privacySettingUpdated: string;
+  settingNotSaved: string;
+  
   // Status & Nachrichten
   loading: string;
   error: string;
@@ -168,6 +190,28 @@ export const translations: Record<string, Translations> = {
     confirmPassword: 'Passwort bestätigen',
     username: 'Benutzername',
     forgotPassword: 'Passwort vergessen?',
+    
+    // Auth validation messages
+    emailPlaceholder: 'deine@email.com',
+    passwordPlaceholder: 'Dein Passwort',
+    invalidEmail: 'Ungültige E-Mail-Adresse',
+    passwordMinLength: 'Passwort muss mindestens 6 Zeichen lang sein',
+    usernameRequired: 'Benutzername ist erforderlich',
+    selectUserType: 'Bitte wähle deinen Kontotyp',
+    acceptTermsRequired: 'Du musst die Nutzungsbedingungen und Datenschutzerklärung akzeptieren',
+    passwordsNoMatch: 'Passwörter stimmen nicht überein',
+    
+    // Auth feedback messages  
+    loginSuccess: 'Anmeldung erfolgreich!',
+    loginFailed: 'Anmeldung fehlgeschlagen',
+    welcomeBack: 'Willkommen zurück',
+    invalidCredentials: 'Ungültige E-Mail oder Passwort',
+    
+    // Settings page
+    manageAccount: 'Verwalte dein Konto und deine Präferenzen',
+    settingSaved: 'Einstellung gespeichert',
+    privacySettingUpdated: 'Deine Privatsphäre-Einstellung wurde aktualisiert',
+    settingNotSaved: 'Einstellung konnte nicht gespeichert werden',
     
     // Registrierung
     iAm: 'Ich bin',
@@ -308,6 +352,28 @@ export const translations: Record<string, Translations> = {
     confirmPassword: 'Confirm Password',
     username: 'Username',
     forgotPassword: 'Forgot Password?',
+    
+    // Auth validation messages
+    emailPlaceholder: 'your@email.com',
+    passwordPlaceholder: 'Your password',
+    invalidEmail: 'Invalid email address',
+    passwordMinLength: 'Password must be at least 6 characters',
+    usernameRequired: 'Username is required',
+    selectUserType: 'Please select your account type',
+    acceptTermsRequired: 'You must accept the terms and privacy policy',
+    passwordsNoMatch: 'Passwords do not match',
+    
+    // Auth feedback messages  
+    loginSuccess: 'Login successful!',
+    loginFailed: 'Login failed',
+    welcomeBack: 'Welcome back',
+    invalidCredentials: 'Invalid email or password',
+    
+    // Settings page
+    manageAccount: 'Manage your account and preferences',
+    settingSaved: 'Setting saved',
+    privacySettingUpdated: 'Your privacy setting has been updated',
+    settingNotSaved: 'Setting could not be saved',
     
     // Registrierung
     iAm: 'I am',

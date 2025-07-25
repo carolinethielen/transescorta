@@ -27,31 +27,33 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Heart, Eye, EyeOff, Shield, Lock } from 'lucide-react';
 import { Link } from 'wouter';
+import { useLanguage } from '@/contexts/LanguageContext';
 
-const loginSchema = z.object({
-  email: z.string().email('Ungültige E-Mail-Adresse'),
-  password: z.string().min(6, 'Passwort muss mindestens 6 Zeichen lang sein'),
+// Dynamic schema creation with translations
+const createLoginSchema = (t: any) => z.object({
+  email: z.string().email(t?.invalidEmail || 'Ungültige E-Mail-Adresse'),
+  password: z.string().min(6, t?.passwordMinLength || 'Passwort muss mindestens 6 Zeichen lang sein'),
 });
 
-const registerSchema = z.object({
-  email: z.string().email('Ungültige E-Mail-Adresse'),
-  password: z.string().min(6, 'Passwort muss mindestens 6 Zeichen lang sein'),
+const createRegisterSchema = (t: any) => z.object({
+  email: z.string().email(t?.invalidEmail || 'Ungültige E-Mail-Adresse'),
+  password: z.string().min(6, t?.passwordMinLength || 'Passwort muss mindestens 6 Zeichen lang sein'),
   confirmPassword: z.string(),
-  firstName: z.string().min(1, 'Benutzername ist erforderlich'),
+  firstName: z.string().min(1, t?.usernameRequired || 'Benutzername ist erforderlich'),
   lastName: z.string().optional(),
   userType: z.enum(['trans', 'man'], {
-    required_error: 'Bitte wähle deinen Kontotyp',
+    required_error: t?.selectUserType || 'Bitte wähle deinen Kontotyp',
   }),
   acceptTerms: z.boolean().refine(val => val === true, {
-    message: 'Du musst die Nutzungsbedingungen und Datenschutzerklärung akzeptieren',
+    message: t?.acceptTermsRequired || 'Du musst die Nutzungsbedingungen und Datenschutzerklärung akzeptieren',
   }),
 }).refine((data) => data.password === data.confirmPassword, {
-  message: 'Passwörter stimmen nicht überein',
+  message: t?.passwordsNoMatch || 'Passwörter stimmen nicht überein',
   path: ['confirmPassword'],
 });
 
-type LoginForm = z.infer<typeof loginSchema>;
-type RegisterForm = z.infer<typeof registerSchema>;
+type LoginForm = z.infer<ReturnType<typeof createLoginSchema>>;
+type RegisterForm = z.infer<ReturnType<typeof createRegisterSchema>>;
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -63,9 +65,10 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const loginForm = useForm<LoginForm>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(createLoginSchema(t)),
     defaultValues: {
       email: '',
       password: '',
@@ -73,7 +76,7 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
   });
 
   const registerForm = useForm<RegisterForm>({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(createRegisterSchema(t)),
     defaultValues: {
       email: '',
       password: '',
@@ -130,16 +133,16 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
     },
     onSuccess: (data: any) => {
       toast({
-        title: "Anmeldung erfolgreich!",
-        description: `Willkommen zurück, ${data.user?.firstName || 'User'}!`,
+        title: t?.loginSuccess || "Anmeldung erfolgreich!",
+        description: `${t?.welcomeBack || 'Willkommen zurück'}, ${data.user?.firstName || 'User'}!`,
       });
       queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
       onClose();
     },
     onError: (error: any) => {
       toast({
-        title: "Anmeldung fehlgeschlagen",
-        description: error.message || "Ungültige E-Mail oder Passwort.",
+        title: t?.loginFailed || "Anmeldung fehlgeschlagen",
+        description: error.message || (t?.invalidCredentials || "Ungültige E-Mail oder Passwort."),
         variant: "destructive",
       });
     },
@@ -228,8 +231,8 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
 
         <Tabs defaultValue={defaultTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="login">Anmelden</TabsTrigger>
-            <TabsTrigger value="register">Registrieren</TabsTrigger>
+            <TabsTrigger value="login">{t?.login || 'Anmelden'}</TabsTrigger>
+            <TabsTrigger value="register">{t?.register || 'Registrieren'}</TabsTrigger>
           </TabsList>
 
           <TabsContent value="login" className="space-y-4">
@@ -258,12 +261,12 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Passwort *</FormLabel>
+                      <FormLabel>{t?.password || 'Passwort'} *</FormLabel>
                       <FormControl>
                         <div className="relative">
                           <Input
                             type={showPassword ? 'text' : 'password'}
-                            placeholder="Dein Passwort"
+                            placeholder={t?.passwordPlaceholder || "Dein Passwort"}
                             {...field}
                           />
                           <Button
@@ -291,7 +294,7 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
                   className="w-full bg-[#FF007F] hover:bg-[#FF007F]/90"
                   disabled={loginMutation.isPending}
                 >
-                  {loginMutation.isPending ? 'Anmelden...' : 'Anmelden'}
+                  {loginMutation.isPending ? (t?.loggingIn || 'Anmelden...') : (t?.login || 'Anmelden')}
                 </Button>
               </form>
             </Form>
@@ -305,7 +308,7 @@ export default function AuthModalNew({ isOpen, onClose, defaultTab = 'login' }: 
                   name="userType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Ich bin *</FormLabel>
+                      <FormLabel>{t?.iAm || 'Ich bin'} *</FormLabel>
                       <FormControl>
                         <div className="grid grid-cols-2 gap-4">
                           <div
