@@ -118,6 +118,17 @@ export interface Translations {
   transEscort: string;
   customer: string;
   upgrade: string;
+  
+  // Profile translations
+  profileNotAvailable: string;
+  
+  // Chat translations
+  typeMessagePlaceholder: string;
+  
+  // Profile Edit translations
+  backButton: string;
+  profileImages: string;
+  servicesOffered: string;
 }
 
 export const supportedLanguages = [
@@ -248,6 +259,17 @@ export const translations: Record<string, Translations> = {
     transEscort: 'Trans Escort',
     customer: 'Kunde',
     upgrade: 'Upgrade',
+    
+    // Profile translations
+    profileNotAvailable: 'Profil nicht verfügbar',
+    
+    // Chat translations
+    typeMessagePlaceholder: 'Nachricht schreiben...',
+    
+    // Profile Edit translations
+    backButton: 'Zurück',
+    profileImages: 'Profilbilder',
+    servicesOffered: 'Angebotene Services',
   },
   
   en: {
@@ -369,6 +391,17 @@ export const translations: Record<string, Translations> = {
     transEscort: 'Trans Escort',
     customer: 'Customer',
     upgrade: 'Upgrade',
+    
+    // Profile translations
+    profileNotAvailable: 'Profile Not Available',
+    
+    // Chat translations
+    typeMessagePlaceholder: 'Type a message...',
+    
+    // Profile Edit translations
+    backButton: 'Back',
+    profileImages: 'Profile Images',
+    servicesOffered: 'Services Offered',
   },
   
   pt: {
@@ -490,6 +523,17 @@ export const translations: Record<string, Translations> = {
     transEscort: 'Trans Escort',
     customer: 'Cliente',
     upgrade: 'Upgrade',
+    
+    // Profile translations
+    profileNotAvailable: 'Perfil Não Disponível',
+    
+    // Chat translations
+    typeMessagePlaceholder: 'Digite uma mensagem...',
+    
+    // Profile Edit translations
+    backButton: 'Voltar',
+    profileImages: 'Imagens do Perfil',
+    servicesOffered: 'Serviços Oferecidos',
   },
   
   es: {
@@ -611,6 +655,17 @@ export const translations: Record<string, Translations> = {
     transEscort: 'Trans Escort',
     customer: 'Cliente',
     upgrade: 'Actualizar',
+    
+    // Profile translations
+    profileNotAvailable: 'Perfil No Disponible',
+    
+    // Chat translations
+    typeMessagePlaceholder: 'Escribe un mensaje...',
+    
+    // Profile Edit translations
+    backButton: 'Atrás',
+    profileImages: 'Imágenes del Perfil',
+    servicesOffered: 'Servicios Ofrecidos',
   },
   
   fr: {
@@ -732,5 +787,16 @@ export const translations: Record<string, Translations> = {
     transEscort: 'Trans Escort',
     customer: 'Client',
     upgrade: 'Mise à Niveau',
+    
+    // Profile translations
+    profileNotAvailable: 'Profil Non Disponible',
+    
+    // Chat translations
+    typeMessagePlaceholder: 'Tapez un message...',
+    
+    // Profile Edit translations
+    backButton: 'Retour',
+    profileImages: 'Images du Profil',
+    servicesOffered: 'Services Offerts',
   },
 };

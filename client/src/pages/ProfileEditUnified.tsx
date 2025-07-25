@@ -18,6 +18,7 @@ import { updateProfileSchema, type UpdateProfile } from '@shared/schema';
 import { ProfileImageUploadNew } from '@/components/ProfileImageUploadNew';
 import { useProfile } from '@/hooks/useProfile';
 import { ArrowLeft, Save, MapPin, User, Heart, DollarSign, Camera } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 // Location detection using GPS
 const useLocationDetection = () => {
@@ -80,6 +81,7 @@ export default function ProfileEditUnified() {
   const [, navigate] = useLocation();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   const { location: gpsLocation, detectLocation, isDetecting } = useLocationDetection();
   
@@ -247,9 +249,9 @@ export default function ProfileEditUnified() {
         <div className="flex items-center justify-between mb-6">
           <Button variant="ghost" onClick={() => navigate('/my-profile')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Zurück
+            {t?.backButton || 'Zurück'}
           </Button>
-          <h1 className="text-2xl font-bold">Profil bearbeiten</h1>
+          <h1 className="text-2xl font-bold">{t?.editProfile || 'Profil bearbeiten'}</h1>
           <div className="w-20" />
         </div>
 
@@ -261,7 +263,7 @@ export default function ProfileEditUnified() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Camera className="w-5 h-5 text-[#FF007F]" />
-                    Profilbilder
+                    {t?.profileImages || 'Profilbilder'}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>

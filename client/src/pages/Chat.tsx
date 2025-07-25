@@ -262,7 +262,7 @@ export default function Chat() {
                   <ChatBubble
                     key={message.id}
                     message={message}
-                    isOwn={message.senderId === user?.id}
+                    currentUserId={user?.id || ''}
                     senderImage={selectedChatRoom?.otherUser.profileImageUrl || undefined}
                   />
                 ))}
@@ -276,7 +276,7 @@ export default function Chat() {
             <div className="flex items-center space-x-2">
               <Input
                 type="text"
-                placeholder={t?.typeMessage || "Nachricht schreiben..."}
+                placeholder={t?.typeMessagePlaceholder || "Nachricht schreiben..."}
                 value={messageText}
                 onChange={(e) => setMessageText(e.target.value)}
                 className="flex-1 rounded-full"
