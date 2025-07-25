@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -8,14 +9,15 @@ import { useToast } from '@/hooks/use-toast';
 
 export default function Premium() {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const { toast } = useToast();
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleUpgrade = () => {
     if (!user) {
       toast({
-        title: "Anmeldung erforderlich",
-        description: "Bitte melde dich an, um Premium zu aktivieren.",
+        title: t?.loginRequired || "Anmeldung erforderlich",
+        description: t?.loginRequiredDesc || "Bitte melde dich an, um Premium zu aktivieren.",
         variant: "destructive",
       });
       return;
@@ -31,8 +33,8 @@ export default function Premium() {
     window.open(verotelUrl, '_blank');
 
     toast({
-      title: "Weiterleitung zu Verotel",
-      description: "Du wirst zur sicheren Zahlungsseite weitergeleitet.",
+      title: t?.redirectingToVerotel || "Weiterleitung zu Verotel",
+      description: t?.redirectingToVerotelDesc || "Du wirst zur sicheren Zahlungsseite weitergeleitet.",
     });
 
     setIsProcessing(false);
@@ -163,10 +165,10 @@ export default function Premium() {
                     className="w-full md:w-auto px-8 bg-green-600 hover:bg-green-700"
                   >
                     <Crown className="w-5 h-5 mr-2" />
-                    Premium bereits aktiv
+                    {t?.premiumAlreadyActive || 'Premium bereits aktiv'}
                   </Button>
                   <p className="text-sm text-muted-foreground">
-                    Du genießt bereits alle Premium-Vorteile
+                    {t?.enjoyingPremiumBenefits || 'Du genießt bereits alle Premium-Vorteile'}
                   </p>
                 </div>
               ) : (
@@ -178,10 +180,10 @@ export default function Premium() {
                     className="w-full md:w-auto px-8 bg-gradient-to-r from-[#FF007F] to-purple-600 hover:from-[#E6006B] hover:to-purple-700 text-white"
                   >
                     <Crown className="w-5 h-5 mr-2" />
-                    {isProcessing ? "Weiterleitung..." : "Jetzt Premium werden"}
+                    {isProcessing ? (t?.redirecting || "Weiterleitung...") : (t?.becomePremiumNow || "Jetzt Premium werden")}
                   </Button>
                   <p className="text-sm text-muted-foreground">
-                    Sichere Zahlung über Verotel • SSL-verschlüsselt
+                    {t?.securePaymentVerotel || 'Sichere Zahlung über Verotel • SSL-verschlüsselt'}
                   </p>
                 </div>
               )}
@@ -197,10 +199,9 @@ export default function Premium() {
                 <Check className="w-3 h-3 text-white" />
               </div>
               <div className="space-y-1">
-                <h4 className="font-medium text-blue-900 dark:text-blue-100">Sicher & Diskret</h4>
+                <h4 className="font-medium text-blue-900 dark:text-blue-100">{t?.secureAndDiscreet || 'Sicher & Diskret'}</h4>
                 <p className="text-sm text-blue-700 dark:text-blue-200">
-                  Alle Zahlungen werden sicher über Verotel abgewickelt. Auf deiner Kreditkartenabrechnung 
-                  erscheint "Verotel" - nicht "TransEscorta".
+                  {t?.securePaymentDesc || 'Alle Zahlungen werden sicher über Verotel abgewickelt. Auf deiner Kreditkartenabrechnung erscheint "Verotel" - nicht "TransEscorta".'}
                 </p>
               </div>
             </div>
@@ -210,25 +211,25 @@ export default function Premium() {
         {/* FAQ */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Häufige Fragen</CardTitle>
+            <CardTitle className="text-lg">{t?.frequentlyAskedQuestions || 'Häufige Fragen'}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <h4 className="font-medium">Verlängert sich der Zugang automatisch?</h4>
+              <h4 className="font-medium">{t?.autoRenewalQuestion || 'Verlängert sich der Zugang automatisch?'}</h4>
               <p className="text-sm text-muted-foreground">
-                Nein, es handelt sich um eine einmalige Zahlung für 1 Monat. Keine automatische Verlängerung.
+                {t?.autoRenewalAnswer || 'Nein, es handelt sich um eine einmalige Zahlung für 1 Monat. Keine automatische Verlängerung.'}
               </p>
             </div>
             <div className="space-y-2">
-              <h4 className="font-medium">Welche Zahlungsmethoden werden akzeptiert?</h4>
+              <h4 className="font-medium">{t?.paymentMethodsQuestion || 'Welche Zahlungsmethoden werden akzeptiert?'}</h4>
               <p className="text-sm text-muted-foreground">
-                Kreditkarten (Visa, Mastercard), Debitkarten und weitere lokale Zahlungsmethoden über Verotel.
+                {t?.paymentMethodsAnswer || 'Kreditkarten (Visa, Mastercard), Debitkarten und weitere lokale Zahlungsmethoden über Verotel.'}
               </p>
             </div>
             <div className="space-y-2">
-              <h4 className="font-medium">Wie lange ist der Premium-Zugang gültig?</h4>
+              <h4 className="font-medium">{t?.premiumDurationQuestion || 'Wie lange ist der Premium-Zugang gültig?'}</h4>
               <p className="text-sm text-muted-foreground">
-                Der Premium-Zugang ist ab Aktivierung genau 1 Monat (30 Tage) gültig.
+                {t?.premiumDurationAnswer || 'Der Premium-Zugang ist ab Aktivierung genau 1 Monat (30 Tage) gültig.'}
               </p>
             </div>
           </CardContent>

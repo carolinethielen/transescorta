@@ -161,6 +161,24 @@ export interface Translations {
   premiumAccess: string;
   oneTimePaymentDesc: string;
   oneTime: string;
+  loginRequired: string;
+  loginRequiredDesc: string;
+  redirectingToVerotel: string;
+  redirectingToVerotelDesc: string;
+  premiumAlreadyActive: string;
+  enjoyingPremiumBenefits: string;
+  redirecting: string;
+  becomePremiumNow: string;
+  securePaymentVerotel: string;
+  secureAndDiscreet: string;
+  securePaymentDesc: string;
+  frequentlyAskedQuestions: string;
+  autoRenewalQuestion: string;
+  autoRenewalAnswer: string;
+  paymentMethodsQuestion: string;
+  paymentMethodsAnswer: string;
+  premiumDurationQuestion: string;
+  premiumDurationAnswer: string;
   
   // Status & Nachrichten
   loading: string;
@@ -286,6 +304,24 @@ export const translations: Record<string, Translations> = {
     premiumAccess: 'Premium Zugang',
     oneTimePaymentDesc: 'Einmalige Zahlung für 1 Monat Premium • Keine automatische Verlängerung',
     oneTime: 'einmalig',
+    loginRequired: 'Anmeldung erforderlich',
+    loginRequiredDesc: 'Bitte melde dich an, um Premium zu aktivieren',
+    redirectingToVerotel: 'Weiterleitung zu Verotel',
+    redirectingToVerotelDesc: 'Du wirst zur sicheren Zahlungsseite weitergeleitet',
+    premiumAlreadyActive: 'Premium bereits aktiv',
+    enjoyingPremiumBenefits: 'Du genießt bereits alle Premium-Vorteile',
+    redirecting: 'Weiterleitung...',
+    becomePremiumNow: 'Jetzt Premium werden',
+    securePaymentVerotel: 'Sichere Zahlung über Verotel • SSL-verschlüsselt',
+    secureAndDiscreet: 'Sicher & Diskret',
+    securePaymentDesc: 'Alle Zahlungen werden sicher über Verotel abgewickelt. Auf deiner Kreditkartenabrechnung erscheint "Verotel" - nicht "TransEscorta".',
+    frequentlyAskedQuestions: 'Häufige Fragen',
+    autoRenewalQuestion: 'Verlängert sich der Zugang automatisch?',
+    autoRenewalAnswer: 'Nein, es handelt sich um eine einmalige Zahlung für 1 Monat. Keine automatische Verlängerung.',
+    paymentMethodsQuestion: 'Welche Zahlungsmethoden werden akzeptiert?',
+    paymentMethodsAnswer: 'Kreditkarten (Visa, Mastercard), Debitkarten und weitere lokale Zahlungsmethoden über Verotel.',
+    premiumDurationQuestion: 'Wie lange ist der Premium-Zugang gültig?',
+    premiumDurationAnswer: 'Der Premium-Zugang ist ab Aktivierung genau 1 Monat (30 Tage) gültig.',
     
     // Registrierung
     iAm: 'Ich bin',
@@ -485,6 +521,24 @@ export const translations: Record<string, Translations> = {
     premiumAccess: 'Premium Access',
     oneTimePaymentDesc: 'One-time payment for 1 month Premium • No automatic renewal',
     oneTime: 'one-time',
+    loginRequired: 'Login required',
+    loginRequiredDesc: 'Please log in to activate Premium',
+    redirectingToVerotel: 'Redirecting to Verotel',
+    redirectingToVerotelDesc: 'You will be redirected to the secure payment page',
+    premiumAlreadyActive: 'Premium already active',
+    enjoyingPremiumBenefits: 'You are already enjoying all Premium benefits',
+    redirecting: 'Redirecting...',
+    becomePremiumNow: 'Become Premium now',
+    securePaymentVerotel: 'Secure payment via Verotel • SSL encrypted',
+    secureAndDiscreet: 'Secure & Discreet',
+    securePaymentDesc: 'All payments are processed securely via Verotel. "Verotel" will appear on your credit card statement - not "TransEscorta".',
+    frequentlyAskedQuestions: 'Frequently Asked Questions',
+    autoRenewalQuestion: 'Does access renew automatically?',
+    autoRenewalAnswer: 'No, this is a one-time payment for 1 month. No automatic renewal.',
+    paymentMethodsQuestion: 'What payment methods are accepted?',
+    paymentMethodsAnswer: 'Credit cards (Visa, Mastercard), debit cards and other local payment methods via Verotel.',
+    premiumDurationQuestion: 'How long is Premium access valid?',
+    premiumDurationAnswer: 'Premium access is valid for exactly 1 month (30 days) from activation.',
     
     // Registrierung
     iAm: 'I am',
@@ -744,6 +798,24 @@ export const translations: Record<string, Translations> = {
     premiumAccess: 'Acesso Premium',
     oneTimePaymentDesc: 'Pagamento único por 1 mês Premium • Sem renovação automática',
     oneTime: 'único',
+    loginRequired: 'Login necessário',
+    loginRequiredDesc: 'Por favor, faça login para ativar o Premium',
+    redirectingToVerotel: 'Redirecionando para Verotel',
+    redirectingToVerotelDesc: 'Você será redirecionado para a página de pagamento seguro',
+    premiumAlreadyActive: 'Premium já ativo',
+    enjoyingPremiumBenefits: 'Você já está aproveitando todos os benefícios Premium',
+    redirecting: 'Redirecionando...',
+    becomePremiumNow: 'Tornar-se Premium agora',
+    securePaymentVerotel: 'Pagamento seguro via Verotel • Criptografia SSL',
+    secureAndDiscreet: 'Seguro e Discreto',
+    securePaymentDesc: 'Todos os pagamentos são processados com segurança via Verotel. "Verotel" aparecerá na sua fatura do cartão de crédito - não "TransEscorta".',
+    frequentlyAskedQuestions: 'Perguntas Frequentes',
+    autoRenewalQuestion: 'O acesso renova automaticamente?',
+    autoRenewalAnswer: 'Não, este é um pagamento único por 1 mês. Sem renovação automática.',
+    paymentMethodsQuestion: 'Quais métodos de pagamento são aceitos?',
+    paymentMethodsAnswer: 'Cartões de crédito (Visa, Mastercard), cartões de débito e outros métodos de pagamento locais via Verotel.',
+    premiumDurationQuestion: 'Por quanto tempo o acesso Premium é válido?',
+    premiumDurationAnswer: 'O acesso Premium é válido por exatamente 1 mês (30 dias) a partir da ativação.',
     
     // Premium
     premium: 'Premium',
@@ -943,6 +1015,24 @@ export const translations: Record<string, Translations> = {
     premiumAccess: 'Acceso Premium',
     oneTimePaymentDesc: 'Pago único por 1 mes Premium • Sin renovación automática',
     oneTime: 'único',
+    loginRequired: 'Login requerido',
+    loginRequiredDesc: 'Por favor, inicia sesión para activar Premium',
+    redirectingToVerotel: 'Redirigiendo a Verotel',
+    redirectingToVerotelDesc: 'Serás redirigido a la página de pago seguro',
+    premiumAlreadyActive: 'Premium ya activo',
+    enjoyingPremiumBenefits: 'Ya estás disfrutando de todos los beneficios Premium',
+    redirecting: 'Redirigiendo...',
+    becomePremiumNow: 'Hacerse Premium ahora',
+    securePaymentVerotel: 'Pago seguro vía Verotel • Encriptación SSL',
+    secureAndDiscreet: 'Seguro y Discreto',
+    securePaymentDesc: 'Todos los pagos se procesan de forma segura vía Verotel. "Verotel" aparecerá en tu estado de cuenta - no "TransEscorta".',
+    frequentlyAskedQuestions: 'Preguntas Frecuentes',
+    autoRenewalQuestion: '¿El acceso se renueva automáticamente?',
+    autoRenewalAnswer: 'No, este es un pago único por 1 mes. Sin renovación automática.',
+    paymentMethodsQuestion: '¿Qué métodos de pago se aceptan?',
+    paymentMethodsAnswer: 'Tarjetas de crédito (Visa, Mastercard), tarjetas de débito y otros métodos de pago locales vía Verotel.',
+    premiumDurationQuestion: '¿Por cuánto tiempo es válido el acceso Premium?',
+    premiumDurationAnswer: 'El acceso Premium es válido por exactamente 1 mes (30 días) desde la activación.',
     
     // Premium
     premium: 'Premium',
@@ -1142,6 +1232,24 @@ export const translations: Record<string, Translations> = {
     premiumAccess: 'Accès Premium',
     oneTimePaymentDesc: 'Paiement unique pour 1 mois Premium • Pas de renouvellement automatique',
     oneTime: 'unique',
+    loginRequired: 'Connexion requise',
+    loginRequiredDesc: 'Veuillez vous connecter pour activer Premium',
+    redirectingToVerotel: 'Redirection vers Verotel',
+    redirectingToVerotelDesc: 'Vous serez redirigé vers la page de paiement sécurisé',
+    premiumAlreadyActive: 'Premium déjà actif',
+    enjoyingPremiumBenefits: 'Vous profitez déjà de tous les avantages Premium',
+    redirecting: 'Redirection...',
+    becomePremiumNow: 'Devenir Premium maintenant',
+    securePaymentVerotel: 'Paiement sécurisé via Verotel • Chiffrement SSL',
+    secureAndDiscreet: 'Sécurisé et Discret',
+    securePaymentDesc: 'Tous les paiements sont traités en toute sécurité via Verotel. "Verotel" apparaîtra sur votre relevé de carte de crédit - pas "TransEscorta".',
+    frequentlyAskedQuestions: 'Questions Fréquemment Posées',
+    autoRenewalQuestion: 'L\'accès se renouvelle-t-il automatiquement?',
+    autoRenewalAnswer: 'Non, il s\'agit d\'un paiement unique pour 1 mois. Pas de renouvellement automatique.',
+    paymentMethodsQuestion: 'Quelles méthodes de paiement sont acceptées?',
+    paymentMethodsAnswer: 'Cartes de crédit (Visa, Mastercard), cartes de débit et autres méthodes de paiement locales via Verotel.',
+    premiumDurationQuestion: 'Combien de temps l\'accès Premium est-il valide?',
+    premiumDurationAnswer: 'L\'accès Premium est valide pendant exactement 1 mois (30 jours) à partir de l\'activation.',
     
     // Premium
     premium: 'Premium',
