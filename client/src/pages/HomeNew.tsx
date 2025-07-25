@@ -247,39 +247,14 @@ export default function Home() {
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/95 dark:bg-gray-900/95 backdrop-blur border-b border-gray-200 dark:border-gray-700">
         <div className="container mx-auto px-4 py-3">
-          {/* Responsive Header Layout - Elements wrap to new line on small screens */}
-          <div className="flex flex-wrap items-center justify-between gap-2 min-h-[48px]">
-            {/* Logo - Always first and gets priority */}
-            <div className="flex-shrink-0">
-              <h1 className="text-2xl font-bold text-[#FF007F]">TransEscorta</h1>
-            </div>
-            
-            {/* Controls - Wrap to new line on small screens when overlapping with logo */}
-            <div className="flex items-center space-x-2 sm:space-x-3">
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl font-bold text-[#FF007F]">TransEscorta</h1>
+            <div className="flex items-center space-x-3">
               {/* Location Selector */}
-              <div className="hidden xs:block">
-                <LocationSelector
-                  selectedLocation={selectedLocation}
-                  onLocationChange={handleLocationChange}
-                />
-              </div>
-              
-              {/* Mobile location selector - smaller version */}
-              <div className="block xs:hidden">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-xs px-2 py-1 h-7"
-                  onClick={() => {
-                    // Simple mobile location toggle
-                    const newLocation = selectedLocation === 'Mein Standort' ? 'Berlin' : 'Mein Standort';
-                    setSelectedLocation(newLocation);
-                  }}
-                >
-                  <MapPin className="w-3 h-3 mr-1" />
-                  {selectedLocation.length > 10 ? selectedLocation.substring(0, 8) + '...' : selectedLocation}
-                </Button>
-              </div>
+              <LocationSelector
+                selectedLocation={selectedLocation}
+                onLocationChange={handleLocationChange}
+              />
               
               {/* Filter Button */}
               <FilterDialog onFiltersChange={setFilters} />
@@ -293,17 +268,6 @@ export default function Home() {
               >
                 {theme === 'dark' ? <Sun className="w-4 h-4 text-gray-600 dark:text-gray-400" /> : <Moon className="w-4 h-4 text-gray-600 dark:text-gray-400" />}
               </Button>
-            </div>
-          </div>
-          
-          {/* When controls are too wide, show in second row on very small screens */}
-          <div className="block xs:hidden">
-            {/* Full location selector for mobile - shows below logo */}
-            <div className="pt-2 border-t border-gray-200 dark:border-gray-700 mt-2">
-              <LocationSelector
-                selectedLocation={selectedLocation}
-                onLocationChange={handleLocationChange}
-              />
             </div>
           </div>
         </div>
