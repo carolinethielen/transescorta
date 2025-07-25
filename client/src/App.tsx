@@ -25,6 +25,7 @@ import PremiumDeclined from "@/pages/PremiumDeclined";
 import Terms from "@/pages/Terms";
 import Privacy from "@/pages/Privacy";
 import Legal from "@/pages/Legal";
+import Admin from "@/pages/Admin";
 import UserTypeSelection from "@/pages/UserTypeSelection";
 import ForgotPassword from "@/pages/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword";
@@ -69,6 +70,8 @@ function Router() {
           {/* Premium subscription only for trans escorts */}
           <Route path="/subscribe" component={Subscribe} />
           <Route path="/premium" component={Premium} />
+          {/* Admin route - only for admins */}
+          <Route path="/admin" component={Admin} />
         </>
       )}
       

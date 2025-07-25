@@ -18,6 +18,7 @@ import {
   Eye, EyeOff, UserX, Archive, MessageSquare,
   Volume2, VolumeX, Vibrate
 } from 'lucide-react';
+import AdminNavButton from '@/components/AdminNavButton';
 
 export default function Settings() {
   const { user, isLoading } = useAuth();
@@ -277,6 +278,9 @@ export default function Settings() {
                 <ChevronRight className="w-4 h-4" />
               </Button>
             )}
+
+            {/* Admin Button */}
+            <AdminNavButton />
           </CardContent>
         </Card>
 

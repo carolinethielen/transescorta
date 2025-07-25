@@ -20,9 +20,15 @@ import {
   type UpdateProfile,
   type CreateMatch,
   type SendMessage,
+  imageModeration,
+  adminLogs,
+  type ImageModeration,
+  type InsertImageModeration,
+  type AdminLog,
+  type InsertAdminLog,
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, and, or, desc, asc, sql } from "drizzle-orm";
+import { eq, and, or, desc, asc, sql, ne, inArray, like, count } from "drizzle-orm";
 import { nanoid } from "nanoid";
 
 export interface IStorage {
@@ -73,6 +79,29 @@ export interface IStorage {
   // Chat room operations
   getChatRooms(userId: string): Promise<(ChatRoom & { otherUser: User; lastMessage: Message | null; unreadCount: number })[]>;
   getOrCreateChatRoom(user1Id: string, user2Id: string): Promise<ChatRoom>;
+  
+  // Admin operations
+  getAllUsers(page: number, limit: number, search?: string, userType?: 'trans' | 'man'): Promise<{ users: User[]; total: number }>;
+  blockUser(adminId: string, userId: string, reason?: string): Promise<void>;
+  unblockUser(adminId: string, userId: string): Promise<void>;
+  activatePremium(adminId: string, userId: string, days: number): Promise<void>;
+  deactivatePremium(adminId: string, userId: string): Promise<void>;
+  updateUserAsAdmin(adminId: string, userId: string, updates: Partial<User>): Promise<User>;
+  deleteUserAsAdmin(adminId: string, userId: string, reason?: string): Promise<void>;
+  
+  // Image moderation operations
+  getPendingImages(page: number, limit: number): Promise<{ images: (ImageModeration & { user: User })[]; total: number }>;
+  approveImage(adminId: string, imageId: string): Promise<void>;
+  rejectImage(adminId: string, imageId: string, reason: string): Promise<void>;
+  createImageModeration(userId: string, imageUrl: string, imageType: 'profile' | 'gallery'): Promise<ImageModeration>;
+  
+  // Admin logs
+  logAdminAction(adminId: string, action: string, targetUserId?: string, details?: any, ipAddress?: string): Promise<void>;
+  getAdminLogs(page: number, limit: number, adminId?: string): Promise<{ logs: (AdminLog & { admin: User; targetUser?: User })[]; total: number }>;
+  
+  // Statistics
+  getUserStats(): Promise<{ totalUsers: number; transUsers: number; customers: number; premiumUsers: number; onlineUsers: number }>;
+  getRevenueStats(): Promise<{ totalRevenue: number; monthlyRevenue: number; premiumSubscriptions: number }>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -743,6 +772,237 @@ export class DatabaseStorage implements IStorage {
       .update(users)
       .set(updateData)
       .where(eq(users.id, userId));
+  }
+
+  // Admin operations
+  async getAllUsers(page: number, limit: number, search?: string, userType?: 'trans' | 'man'): Promise<{ users: User[]; total: number }> {
+    let query = db.select().from(users);
+    
+    const conditions = [];
+    if (search) {
+      conditions.push(
+        or(
+          like(users.firstName, `%${search}%`),
+          like(users.lastName, `%${search}%`),
+          like(users.email, `%${search}%`),
+          like(users.username, `%${search}%`)
+        )
+      );
+    }
+    
+    if (userType) {
+      conditions.push(eq(users.userType, userType));
+    }
+    
+    if (conditions.length > 0) {
+      query = query.where(and(...conditions));
+    }
+    
+    const offset = (page - 1) * limit;
+    const [userResults, totalResult] = await Promise.all([
+      query.limit(limit).offset(offset).orderBy(desc(users.createdAt)),
+      db.select({ count: count() }).from(users).where(conditions.length > 0 ? and(...conditions) : undefined)
+    ]);
+    
+    return {
+      users: userResults,
+      total: totalResult[0].count
+    };
+  }
+
+  async blockUser(adminId: string, userId: string, reason?: string): Promise<void> {
+    await db.update(users).set({ isBlocked: true }).where(eq(users.id, userId));
+    await this.logAdminAction(adminId, 'user_block', userId, { reason });
+  }
+
+  async unblockUser(adminId: string, userId: string): Promise<void> {
+    await db.update(users).set({ isBlocked: false }).where(eq(users.id, userId));
+    await this.logAdminAction(adminId, 'user_unblock', userId);
+  }
+
+  async activatePremium(adminId: string, userId: string, days: number): Promise<void> {
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + days);
+    
+    await db.update(users).set({ 
+      isPremium: true, 
+      premiumExpiresAt: expiresAt 
+    }).where(eq(users.id, userId));
+    
+    await this.logAdminAction(adminId, 'premium_activate', userId, { days });
+  }
+
+  async deactivatePremium(adminId: string, userId: string): Promise<void> {
+    await db.update(users).set({ 
+      isPremium: false, 
+      premiumExpiresAt: null 
+    }).where(eq(users.id, userId));
+    
+    await this.logAdminAction(adminId, 'premium_deactivate', userId);
+  }
+
+  async updateUserAsAdmin(adminId: string, userId: string, updates: Partial<User>): Promise<User> {
+    const [updatedUser] = await db.update(users)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(users.id, userId))
+      .returning();
+    
+    await this.logAdminAction(adminId, 'user_edit', userId, { updates });
+    return updatedUser;
+  }
+
+  async deleteUserAsAdmin(adminId: string, userId: string, reason?: string): Promise<void> {
+    await this.logAdminAction(adminId, 'user_delete', userId, { reason });
+    
+    await db.delete(messages).where(or(eq(messages.senderId, userId), eq(messages.receiverId, userId)));
+    await db.delete(matches).where(or(eq(matches.userId, userId), eq(matches.targetUserId, userId)));
+    await db.delete(privateAlbums).where(eq(privateAlbums.ownerId, userId));
+    await db.delete(imageModeration).where(eq(imageModeration.userId, userId));
+    
+    await db.delete(users).where(eq(users.id, userId));
+  }
+
+  async getPendingImages(page: number, limit: number): Promise<{ images: (ImageModeration & { user: User })[]; total: number }> {
+    const offset = (page - 1) * limit;
+    
+    const [imageResults, totalResult] = await Promise.all([
+      db.select({
+        id: imageModeration.id,
+        userId: imageModeration.userId,
+        imageUrl: imageModeration.imageUrl,
+        imageType: imageModeration.imageType,
+        status: imageModeration.status,
+        moderatedBy: imageModeration.moderatedBy,
+        moderatedAt: imageModeration.moderatedAt,
+        rejectionReason: imageModeration.rejectionReason,
+        createdAt: imageModeration.createdAt,
+        user: users
+      })
+      .from(imageModeration)
+      .innerJoin(users, eq(imageModeration.userId, users.id))
+      .where(eq(imageModeration.status, 'pending'))
+      .limit(limit)
+      .offset(offset)
+      .orderBy(desc(imageModeration.createdAt)),
+      
+      db.select({ count: count() })
+        .from(imageModeration)
+        .where(eq(imageModeration.status, 'pending'))
+    ]);
+    
+    return {
+      images: imageResults,
+      total: totalResult[0].count
+    };
+  }
+
+  async approveImage(adminId: string, imageId: string): Promise<void> {
+    await db.update(imageModeration).set({
+      status: 'approved',
+      moderatedBy: adminId,
+      moderatedAt: new Date()
+    }).where(eq(imageModeration.id, imageId));
+    
+    await this.logAdminAction(adminId, 'image_approve', undefined, { imageId });
+  }
+
+  async rejectImage(adminId: string, imageId: string, reason: string): Promise<void> {
+    const [moderationRecord] = await db.select().from(imageModeration).where(eq(imageModeration.id, imageId));
+    
+    await db.update(imageModeration).set({
+      status: 'rejected',
+      moderatedBy: adminId,
+      moderatedAt: new Date(),
+      rejectionReason: reason
+    }).where(eq(imageModeration.id, imageId));
+    
+    if (moderationRecord) {
+      const user = await this.getUser(moderationRecord.userId);
+      if (user) {
+        if (moderationRecord.imageType === 'profile' && user.profileImageUrl === moderationRecord.imageUrl) {
+          await db.update(users).set({ profileImageUrl: null }).where(eq(users.id, user.id));
+        } else if (moderationRecord.imageType === 'gallery' && user.profileImages?.includes(moderationRecord.imageUrl)) {
+          const updatedImages = user.profileImages.filter(img => img !== moderationRecord.imageUrl);
+          await db.update(users).set({ profileImages: updatedImages }).where(eq(users.id, user.id));
+        }
+      }
+    }
+    
+    await this.logAdminAction(adminId, 'image_reject', moderationRecord?.userId, { imageId, reason });
+  }
+
+  async createImageModeration(userId: string, imageUrl: string, imageType: 'profile' | 'gallery'): Promise<ImageModeration> {
+    const [moderation] = await db.insert(imageModeration).values({
+      id: nanoid(),
+      userId,
+      imageUrl,
+      imageType,
+      status: 'pending'
+    }).returning();
+    
+    return moderation;
+  }
+
+  async logAdminAction(adminId: string, action: string, targetUserId?: string, details?: any, ipAddress?: string): Promise<void> {
+    await db.insert(adminLogs).values({
+      id: nanoid(),
+      adminId,
+      action,
+      targetUserId,
+      details,
+      ipAddress
+    });
+  }
+
+  async getAdminLogs(page: number, limit: number, adminId?: string): Promise<{ logs: (AdminLog & { admin: User; targetUser?: User })[]; total: number }> {
+    const offset = (page - 1) * limit;
+    
+    const [logResults, totalResult] = await Promise.all([
+      db.select({
+        id: adminLogs.id,
+        adminId: adminLogs.adminId,
+        action: adminLogs.action,
+        targetUserId: adminLogs.targetUserId,
+        details: adminLogs.details,
+        ipAddress: adminLogs.ipAddress,
+        createdAt: adminLogs.createdAt,
+        admin: users
+      })
+      .from(adminLogs)
+      .innerJoin(users, eq(adminLogs.adminId, users.id))
+      .limit(limit).offset(offset).orderBy(desc(adminLogs.createdAt)),
+      
+      db.select({ count: count() }).from(adminLogs).where(adminId ? eq(adminLogs.adminId, adminId) : undefined)
+    ]);
+    
+    return {
+      logs: logResults,
+      total: totalResult[0].count
+    };
+  }
+
+  async getUserStats(): Promise<{ totalUsers: number; transUsers: number; customers: number; premiumUsers: number; onlineUsers: number }> {
+    const [stats] = await db.select({
+      totalUsers: count(),
+      transUsers: count(sql`CASE WHEN ${users.userType} = 'trans' THEN 1 END`),
+      customers: count(sql`CASE WHEN ${users.userType} = 'man' THEN 1 END`),
+      premiumUsers: count(sql`CASE WHEN ${users.isPremium} = true THEN 1 END`),
+      onlineUsers: count(sql`CASE WHEN ${users.isOnline} = true THEN 1 END`)
+    }).from(users);
+    
+    return stats;
+  }
+
+  async getRevenueStats(): Promise<{ totalRevenue: number; monthlyRevenue: number; premiumSubscriptions: number }> {
+    const [premiumCount] = await db.select({
+      count: count()
+    }).from(users).where(eq(users.isPremium, true));
+    
+    return {
+      totalRevenue: premiumCount.count * 9.99,
+      monthlyRevenue: premiumCount.count * 9.99,
+      premiumSubscriptions: premiumCount.count
+    };
   }
 
   async updateUserPremiumStatus(userId: string, isPremium: boolean): Promise<void> {

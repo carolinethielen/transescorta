@@ -43,6 +43,10 @@ export const users = pgTable("users", {
   stripeCustomerId: varchar("stripe_customer_id"),
   stripeSubscriptionId: varchar("stripe_subscription_id"),
   isPremium: boolean("is_premium").default(false),
+  premiumExpiresAt: timestamp("premium_expires_at"),
+  isAdmin: boolean("is_admin").default(false),
+  isBlocked: boolean("is_blocked").default(false),
+  lastLoginAt: timestamp("last_login_at"),
   
   // Profile fields
   age: integer("age"),
@@ -216,9 +220,37 @@ export const insertChatRoomSchema = createInsertSchema(chatRooms).omit({ id: tru
 export const insertPrivateAlbumSchema = createInsertSchema(privateAlbums).omit({ id: true, createdAt: true, updatedAt: true });
 export const insertAlbumAccessSchema = createInsertSchema(albumAccess).omit({ id: true, createdAt: true });
 
+// Image moderation table for admin dashboard
+export const imageModeration = pgTable("image_moderation", {
+  id: varchar("id").primaryKey().notNull(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  imageUrl: varchar("image_url").notNull(),
+  imageType: varchar("image_type").$type<'profile' | 'gallery'>().notNull(),
+  status: varchar("status").$type<'pending' | 'approved' | 'rejected'>().default('pending'),
+  moderatedBy: varchar("moderated_by").references(() => users.id),
+  moderatedAt: timestamp("moderated_at"),
+  rejectionReason: text("rejection_reason"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Admin logs table for tracking admin actions
+export const adminLogs = pgTable("admin_logs", {
+  id: varchar("id").primaryKey().notNull(),
+  adminId: varchar("admin_id").notNull().references(() => users.id),
+  action: varchar("action").notNull(), // 'user_edit', 'user_delete', 'premium_activate', 'image_moderate', etc.
+  targetUserId: varchar("target_user_id").references(() => users.id),
+  details: jsonb("details"), // Additional action details
+  ipAddress: varchar("ip_address"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Additional type exports
 export type InsertUser = typeof users.$inferInsert;
 export type UpsertUser = Partial<InsertUser> & { id?: string };
+export type ImageModeration = typeof imageModeration.$inferSelect;
+export type InsertImageModeration = typeof imageModeration.$inferInsert;
+export type AdminLog = typeof adminLogs.$inferSelect;
+export type InsertAdminLog = typeof adminLogs.$inferInsert;
 export type InsertMatch = typeof matches.$inferInsert;
 export type InsertMessage = typeof messages.$inferInsert;
 export type InsertChatRoom = typeof chatRooms.$inferInsert;

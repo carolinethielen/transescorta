@@ -9,6 +9,7 @@ import { z } from "zod";
 import { uploadProfile, uploadChat, uploadGeneral, uploadPrivateAlbum, cloudinary } from "./cloudinary";
 import { eq, and, desc } from "drizzle-orm";
 import { users, privateAlbums, albumAccess } from "@shared/schema";
+import adminRoutes from "./routes/admin";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
@@ -576,6 +577,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Failed to fetch accessible albums" });
     }
   });
+
+  // Admin routes
+  app.use('/api/admin', adminRoutes);
 
   // Create HTTP server
   const httpServer = createServer(app);
