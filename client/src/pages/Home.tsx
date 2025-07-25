@@ -132,9 +132,9 @@ export default function Home() {
   }
 
   return (
-    <div className="w-full h-full bg-background">
-      {/* Mobile Header */}
-      <header className="md:hidden flex justify-between items-center p-4 border-b border-border bg-background w-full">
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="flex justify-between items-center p-4 border-b border-border">
         <h1 className="text-2xl font-bold text-[#FF007F] font-['Poppins']">TransEscorta</h1>
         <div className="flex items-center space-x-3">
           {/* Location Badge */}
@@ -155,41 +155,10 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Desktop Header */}
-      <header className="hidden md:block mb-8">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-[#FF007F] to-purple-600 bg-clip-text text-transparent">
-              Entdecke TS-Escorts
-            </h1>
-            {location && (
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <MapPin className="w-6 h-6 text-[#FF007F]" />
-                <span className="text-lg">{location?.city || user?.location || 'Berlin'}</span>
-              </div>
-            )}
-          </div>
-          <div className="flex items-center gap-3">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              className="rounded-full"
-            >
-              {theme === 'dark' ? (
-                <Sun className="w-6 h-6" />
-              ) : (
-                <Moon className="w-6 h-6" />
-              )}
-            </Button>
-          </div>
-        </div>
-      </header>
-
       {/* Content */}
-      <main className="p-4 md:p-0 bg-background">
+      <main className="p-4">
         {/* View Toggle */}
-        <div className="flex mb-6 bg-muted rounded-lg p-1 max-w-xs md:max-w-sm">
+        <div className="flex mb-4 bg-muted rounded-lg p-1">
           <Button
             variant={viewMode === 'grid' ? 'default' : 'ghost'}
             size="sm"
@@ -203,7 +172,7 @@ export default function Home() {
             variant={viewMode === 'swipe' ? 'default' : 'ghost'}
             size="sm"
             onClick={() => setViewMode('swipe')}
-            className="flex-1 rounded-md md:hidden"
+            className="flex-1 rounded-md"
           >
             <Heart className="w-4 h-4 mr-2" />
             Swipe
@@ -225,7 +194,7 @@ export default function Home() {
           <>
             {/* Grid View */}
             {viewMode === 'grid' && (
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {users.map((user: any) => (
                   <ProfileCard
                     key={user.id}
@@ -236,9 +205,9 @@ export default function Home() {
               </div>
             )}
 
-            {/* Swipe View - Mobile Only */}
+            {/* Swipe View */}
             {viewMode === 'swipe' && (
-              <div className="md:hidden">
+              <div>
                 <div className="relative h-96 mx-auto max-w-sm mb-8">
                   {users[currentSwipeIndex] && (
                     <SwipeCard
@@ -277,19 +246,6 @@ export default function Home() {
                 </div>
               </div>
             )}
-
-            {/* Desktop: Always show grid, force grid view */}
-            <div className="hidden md:block">
-              <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
-                {users.map((user: any) => (
-                  <ProfileCard
-                    key={user.id}
-                    user={user}
-                    onClick={handleCardClick}
-                  />
-                ))}
-              </div>
-            </div>
           </>
         )}
       </main>
