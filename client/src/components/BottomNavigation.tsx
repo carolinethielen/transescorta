@@ -55,7 +55,7 @@ export function BottomNavigation() {
   };
 
   return (
-    <nav className="fixed bottom-0 left-1/2 transform -translate-x-1/2 max-w-md w-full bg-card border-t border-border z-50">
+    <nav className="fixed bottom-0 left-0 right-0 w-full bg-card border-t border-border z-50">
       {isAuthenticated && !isLoading ? (
         // Authenticated Navigation
         <div className="flex justify-around py-3">
@@ -87,7 +87,7 @@ export function BottomNavigation() {
         </div>
       ) : !isLoading ? (
         // Unauthenticated Navigation - Login/Register buttons
-        <div className="flex gap-3 py-3 px-4">
+        <div className="flex gap-3 py-3 px-4 w-full">
           <Button
             onClick={handleLogin}
             variant="outline"
@@ -95,7 +95,7 @@ export function BottomNavigation() {
             className="flex-1 border-[#FF007F] text-[#FF007F] hover:bg-[#FF007F] hover:text-white transition-colors"
           >
             <LogIn className="w-4 h-4 mr-2" />
-            Einloggen
+            {t?.login || 'Einloggen'}
           </Button>
           <Button
             onClick={handleRegister}
@@ -103,7 +103,7 @@ export function BottomNavigation() {
             className="flex-1 bg-[#FF007F] hover:bg-[#FF007F]/90 text-white transition-colors"
           >
             <UserPlus className="w-4 h-4 mr-2" />
-            Registrieren
+            {t?.register || 'Registrieren'}
           </Button>
         </div>
       ) : null}
