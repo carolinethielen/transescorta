@@ -211,10 +211,10 @@ export default function Settings() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-background">
+    <div className="w-screen h-screen bg-background">
       {/* Mobile Layout */}
-      <div className="md:hidden w-full bg-background p-4 pb-24">
-        <div className="max-w-md mx-auto space-y-6 bg-background">
+      <div className="md:hidden w-screen bg-background p-4 pb-24">
+        <div className="w-full space-y-6 bg-background">
           <h1 className="text-2xl font-bold text-foreground">Einstellungen</h1>
         
         {/* User Info Card */}
@@ -573,8 +573,8 @@ export default function Settings() {
       </div>
 
       {/* Desktop Layout */}
-      <div className="hidden md:block p-6">
-        <div className="max-w-4xl mx-auto">
+      <div className="hidden md:block p-6 w-full h-full bg-background">
+        <div className="w-full h-full bg-background">
           <h1 className="text-3xl font-bold text-foreground mb-8">Einstellungen</h1>
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

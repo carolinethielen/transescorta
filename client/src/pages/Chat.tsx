@@ -11,7 +11,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { isUnauthorizedError } from '@/lib/authUtils';
 import { apiRequest } from '@/lib/queryClient';
-import { Send, Phone, Video, ArrowLeft } from 'lucide-react';
+import { Send, Phone, Video, ArrowLeft, MessageCircle } from 'lucide-react';
 import { type User, type Message, type ChatRoom } from '@shared/schema';
 
 export default function Chat() {
@@ -136,14 +136,14 @@ export default function Chat() {
   }
 
   return (
-    <div className="w-full h-screen bg-background">
+    <div className="w-screen h-screen bg-background">
       {/* Mobile Layout */}
-      <div className="md:hidden flex flex-col h-full w-full bg-background">
+      <div className="md:hidden flex flex-col h-screen w-screen bg-background">
         {!selectedChat ? (
           // Chat List
-          <div className="flex-1 bg-background">
+          <div className="flex-1 bg-background w-full">
             {/* Header */}
-            <div className="p-4 border-b border-border bg-background">
+            <div className="p-4 border-b border-border bg-background w-full">
               <h2 className="text-xl font-bold">Nachrichten</h2>
             </div>
 
@@ -296,11 +296,11 @@ export default function Chat() {
       </div>
 
       {/* Desktop Layout - Two Panel */}
-      <div className="hidden md:flex h-full w-full bg-background">
+      <div className="hidden md:flex h-screen w-screen bg-background">
         {/* Left Panel - Chat List */}
-        <div className="w-1/3 border-r border-border flex flex-col bg-background">
+        <div className="w-1/3 border-r border-border flex flex-col bg-background h-full">
           {/* Header */}
-          <div className="p-6 border-b border-border bg-background">
+          <div className="p-6 border-b border-border bg-background w-full">
             <h1 className="text-2xl font-bold bg-gradient-to-r from-[#FF007F] to-purple-600 bg-clip-text text-transparent">
               Nachrichten
             </h1>
@@ -418,14 +418,28 @@ export default function Chat() {
                     <div className="animate-spin w-8 h-8 border-4 border-[#FF007F] border-t-transparent rounded-full" />
                   </div>
                 ) : (
-                  <div className="space-y-6">
+                  <div className="space-y-4">
                     {messages.map((message: any) => (
-                      <ChatMessage
+                      <div
                         key={message.id}
-                        message={message}
-                        currentUserId={user?.id || ''}
-                        senderImage={selectedChatRoom?.otherUser.profileImageUrl || undefined}
-                      />
+                        className={`flex ${message.senderId === user?.id ? 'justify-end' : 'justify-start'}`}
+                      >
+                        <div
+                          className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                            message.senderId === user?.id
+                              ? 'bg-[#FF007F] text-white'
+                              : 'bg-muted text-foreground'
+                          }`}
+                        >
+                          <p>{message.content}</p>
+                          <p className="text-xs opacity-70 mt-1">
+                            {new Date(message.createdAt).toLocaleTimeString('de-DE', {
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </p>
+                        </div>
+                      </div>
                     ))}
                     <div ref={messagesEndRef} />
                   </div>

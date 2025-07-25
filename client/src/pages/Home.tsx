@@ -132,9 +132,9 @@ export default function Home() {
   }
 
   return (
-    <div className="w-full bg-background">
+    <div className="w-full h-full bg-background">
       {/* Mobile Header */}
-      <header className="md:hidden flex justify-between items-center p-4 border-b border-border bg-background">
+      <header className="md:hidden flex justify-between items-center p-4 border-b border-border bg-background w-full">
         <h1 className="text-2xl font-bold text-[#FF007F] font-['Poppins']">TransEscorta</h1>
         <div className="flex items-center space-x-3">
           {/* Location Badge */}
