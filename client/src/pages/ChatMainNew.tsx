@@ -13,6 +13,7 @@ import { apiRequest } from '@/lib/queryClient';
 import { ArrowLeft, Send, MessageCircle, User2, Download, ExternalLink } from 'lucide-react';
 import { ChatInput } from '@/components/ChatInput';
 import { ChatBubble } from '@/components/ChatBubble';
+import { OnlineIndicator } from '@/components/OnlineIndicator';
 import type { Message, User, ChatRoom } from '@shared/schema';
 
 // Audio notification for new messages - WhatsApp-style tone
@@ -441,6 +442,7 @@ export default function ChatMainNew() {
                             {room.otherUser.firstName?.charAt(0) || '?'}
                           </AvatarFallback>
                         </Avatar>
+                        <OnlineIndicator isOnline={room.otherUser.isOnline} variant="dot" />
 
                       </div>
                       
@@ -450,8 +452,7 @@ export default function ChatMainNew() {
                             <h3 className="font-medium truncate">
                               {room.otherUser.firstName} {room.otherUser.lastName}
                             </h3>
-                            {/* Always show online status */}
-                            <div className="w-2 h-2 bg-green-500 rounded-full flex-shrink-0" />
+                            <OnlineIndicator isOnline={room.otherUser.isOnline} variant="dot" />
                           </div>
                           {room.lastMessage && room.lastMessage.createdAt && (
                             <span className="text-xs text-muted-foreground">
@@ -513,12 +514,14 @@ export default function ChatMainNew() {
                 <h3 className="font-medium">
                   {chatPartner?.firstName} {chatPartner?.lastName}
                 </h3>
-                {/* Always show online status */}
-                <div className="w-2 h-2 bg-green-500 rounded-full" />
+                <OnlineIndicator isOnline={chatPartner?.isOnline || false} variant="dot" />
               </div>
-              <p className="text-sm text-muted-foreground">
-                Online
-              </p>
+              <OnlineIndicator 
+                isOnline={chatPartner?.isOnline || false} 
+                lastSeen={chatPartner?.lastSeen} 
+                variant="text"
+                className="text-sm"
+              />
             </button>
           </div>
         </div>

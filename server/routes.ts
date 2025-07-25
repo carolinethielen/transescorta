@@ -467,6 +467,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Update online status route
+  app.post('/api/auth/online-status', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const { isOnline } = req.body;
+      
+      await storage.updateUserOnlineStatus(userId, isOnline);
+      
+      res.json({ success: true, isOnline });
+    } catch (error) {
+      console.error("Error updating online status:", error);
+      res.status(500).json({ message: "Failed to update online status" });
+    }
+  });
+
   // Update user type route
   app.post('/api/users/update-type', isAuthenticated, async (req: any, res) => {
     try {

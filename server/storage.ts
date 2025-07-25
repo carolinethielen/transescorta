@@ -410,18 +410,19 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
-  async updateUserOnlineStatus(userId: string, isOnline: boolean): Promise<User> {
-    const [user] = await db
+  async updateUserOnlineStatus(userId: string, isOnline: boolean): Promise<void> {
+    console.log(`Updating user ${userId} online status to:`, isOnline);
+    await db
       .update(users)
       .set({
         isOnline,
         lastSeen: new Date(),
         updatedAt: new Date(),
       })
-      .where(eq(users.id, userId))
-      .returning();
-    return user;
+      .where(eq(users.id, userId));
   }
+
+
 
   // Discovery operations
   async getNearbyUsers(userId: string, latitude: number, longitude: number, radius: number, limit: number): Promise<User[]> {
