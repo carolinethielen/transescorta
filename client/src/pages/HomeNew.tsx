@@ -103,11 +103,12 @@ export default function Home() {
   }) : escorts;
 
   // Organize escorts like hunqz.com: Premium first, then new, then by distance
-  const premiumEscorts = filteredEscorts.filter(escort => escort.isPremium);
-  const newEscorts = filteredEscorts.filter(escort => !escort.isPremium).sort((a, b) => 
-    new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
-  );
-  const nearbyEscorts = [...filteredEscorts].sort((a, b) => a.distance - b.distance);
+  // Apply limits: max 6 Premium, max 4 New, max 40 Nearby
+  const premiumEscorts = filteredEscorts.filter(escort => escort.isPremium).slice(0, 6);
+  const newEscorts = filteredEscorts.filter(escort => !escort.isPremium)
+    .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
+    .slice(0, 4);
+  const nearbyEscorts = [...filteredEscorts].sort((a, b) => a.distance - b.distance).slice(0, 40);
 
   const handleContactEscort = (escort: any) => {
     if (!isAuthenticated) {
@@ -222,12 +223,11 @@ export default function Home() {
     </div>
   );
 
-  const SectionHeader = ({ title, icon: Icon, count }: { title: string; icon: any; count: number }) => (
+  const SectionHeader = ({ title, icon: Icon }: { title: string; icon: any }) => (
     <div className="flex items-center justify-between mb-4">
       <div className="flex items-center gap-2">
         <Icon className="w-5 h-5 text-[#FF007F]" />
         <h2 className="text-xl font-semibold">{title}</h2>
-        <Badge variant="secondary">{count}</Badge>
       </div>
     </div>
   );
@@ -283,7 +283,7 @@ export default function Home() {
           {/* Premium Escorts Section */}
           {premiumEscorts.length > 0 && (
             <section className="mb-8">
-              <SectionHeader title="Premium Escorts" icon={Crown} count={premiumEscorts.length} />
+              <SectionHeader title="Premium Escorts" icon={Crown} />
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
                 {premiumEscorts.map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
@@ -295,9 +295,9 @@ export default function Home() {
           {/* New Escorts Section */}
           {newEscorts.length > 0 && (
             <section className="mb-8">
-              <SectionHeader title="Neue Escorts" icon={Star} count={newEscorts.slice(0, 10).length} />
+              <SectionHeader title="Neue Escorts" icon={Star} />
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
-                {newEscorts.slice(0, 10).map((escort) => (
+                {newEscorts.map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
                 ))}
               </div>
@@ -310,7 +310,6 @@ export default function Home() {
               <SectionHeader 
                 title={selectedLocation === 'Mein Standort' ? 'Escorts in der Nähe' : `Escorts in ${selectedLocation}`} 
                 icon={MapPin} 
-                count={nearbyEscorts.length} 
               />
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
                 {nearbyEscorts.map((escort) => (
@@ -327,14 +326,40 @@ export default function Home() {
           )}
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 mt-12">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex flex-col items-center space-y-4">
+            {/* Legal Links */}
+            <div className="flex flex-wrap justify-center gap-4 text-sm">
+              <a href="/terms" className="text-gray-600 dark:text-gray-400 hover:text-[#FF007F] transition-colors">
+                Terms of Use
+              </a>
+              <span className="text-gray-300 dark:text-gray-600">|</span>
+              <a href="/privacy" className="text-gray-600 dark:text-gray-400 hover:text-[#FF007F] transition-colors">
+                Privacy Statement
+              </a>
+              <span className="text-gray-300 dark:text-gray-600">|</span>
+              <a href="/legal" className="text-gray-600 dark:text-gray-400 hover:text-[#FF007F] transition-colors">
+                Legal Notice
+              </a>
+            </div>
+            
+            {/* Copyright */}
+            <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+              © {new Date().getFullYear()} TransEscorta.com - All rights reserved
+            </div>
+          </div>
+        </div>
+      </footer>
+
       {/* Auth Modal */}
       <AuthModalNew
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         defaultTab={authTab}
       />
-      
-      {/* Test Registration Component */}
 
     </div>
   );

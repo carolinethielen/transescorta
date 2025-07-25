@@ -22,6 +22,9 @@ import Subscribe from "@/pages/Subscribe";
 import Premium from "@/pages/Premium";
 import PremiumSuccess from "@/pages/PremiumSuccess";
 import PremiumDeclined from "@/pages/PremiumDeclined";
+import Terms from "@/pages/Terms";
+import Privacy from "@/pages/Privacy";
+import Legal from "@/pages/Legal";
 import UserTypeSelection from "@/pages/UserTypeSelection";
 import ForgotPassword from "@/pages/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword";
@@ -72,6 +75,11 @@ function Router() {
       {/* Premium success/failure routes - accessible without auth for payment callbacks */}
       <Route path="/premium-success" component={PremiumSuccess} />
       <Route path="/premium-declined" component={PremiumDeclined} />
+      
+      {/* Legal pages - accessible without auth */}
+      <Route path="/terms" component={Terms} />
+      <Route path="/privacy" component={Privacy} />
+      <Route path="/legal" component={Legal} />
       
       {/* Profile viewing - accessible but may require auth for contact */}
       <Route path="/profile/:userId" component={EscortProfile} />
