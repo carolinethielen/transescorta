@@ -238,8 +238,9 @@ export const adminLogs = pgTable("admin_logs", {
   id: varchar("id").primaryKey().notNull(),
   adminId: varchar("admin_id").notNull().references(() => users.id),
   action: varchar("action").notNull(), // 'user_edit', 'user_delete', 'premium_activate', 'image_moderate', etc.
-  targetUserId: varchar("target_user_id").references(() => users.id),
-  details: jsonb("details"), // Additional action details
+  targetId: varchar("target_id"),
+  targetType: varchar("target_type"), // 'user', 'image', etc.
+  details: text("details"), // Additional action details
   ipAddress: varchar("ip_address"),
   createdAt: timestamp("created_at").defaultNow(),
 });

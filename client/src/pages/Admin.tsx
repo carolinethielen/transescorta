@@ -652,12 +652,16 @@ export default function Admin() {
                       Abbrechen
                     </Button>
                     <Button 
-                      onClick={() => updateUserMutation.mutate({ 
-                        userId: selectedUser.id, 
-                        updates: selectedUser 
-                      })}
+                      onClick={() => {
+                        console.log("Saving user:", selectedUser);
+                        updateUserMutation.mutate({ 
+                          userId: selectedUser.id, 
+                          updates: selectedUser 
+                        });
+                      }}
+                      disabled={updateUserMutation.isPending}
                     >
-                      Speichern
+                      {updateUserMutation.isPending ? "Speichert..." : "Speichern"}
                     </Button>
                   </div>
                 </div>
