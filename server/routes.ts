@@ -1020,5 +1020,33 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Verotel webhook handler for premium subscription
+  app.post('/api/webhooks/verotel', express.raw({ type: 'application/x-www-form-urlencoded' }), async (req, res) => {
+    try {
+      const body = req.body.toString();
+      const params = new URLSearchParams(body);
+      
+      console.log('Verotel webhook received:', Object.fromEntries(params));
+      
+      const referenceID = params.get('referenceID'); // This should be the user ID
+      const status = params.get('status'); // 'approved' for successful payment
+      const type = params.get('type'); // 'purchase' or 'subscription'
+      
+      if (status === 'approved' && referenceID) {
+        // Activate premium for the user
+        await storage.updateUserPremiumStatus(referenceID, true);
+        console.log(`Premium activated for user: ${referenceID}`);
+        
+        res.status(200).send('OK');
+      } else {
+        console.log('Webhook ignored - not an approved payment or missing referenceID');
+        res.status(200).send('OK');
+      }
+    } catch (error) {
+      console.error('Verotel webhook error:', error);
+      res.status(500).json({ message: 'Webhook processing failed' });
+    }
+  });
+
   return httpServer;
 }

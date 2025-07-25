@@ -19,6 +19,9 @@ import EscortProfile from "@/pages/EscortProfile";
 import Explore from "@/pages/Explore";
 import Settings from "@/pages/Settings";
 import Subscribe from "@/pages/Subscribe";
+import Premium from "@/pages/Premium";
+import PremiumSuccess from "@/pages/PremiumSuccess";
+import PremiumDeclined from "@/pages/PremiumDeclined";
 import UserTypeSelection from "@/pages/UserTypeSelection";
 import ForgotPassword from "@/pages/ForgotPassword";
 import ResetPassword from "@/pages/ResetPassword";
@@ -62,8 +65,13 @@ function Router() {
           <Route path="/albums" component={PrivateAlbums} />
           {/* Premium subscription only for trans escorts */}
           <Route path="/subscribe" component={Subscribe} />
+          <Route path="/premium" component={Premium} />
         </>
       )}
+      
+      {/* Premium success/failure routes - accessible without auth for payment callbacks */}
+      <Route path="/premium-success" component={PremiumSuccess} />
+      <Route path="/premium-declined" component={PremiumDeclined} />
       
       {/* Profile viewing - accessible but may require auth for contact */}
       <Route path="/profile/:userId" component={EscortProfile} />

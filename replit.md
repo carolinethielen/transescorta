@@ -10,6 +10,15 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (January 2025)
 
+### Premium Subscription Integration - Verotel FlexPay (January 25, 2025)
+- **Verotel Payment Gateway**: Integrated secure €9.99/month premium subscription via Verotel FlexPay
+- **Premium Features**: Gold crown badge, separate "Premium Escorts" section on homepage, higher visibility
+- **Payment Flow**: New tab opens to Verotel, processes payment, returns with premium status activated
+- **Webhook Integration**: `/api/webhooks/verotel` handles payment confirmations and activates premium status
+- **Premium Pages**: `/premium`, `/premium-success`, `/premium-declined` for complete payment flow
+- **Navigation Update**: Premium tab added to trans escort navigation with crown icon
+- **Database Integration**: `isPremium` flag automatically updated via webhook postback
+
 ### Complete Brand Rebrand - TransConnect → TransEscorta (January 25, 2025)
 - **Brand Name Change**: All references changed from "TransConnect" to "TransEscorta" throughout application
 - **Title Update**: Changed to "TransEscorta - Premium TS-Escorts" for professional escort positioning

@@ -3,7 +3,7 @@ import { useLocation } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
 import AuthModalNew from '@/components/AuthModalNew';
-import { Home, MessageCircle, User, Search, Settings, LogIn, UserPlus, ImageIcon } from 'lucide-react';
+import { Home, MessageCircle, User, Search, Settings, LogIn, UserPlus, ImageIcon, Crown } from 'lucide-react';
 import { Link } from 'wouter';
 import { useQuery } from '@tanstack/react-query';
 
@@ -14,7 +14,7 @@ const getNavItems = (userType?: string) => {
       { path: '/', icon: Home, label: 'Home' },
       { path: '/chat', icon: MessageCircle, label: 'Chat' },
       { path: '/my-profile', icon: User, label: 'Profil' },
-      { path: '/albums', icon: ImageIcon, label: 'Alben' },
+      { path: '/premium', icon: Crown, label: 'Premium' },
       { path: '/settings', icon: Settings, label: 'Mehr' },
     ];
   } else {

@@ -43,6 +43,7 @@ export interface IStorage {
   verifyUserEmail(userId: string): Promise<void>;
   deleteUser(userId: string): Promise<void>;
   updateUserPrivacySettings(userId: string, settings: { showOnlineStatus?: boolean; showLastSeen?: boolean; allowMessagePreviews?: boolean }): Promise<void>;
+  updateUserPremiumStatus(userId: string, isPremium: boolean): Promise<void>;
   
   // Discovery operations
   getNearbyUsers(userId: string, latitude: number, longitude: number, radius: number, limit: number): Promise<User[]>;
@@ -741,6 +742,16 @@ export class DatabaseStorage implements IStorage {
     await db
       .update(users)
       .set(updateData)
+      .where(eq(users.id, userId));
+  }
+
+  async updateUserPremiumStatus(userId: string, isPremium: boolean): Promise<void> {
+    await db
+      .update(users)
+      .set({
+        isPremium,
+        updatedAt: new Date(),
+      })
       .where(eq(users.id, userId));
   }
 
