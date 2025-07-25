@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { 
   ArrowLeft, 
   MapPin, 
@@ -28,6 +29,7 @@ export default function ProfileDetail() {
   const [location, navigate] = useLocation();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   // Extract user ID from URL
@@ -62,8 +64,8 @@ export default function ProfileDetail() {
   const handleContactEscort = () => {
     if (!user) {
       toast({
-        title: "Anmeldung erforderlich",
-        description: "Du musst dich anmelden, um Escorts zu kontaktieren",
+        title: t?.loginRequired || "Anmeldung erforderlich",
+        description: t?.loginToContact || "Du musst dich anmelden, um Escorts zu kontaktieren",
         variant: "destructive",
       });
       setTimeout(() => {
@@ -73,8 +75,8 @@ export default function ProfileDetail() {
     }
     navigate(`/chat?user=${profileId}`);
     toast({
-      title: "Chat wird geöffnet",
-      description: `Du startest eine Unterhaltung mit ${profile?.firstName || 'diesem Escort'}`,
+      title: t?.openingChat || "Chat wird geöffnet",
+      description: `${t?.startingConversation || "Du startest eine Unterhaltung mit"} ${profile?.firstName || 'diesem Escort'}`,
     });
   };
 
@@ -94,8 +96,8 @@ export default function ProfileDetail() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">Profil nicht gefunden</h2>
-          <Button onClick={handleBack}>Zurück zur Übersicht</Button>
+          <h2 className="text-xl font-semibold mb-2">{t?.profileNotFound || "Profil nicht gefunden"}</h2>
+          <Button onClick={handleBack}>{t?.backToOverview || "Zurück zur Übersicht"}</Button>
         </div>
       </div>
     );
@@ -112,9 +114,9 @@ export default function ProfileDetail() {
           className="flex items-center gap-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          Zurück
+          {t?.back || "Zurück"}
         </Button>
-        <h1 className="text-lg font-semibold">Profil</h1>
+        <h1 className="text-lg font-semibold">{t?.profile || "Profil"}</h1>
         <div className="w-16" /> {/* Spacer for centering */}
       </div>
 
@@ -186,7 +188,7 @@ export default function ProfileDetail() {
                 <div className="absolute top-4 left-4">
                   <Badge className="bg-green-500 text-white flex items-center gap-1">
                     <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
-                    Online
+                    {t?.online || "Online"}
                   </Badge>
                 </div>
               )}
@@ -243,7 +245,7 @@ export default function ProfileDetail() {
         {profile.services && profile.services.length > 0 && (
           <Card>
             <CardContent className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Services</h3>
+              <h3 className="text-lg font-semibold mb-4">{t?.services || "Services"}</h3>
               <div className="flex flex-wrap gap-2">
                 {profile.services.map((service: string, index: number) => (
                   <Badge key={index} variant="secondary" className="bg-[#FF007F]/10 text-[#FF007F] border-[#FF007F]/20">

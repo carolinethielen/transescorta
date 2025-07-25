@@ -295,9 +295,9 @@ export default function ProfileEditUnified() {
                     name="firstName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Vorname *</FormLabel>
+                        <FormLabel>{t.firstName || "Vorname"} *</FormLabel>
                         <FormControl>
-                          <Input placeholder="Dein Vorname" {...field} />
+                          <Input placeholder={t.firstName || "Dein Vorname"} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -308,9 +308,9 @@ export default function ProfileEditUnified() {
                     name="lastName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Nachname</FormLabel>
+                        <FormLabel>{t.lastName || "Nachname"}</FormLabel>
                         <FormControl>
-                          <Input placeholder="Dein Nachname" {...field} />
+                          <Input placeholder={t.lastName || "Dein Nachname"} {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -323,7 +323,7 @@ export default function ProfileEditUnified() {
                   name="age"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Alter</FormLabel>
+                      <FormLabel>{t.age || "Alter"}</FormLabel>
                       <FormControl>
                         <Input 
                           type="number" 
@@ -375,7 +375,7 @@ export default function ProfileEditUnified() {
                     name="location"
                     render={({ field }) => (
                       <FormItem className="flex-1">
-                        <FormLabel>Stadt</FormLabel>
+                        <FormLabel>{t.location || "Stadt"}</FormLabel>
                         <FormControl>
                           <Input placeholder="Berlin, Deutschland" {...field} />
                         </FormControl>
@@ -421,7 +421,7 @@ export default function ProfileEditUnified() {
                       name="height"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Größe (cm)</FormLabel>
+                          <FormLabel>{t.height || "Größe"} (cm)</FormLabel>
                           <FormControl>
                             <Input 
                               type="number" 
@@ -441,7 +441,7 @@ export default function ProfileEditUnified() {
                       name="weight"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Gewicht (kg)</FormLabel>
+                          <FormLabel>{t.weight || "Gewicht"} (kg)</FormLabel>
                           <FormControl>
                             <Input 
                               type="number" 
@@ -464,7 +464,7 @@ export default function ProfileEditUnified() {
                       name="cockSize"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Schwanzgröße (cm)</FormLabel>
+                          <FormLabel>{t.cockSize || "Schwanzgröße"} (cm)</FormLabel>
                           <FormControl>
                             <Input 
                               type="number" 
@@ -484,7 +484,7 @@ export default function ProfileEditUnified() {
                       name="circumcision"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Beschneidung</FormLabel>
+                          <FormLabel>{t.circumcision || "Beschneidung"}</FormLabel>
                           <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
                               <SelectTrigger>
@@ -509,7 +509,7 @@ export default function ProfileEditUnified() {
                       name="position"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Position</FormLabel>
+                          <FormLabel>{t.position || "Position"}</FormLabel>
                           <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
                               <SelectTrigger>
@@ -531,7 +531,7 @@ export default function ProfileEditUnified() {
                       name="bodyType"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Körpertyp</FormLabel>
+                          <FormLabel>{t.bodyType || "Körpertyp"}</FormLabel>
                           <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
                               <SelectTrigger>
@@ -555,7 +555,7 @@ export default function ProfileEditUnified() {
                     name="ethnicity"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Ethnizität</FormLabel>
+                        <FormLabel>{t.ethnicity || "Ethnizität"}</FormLabel>
                         <Select onValueChange={field.onChange} value={field.value}>
                           <FormControl>
                             <SelectTrigger>
@@ -620,7 +620,7 @@ export default function ProfileEditUnified() {
                     name="hourlyRate"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Stundensatz (€)</FormLabel>
+                        <FormLabel>{t.pricePerHour || "Stundensatz"} (€)</FormLabel>
                         <FormControl>
                           <Input 
                             type="number" 

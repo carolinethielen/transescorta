@@ -301,9 +301,9 @@ export default function Settings() {
               <div className="flex items-center gap-3">
                 <Smartphone className="w-5 h-5 text-muted-foreground" />
                 <div>
-                  <div className="font-medium">Push-Benachrichtigungen</div>
+                  <div className="font-medium">{t?.pushNotifications || "Push-Benachrichtigungen"}</div>
                   <div className="text-sm text-muted-foreground">
-                    Erhalte Benachrichtigungen auf deinem Gerät
+                    {t?.receiveNotifications || "Erhalte Benachrichtigungen auf deinem Gerät"}
                   </div>
                 </div>
               </div>
@@ -320,7 +320,7 @@ export default function Settings() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       {settings.soundEnabled ? <Volume2 className="w-5 h-5 text-muted-foreground" /> : <VolumeX className="w-5 h-5 text-muted-foreground" />}
-                      <span className="font-medium">Ton</span>
+                      <span className="font-medium">{t?.soundNotifications || "Ton"}</span>
                     </div>
                     <Switch 
                       checked={settings.soundEnabled}
@@ -331,7 +331,7 @@ export default function Settings() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <Vibrate className="w-5 h-5 text-muted-foreground" />
-                      <span className="font-medium">Vibration</span>
+                      <span className="font-medium">{t?.vibrationNotifications || "Vibration"}</span>
                     </div>
                     <Switch 
                       checked={settings.vibrationEnabled}
@@ -392,7 +392,7 @@ export default function Settings() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Shield className="w-5 h-5" />
-              Privatsphäre & Sicherheit
+              {t?.privacy || "Privatsphäre"} & {t?.security || "Sicherheit"}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -400,7 +400,7 @@ export default function Settings() {
               <div className="flex items-center gap-3">
                 <Eye className="w-5 h-5 text-muted-foreground" />
                 <div>
-                  <div className="font-medium">Online-Status anzeigen</div>
+                  <div className="font-medium">{t?.showOnlineStatus || "Online-Status anzeigen"}</div>
                   <div className="text-sm text-muted-foreground">Anderen zeigen, wenn du online bist</div>
                 </div>
               </div>
@@ -428,7 +428,7 @@ export default function Settings() {
               <div className="flex items-center gap-3">
                 <MessageSquare className="w-5 h-5 text-muted-foreground" />
                 <div>
-                  <div className="font-medium">Nachrichten-Vorschau</div>
+                  <div className="font-medium">{t?.messagePreview || "Nachrichten-Vorschau"}</div>
                   <div className="text-sm text-muted-foreground">Nachrichteninhalt in Benachrichtigungen</div>
                 </div>
               </div>
@@ -496,7 +496,7 @@ export default function Settings() {
               className="w-full justify-between"
               onClick={() => setShowContactSupport(true)}
             >
-              <span>Support kontaktieren</span>
+              <span>{t?.contactSupport || "Support kontaktieren"}</span>
               <ChevronRight className="w-4 h-4" />
             </Button>
 
@@ -550,9 +550,9 @@ export default function Settings() {
             >
               <LogOut className="w-5 h-5" />
               <div>
-                <div className="font-medium">Abmelden</div>
+                <div className="font-medium">{t?.logout || "Abmelden"}</div>
                 <div className="text-sm text-muted-foreground">
-                  Dich von deinem Konto abmelden
+                  {t?.logoutDescription || "Dich von deinem Konto abmelden"}
                 </div>
               </div>
             </button>
