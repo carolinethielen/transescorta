@@ -16,6 +16,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { updateProfileSchema, type UpdateProfile } from '@shared/schema';
 import { ProfileImageUploadNew } from '@/components/ProfileImageUploadNew';
+import { useProfile } from '@/hooks/useProfile';
 import { ArrowLeft, Save, MapPin, User, Heart, DollarSign, Camera } from 'lucide-react';
 
 // Location detection using GPS
@@ -85,10 +86,8 @@ export default function ProfileEditUnified() {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
 
-  // Fetch current user data
-  const { data: currentUser, isLoading } = useQuery({
-    queryKey: ['/api/auth/user'],
-  });
+  // Use profile hook for consistent data
+  const { profile: currentUser, isLoading, refreshProfile } = useProfile();
 
   const form = useForm<UpdateProfile>({
     resolver: zodResolver(updateProfileSchema),
@@ -115,10 +114,12 @@ export default function ProfileEditUnified() {
     }
   });
 
-  // Update form when user data loads
+  // Update form when user data loads - with proper value handling
   useEffect(() => {
     if (currentUser) {
-      form.reset({
+      console.log('Updating form with user data:', currentUser);
+      
+      const formData = {
         firstName: currentUser.firstName || '',
         lastName: currentUser.lastName || '',
         age: currentUser.age || undefined,
@@ -138,9 +139,23 @@ export default function ProfileEditUnified() {
         services: currentUser.services || [],
         hourlyRate: currentUser.hourlyRate || undefined,
         interests: currentUser.interests || [],
-      });
+      };
+      
+      console.log('Form data being set:', formData);
+      
+      // Reset form with new data
+      form.reset(formData);
+      
+      // Set selected services and interests
       setSelectedServices(currentUser.services || []);
       setSelectedInterests(currentUser.interests || []);
+      
+      // Force update individual fields that might not be updating
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          form.setValue(key as any, value);
+        }
+      });
     }
   }, [currentUser, form]);
 
@@ -159,6 +174,8 @@ export default function ProfileEditUnified() {
 
   const updateProfileMutation = useMutation({
     mutationFn: async (data: UpdateProfile & { profileImageUrl?: string; profileImages?: string[] }) => {
+      console.log('Updating profile with data:', { ...data, services: selectedServices, interests: selectedInterests });
+      
       const response = await fetch('/api/auth/profile', {
         method: 'PUT',
         headers: {
@@ -179,8 +196,10 @@ export default function ProfileEditUnified() {
       
       return response.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
+    onSuccess: async () => {
+      // Refresh profile data using the hook
+      await refreshProfile();
+      
       toast({
         title: "Profil gespeichert",
         description: "Dein Profil wurde erfolgreich aktualisiert!",

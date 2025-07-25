@@ -136,22 +136,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      res.json({
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        userType: user.userType,
-        isEmailVerified: user.isEmailVerified,
-        profileImageUrl: user.profileImageUrl,
-        isPremium: user.isPremium,
-        age: user.age,
-        bio: user.bio,
-        location: user.location,
-        services: user.services,
-        hourlyRate: user.hourlyRate,
-        isOnline: user.isOnline,
-      });
+      // Remove sensitive data and ensure all fields are included
+      const { passwordHash, passwordResetToken, passwordResetExpires, emailVerificationToken, stripeCustomerId, stripeSubscriptionId, ...publicUser } = user;
+      
+      // Ensure all profile fields are included in response
+      const completeProfile = {
+        ...publicUser,
+        height: user.height || null,
+        weight: user.weight || null,
+        cockSize: user.cockSize || null,
+        circumcision: user.circumcision || null,
+        position: user.position || null,
+        bodyType: user.bodyType || null,
+        ethnicity: user.ethnicity || null,
+        profileImages: Array.isArray(user.profileImages) ? user.profileImages : [],
+        services: Array.isArray(user.services) ? user.services : [],
+        interests: Array.isArray(user.interests) ? user.interests : [],
+        latitude: user.latitude || null,
+        longitude: user.longitude || null,
+      };
+      
+      res.json(completeProfile);
     } catch (error) {
       console.error("Error fetching user:", error);
       res.status(500).json({ message: "Failed to fetch user" });
