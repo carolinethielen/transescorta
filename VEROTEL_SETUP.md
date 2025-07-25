@@ -1,6 +1,6 @@
 # Verotel FlexPay Setup Instructions
 
-## Verotel Configuration für TransEscorta Premium (€9.99 einmalig für 1 Monat)
+## Verotel Configuration für TransEscorta Premium-Zugang (€9.99 einmalig für 1 Monat)
 
 ### FlexPay Setup in Verotel Dashboard
 
@@ -37,8 +37,9 @@ https://secure.verotel.com/startorder?description=TransEscorta+Premium+Abo&price
 
 **So funktioniert es:**
 - Nutzer klickt "Premium werden" → statischer Verotel-Link öffnet sich
+- Einmalige Zahlung für 1 Monat Premium-Zugang (keine automatische Verlängerung)
 - Nach Zahlung → Verotel leitet automatisch zu den konfigurierten URLs weiter  
-- Postback webhook aktiviert Premium-Status automatisch
+- Postback webhook aktiviert Premium-Status für 1 Monat automatisch
 
 ## Wie Premium funktioniert:
 

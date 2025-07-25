@@ -84,7 +84,7 @@ export default function Premium() {
             </h1>
           </div>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Steigere deine Sichtbarkeit und erhalte mehr Anfragen mit unserem Premium Abo
+            Steigere deine Sichtbarkeit und erhalte mehr Anfragen mit unserem Premium-Zugang
           </p>
         </div>
 
@@ -126,7 +126,7 @@ export default function Premium() {
           <CardHeader className="text-center pb-4">
             <div className="flex items-center justify-center gap-2 mb-2">
               <Crown className="w-6 h-6 text-[#FF007F]" />
-              <CardTitle className="text-2xl">Premium Abo</CardTitle>
+              <CardTitle className="text-2xl">Premium Zugang</CardTitle>
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-center gap-1">
@@ -134,7 +134,7 @@ export default function Premium() {
                 <span className="text-muted-foreground">einmalig</span>
               </div>
               <CardDescription>
-                1 Monat Premium-Zugang • Sichere Zahlung über Verotel
+                Einmalige Zahlung für 1 Monat Premium • Keine automatische Verlängerung
               </CardDescription>
             </div>
           </CardHeader>
@@ -214,9 +214,9 @@ export default function Premium() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <h4 className="font-medium">Wie kann ich kündigen?</h4>
+              <h4 className="font-medium">Verlängert sich der Zugang automatisch?</h4>
               <p className="text-sm text-muted-foreground">
-                Du kannst jederzeit über dein Verotel-Konto oder durch Kontakt mit unserem Support kündigen.
+                Nein, es handelt sich um eine einmalige Zahlung für 1 Monat. Keine automatische Verlängerung.
               </p>
             </div>
             <div className="space-y-2">
@@ -226,9 +226,9 @@ export default function Premium() {
               </p>
             </div>
             <div className="space-y-2">
-              <h4 className="font-medium">Wann wird mein Premium-Status aktiviert?</h4>
+              <h4 className="font-medium">Wie lange ist der Premium-Zugang gültig?</h4>
               <p className="text-sm text-muted-foreground">
-                Sofort nach erfolgreicher Zahlung. Du erhältst eine Bestätigung per E-Mail.
+                Der Premium-Zugang ist ab Aktivierung genau 1 Monat (30 Tage) gültig.
               </p>
             </div>
           </CardContent>
