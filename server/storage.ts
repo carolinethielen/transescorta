@@ -982,6 +982,33 @@ export class DatabaseStorage implements IStorage {
   async deleteUserAsAdmin(adminId: string, userId: string, reason: string): Promise<void> {
     console.log("deleteUserAsAdmin called:", { adminId, userId, reason });
     
+    // Delete related data first to avoid foreign key constraints
+    try {
+      // Delete chat rooms
+      await db.delete(chatRooms).where(or(eq(chatRooms.user1Id, userId), eq(chatRooms.user2Id, userId)));
+    } catch (e) { console.log("No chat rooms to delete") }
+    
+    try {
+      // Delete messages
+      await db.delete(messages).where(or(eq(messages.senderId, userId), eq(messages.receiverId, userId)));
+    } catch (e) { console.log("No messages to delete") }
+    
+    try {
+      // Delete matches
+      await db.delete(matches).where(or(eq(matches.userId, userId), eq(matches.targetUserId, userId)));
+    } catch (e) { console.log("No matches to delete") }
+    
+    try {
+      // Delete private albums
+      await db.delete(privateAlbums).where(eq(privateAlbums.ownerId, userId));
+    } catch (e) { console.log("No albums to delete") }
+    
+    try {
+      // Delete image moderation
+      await db.delete(imageModeration).where(eq(imageModeration.userId, userId));  
+    } catch (e) { console.log("No image moderation to delete") }
+    
+    // Finally delete the user
     await db.delete(users).where(eq(users.id, userId));
     await this.logAdminAction(adminId, 'user_delete', userId, 'user', reason);
   }
