@@ -74,7 +74,13 @@ export function LanguageProvider({ children }: LanguageProviderProps) {
 export function useLanguage() {
   const context = useContext(LanguageContext);
   if (context === undefined) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
+    // Fallback for cases where context is not available
+    return {
+      language: 'de',
+      setLanguage: () => {},
+      t: translations.de,
+      availableLanguages: supportedLanguages,
+    };
   }
   return context;
 }
