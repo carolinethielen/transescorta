@@ -77,7 +77,8 @@ export default function Home() {
     
     return {
       ...escort,
-      username: escort.username || '',
+      firstName: escort.firstName || '',
+      lastName: escort.lastName || '',
       profileImageUrl: escort.profileImageUrl || '',
       location: escort.location || '',
       services: escort.services || [],
@@ -163,7 +164,7 @@ export default function Home() {
         {escort.profileImageUrl ? (
           <img
             src={escort.profileImageUrl}
-            alt={escort.username || 'Escort Profile'}
+            alt={escort.firstName || 'Escort Profile'}
             className="w-full h-full object-cover"
             onError={(e) => {
               // If image fails to load, show placeholder instead
@@ -206,7 +207,7 @@ export default function Home() {
       <div className="p-3">
         <div className="flex justify-between items-center">
           <h3 className="font-semibold text-lg text-gray-900 dark:text-white truncate">
-            {escort.username}
+            {escort.firstName}
           </h3>
           <span className="text-sm text-gray-500 dark:text-gray-400 font-medium">
             {escort.age}

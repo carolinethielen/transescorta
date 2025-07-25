@@ -84,7 +84,7 @@ export function EscortProfileView({
             <ImageGallery
               images={user.profileImages || []}
               mainImage={user.profileImageUrl || undefined}
-              userName={user.username || 'Escort'}
+              userName={user.firstName || 'Escort'}
             />
           </div>
 
@@ -93,7 +93,7 @@ export function EscortProfileView({
             {/* Basic Info */}
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-3xl font-bold">{user.username}</h1>
+                <h1 className="text-3xl font-bold">{user.firstName}</h1>
                 {user.age && (
                   <Badge variant="secondary" className="text-lg px-3 py-1">
                     {user.age}
