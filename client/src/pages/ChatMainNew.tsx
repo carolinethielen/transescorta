@@ -95,7 +95,7 @@ export default function ChatMainNew() {
   const selectedChatRoom = chatRooms.find(room => room.otherUser.id === selectedChatUserId);
   const chatPartner = selectedChatRoom?.otherUser;
 
-  // Send message mutation
+  // Send message mutation with optimistic updates
   const sendMessageMutation = useMutation({
     mutationFn: async ({ receiverId, content, messageType, imageFile, privateAlbumId }: { 
       receiverId: string; 
@@ -136,18 +136,45 @@ export default function ChatMainNew() {
         });
       }
     },
-    onSuccess: (newMessage) => {
+    onMutate: async ({ receiverId, content, messageType }) => {
       // Clear input immediately for instant feedback
       setMessageText('');
       
-      // Immediately update messages list with optimistic update
-      if (selectedChatUserId) {
+      // Optimistic update - add message immediately to UI
+      if (selectedChatUserId && user) {
+        const optimisticMessage = {
+          id: `temp-${Date.now()}`,
+          senderId: user.id,
+          receiverId,
+          content,
+          messageType: messageType || 'text',
+          createdAt: new Date(),
+          isRead: false,
+          imageUrl: null,
+          privateAlbumId: null,
+          privateAlbumAccessExpiresAt: null
+        };
+        
         queryClient.setQueryData(['/api/chat', selectedChatUserId, 'messages'], (oldMessages: any[] = []) => {
-          return [...oldMessages, newMessage];
+          return [...oldMessages, optimisticMessage];
         });
         
-        // Then refetch to ensure consistency
-        queryClient.invalidateQueries({ queryKey: ['/api/chat', selectedChatUserId, 'messages'] });
+        // Scroll to bottom immediately
+        setTimeout(scrollToBottom, 50);
+      }
+    },
+    onSuccess: (newMessage) => {
+      // Replace optimistic message with real one
+      if (selectedChatUserId) {
+        queryClient.setQueryData(['/api/chat', selectedChatUserId, 'messages'], (oldMessages: any[] = []) => {
+          // Remove temp message and add real one
+          const filtered = oldMessages.filter(m => !m.id.startsWith('temp-'));
+          const exists = filtered.find(m => m.id === newMessage.id);
+          if (!exists) {
+            return [...filtered, newMessage];
+          }
+          return filtered;
+        });
       }
       
       // Update chat rooms and unread count
@@ -155,9 +182,16 @@ export default function ChatMainNew() {
       queryClient.invalidateQueries({ queryKey: ['/api/chat/unread-count'] });
       
       // Auto-scroll immediately
-      setTimeout(scrollToBottom, 10);
+      setTimeout(scrollToBottom, 100);
     },
     onError: (error) => {
+      // Remove optimistic message on error
+      if (selectedChatUserId) {
+        queryClient.setQueryData(['/api/chat', selectedChatUserId, 'messages'], (oldMessages: any[] = []) => {
+          return oldMessages.filter(m => !m.id.startsWith('temp-'));
+        });
+      }
+      
       console.error('Send message error:', error);
       toast({
         title: "Fehler",
@@ -167,7 +201,7 @@ export default function ChatMainNew() {
     },
   });
 
-  // WebSocket connection
+  // WebSocket connection with selectedChatUserId dependency
   useEffect(() => {
     if (!user) return;
 
@@ -197,30 +231,33 @@ export default function ChatMainNew() {
             console.log('🔔 Real-time message received instantly:', data);
             
             // INSTANT update for current chat - no delay
-            if (selectedChatUserId && (data.senderId === selectedChatUserId || data.receiverId === selectedChatUserId)) {
+            if (selectedChatUserId && data.message && (data.message.senderId === selectedChatUserId || data.message.receiverId === selectedChatUserId)) {
+              console.log('💬 Updating current chat with new message:', data.message);
               // Immediate optimistic update
               queryClient.setQueryData(['/api/chat', selectedChatUserId, 'messages'], (oldMessages: any[] = []) => {
                 const exists = oldMessages.find(m => m.id === data.message.id);
                 if (!exists) {
                   const updatedMessages = [...oldMessages, data.message];
-                  console.log('💬 Message added to chat instantly');
+                  console.log('💬 Message added to chat instantly:', updatedMessages.length);
                   return updatedMessages;
                 }
                 return oldMessages;
               });
+              
+              // Force immediate scroll to bottom
+              setTimeout(() => {
+                scrollToBottom();
+              }, 100);
             }
             
-            // Update other data
+            // Always refresh rooms list for unread counts
             queryClient.invalidateQueries({ queryKey: ['/api/chat/rooms'] });
             queryClient.invalidateQueries({ queryKey: ['/api/chat/unread-count'] });
             
             // Play notification sound for received messages
-            if (data.senderId !== user.id) {
+            if (data.message.senderId !== user.id) {
               playNotificationSound();
             }
-            
-            // Scroll immediately
-            setTimeout(scrollToBottom, 50);
           }
         } catch (e) {
           console.error('WebSocket message parsing error:', e);
@@ -238,7 +275,7 @@ export default function ChatMainNew() {
     } catch (error) {
       console.error('WebSocket connection error:', error);
     }
-  }, [user, queryClient]);
+  }, [user, queryClient, selectedChatUserId]);
 
   // Auto-scroll to bottom only when needed
   const scrollToBottom = () => {
@@ -524,7 +561,7 @@ export default function ChatMainNew() {
                       key={message.id}
                       message={{
                         ...message,
-                        imageUrl: message.imageUrl || undefined,
+                        imageUrl: message.imageUrl ?? undefined,
                         privateAlbum: message.privateAlbumId ? {
                           id: message.privateAlbumId,
                           title: 'Privates Album',

@@ -340,12 +340,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Send to both sender and receiver for instant updates
       const notifyUsers = [senderId, messageData.receiverId];
       let broadcastCount = 0;
-      for (const [socket, userId] of connectedClients.entries()) {
+      connectedClients.forEach((userId, socket) => {
         if (notifyUsers.includes(userId) && socket.readyState === WebSocket.OPEN) {
           socket.send(broadcastData);
           broadcastCount++;
         }
-      }
+      });
       console.log(`Message broadcasted to ${broadcastCount} connected clients`);
       
       res.json(message);
@@ -437,7 +437,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Broadcast to WebSocket clients
       const notifyUsers = [senderId, receiverId];
-      for (const [socket, userId] of connectedClients.entries()) {
+      connectedClients.forEach((userId, socket) => {
         if (notifyUsers.includes(userId) && socket.readyState === WebSocket.OPEN) {
           socket.send(JSON.stringify({
             type: 'new_message',
@@ -446,7 +446,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
             receiverId: receiverId
           }));
         }
-      }
+      });
       
       res.json(message);
     } catch (error) {
@@ -570,7 +570,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
 
           // Send to receiver if online
-          for (const [socket, socketUserId] of connectedClients.entries()) {
+          connectedClients.forEach((socketUserId, socket) => {
             if (socketUserId === message.receiverId && socket.readyState === WebSocket.OPEN) {
               socket.send(JSON.stringify({
                 type: 'new_message',
@@ -578,7 +578,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 senderId: userId
               }));
             }
-          }
+          });
 
           // Confirm to sender
           ws.send(JSON.stringify({
