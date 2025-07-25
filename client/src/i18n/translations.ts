@@ -180,6 +180,34 @@ export interface Translations {
   premiumDurationQuestion: string;
   premiumDurationAnswer: string;
   
+  // Location & Navigation
+  myLocation: string;
+  useCurrentLocation: string;
+  detectingLocation: string;
+  newEscorts: string;
+  escortsIn: string;
+  premiumEscorts: string;
+  standardEscorts: string;
+  noEscortsFound: string;
+  
+  // Search & Filter
+  searchAndFilter: string;
+  filterActive: string;
+  clearFilters: string;
+  applyFilters: string;
+  
+  // Home Page specific
+  nearbyEscorts: string;
+  
+  // Location Selector
+  selectLocation: string;
+  activatingGPS: string;
+  popularCities: string;
+  allCities: string;
+  selectCity: string;
+  enterOtherCity: string;
+  enterCityOrZip: string;
+  
   // Status & Nachrichten
   loading: string;
   error: string;
@@ -323,6 +351,34 @@ export const translations: Record<string, Translations> = {
     premiumDurationQuestion: 'Wie lange ist der Premium-Zugang gültig?',
     premiumDurationAnswer: 'Der Premium-Zugang ist ab Aktivierung genau 1 Monat (30 Tage) gültig.',
     
+    // Location & Navigation
+    myLocation: 'Mein Standort',
+    useCurrentLocation: 'Aktuellen Standort verwenden',
+    detectingLocation: 'Standort wird ermittelt...',
+    newEscorts: 'Neue Escorts',
+    escortsIn: 'Escorts in',
+    premiumEscorts: 'Premium Escorts',
+    standardEscorts: 'Standard Escorts',
+    noEscortsFound: 'Keine Escorts gefunden',
+    
+    // Search & Filter
+    searchAndFilter: 'Suche & Filter',
+    filterActive: 'Filter aktiv',
+    clearFilters: 'Filter löschen',
+    applyFilters: 'Filter anwenden',
+    
+    // Home Page specific
+    nearbyEscorts: 'Escorts in der Nähe',
+    
+    // Location Selector
+    selectLocation: 'Standort auswählen',
+    activatingGPS: 'GPS wird aktiviert...',
+    popularCities: 'Beliebte Städte',
+    allCities: 'Alle Städte',
+    selectCity: 'Stadt auswählen...',
+    enterOtherCity: 'Andere Stadt eingeben',
+    enterCityOrZip: 'Stadt oder Postleitzahl eingeben...',
+    
     // Registrierung
     iAm: 'Ich bin',
     transEscort: 'Trans Escort',
@@ -366,8 +422,6 @@ export const translations: Record<string, Translations> = {
     
     // Filter
     filter: 'Filter',
-    clearFilters: 'Filter löschen',
-    applyFilters: 'Filter anwenden',
     ageRange: 'Altersbereich',
     priceRange: 'Preisbereich',
     cockSizeRange: 'Schwanzgröße',
@@ -387,8 +441,6 @@ export const translations: Record<string, Translations> = {
     premium: 'Premium',
     upgradePremium: 'Premium Upgrade',
     premiumActive: 'Premium aktiv',
-    premiumEscorts: 'Premium Escorts',
-    newEscorts: 'Neue Escorts',
     nearbyEscorts: 'Escorts in der Nähe',
     
     // Aktionen
@@ -540,6 +592,34 @@ export const translations: Record<string, Translations> = {
     premiumDurationQuestion: 'How long is Premium access valid?',
     premiumDurationAnswer: 'Premium access is valid for exactly 1 month (30 days) from activation.',
     
+    // Location & Navigation
+    myLocation: 'My Location',
+    useCurrentLocation: 'Use Current Location',
+    detectingLocation: 'Detecting location...',
+    newEscorts: 'New Escorts',
+    escortsIn: 'Escorts in',
+    premiumEscorts: 'Premium Escorts',
+    standardEscorts: 'Standard Escorts',
+    noEscortsFound: 'No escorts found',
+    
+    // Search & Filter
+    searchAndFilter: 'Search & Filter',
+    filterActive: 'Filter active',
+    clearFilters: 'Clear filters',
+    applyFilters: 'Apply filters',
+    
+    // Home Page specific
+    nearbyEscorts: 'Nearby Escorts',
+    
+    // Location Selector
+    selectLocation: 'Select Location',
+    activatingGPS: 'Activating GPS...',
+    popularCities: 'Popular Cities',
+    allCities: 'All Cities',
+    selectCity: 'Select city...',
+    enterOtherCity: 'Enter other city',
+    enterCityOrZip: 'Enter city or zip code...',
+    
     // Registrierung
     iAm: 'I am',
     transEscort: 'Trans Escort',
@@ -583,8 +663,6 @@ export const translations: Record<string, Translations> = {
     
     // Filter
     filter: 'Filter',
-    clearFilters: 'Clear Filters',
-    applyFilters: 'Apply Filters',
     ageRange: 'Age Range',
     priceRange: 'Price Range',
     cockSizeRange: 'Size Range',
@@ -604,8 +682,7 @@ export const translations: Record<string, Translations> = {
     premium: 'Premium',
     upgradePremium: 'Upgrade Premium',
     premiumActive: 'Premium Active',
-    premiumEscorts: 'Premium Escorts',
-    newEscorts: 'New Escorts',
+
     nearbyEscorts: 'Nearby Escorts',
     
     // Aktionen
@@ -816,6 +893,34 @@ export const translations: Record<string, Translations> = {
     paymentMethodsAnswer: 'Cartões de crédito (Visa, Mastercard), cartões de débito e outros métodos de pagamento locais via Verotel.',
     premiumDurationQuestion: 'Por quanto tempo o acesso Premium é válido?',
     premiumDurationAnswer: 'O acesso Premium é válido por exatamente 1 mês (30 dias) a partir da ativação.',
+    
+    // Location & Navigation
+    myLocation: 'Minha Localização',
+    useCurrentLocation: 'Usar Localização Atual',
+    detectingLocation: 'Detectando localização...',
+    newEscorts: 'Novas Escorts',
+    escortsIn: 'Escorts em',
+    premiumEscorts: 'Escorts Premium',
+    standardEscorts: 'Escorts Padrão',
+    noEscortsFound: 'Nenhuma escort encontrada',
+    
+    // Search & Filter
+    searchAndFilter: 'Busca e Filtro',
+    filterActive: 'Filtro ativo',
+    clearFilters: 'Limpar filtros',
+    applyFilters: 'Aplicar filtros',
+    
+    // Home Page specific
+    nearbyEscorts: 'Escorts Próximas',
+    
+    // Location Selector
+    selectLocation: 'Selecionar Localização',
+    activatingGPS: 'Ativando GPS...',
+    popularCities: 'Cidades Populares',
+    allCities: 'Todas as Cidades',
+    selectCity: 'Selecionar cidade...',
+    enterOtherCity: 'Inserir outra cidade',
+    enterCityOrZip: 'Inserir cidade ou código postal...',
     
     // Premium
     premium: 'Premium',
@@ -1034,6 +1139,34 @@ export const translations: Record<string, Translations> = {
     premiumDurationQuestion: '¿Por cuánto tiempo es válido el acceso Premium?',
     premiumDurationAnswer: 'El acceso Premium es válido por exactamente 1 mes (30 días) desde la activación.',
     
+    // Location & Navigation
+    myLocation: 'Mi Ubicación',
+    useCurrentLocation: 'Usar Ubicación Actual',
+    detectingLocation: 'Detectando ubicación...',
+    newEscorts: 'Nuevas Escorts',
+    escortsIn: 'Escorts en',
+    premiumEscorts: 'Escorts Premium',
+    standardEscorts: 'Escorts Estándar',
+    noEscortsFound: 'No se encontraron escorts',
+    
+    // Search & Filter
+    searchAndFilter: 'Búsqueda y Filtro',
+    filterActive: 'Filtro activo',
+    clearFilters: 'Limpiar filtros',
+    applyFilters: 'Aplicar filtros',
+    
+    // Home Page specific
+    nearbyEscorts: 'Escorts Cercanas',
+    
+    // Location Selector
+    selectLocation: 'Seleccionar Ubicación',
+    activatingGPS: 'Activando GPS...',
+    popularCities: 'Ciudades Populares',
+    allCities: 'Todas las Ciudades',
+    selectCity: 'Seleccionar ciudad...',
+    enterOtherCity: 'Ingresar otra ciudad',
+    enterCityOrZip: 'Ingresar ciudad o código postal...',
+    
     // Premium
     premium: 'Premium',
     upgradePremium: 'Actualizar Premium',
@@ -1250,6 +1383,34 @@ export const translations: Record<string, Translations> = {
     paymentMethodsAnswer: 'Cartes de crédit (Visa, Mastercard), cartes de débit et autres méthodes de paiement locales via Verotel.',
     premiumDurationQuestion: 'Combien de temps l\'accès Premium est-il valide?',
     premiumDurationAnswer: 'L\'accès Premium est valide pendant exactement 1 mois (30 jours) à partir de l\'activation.',
+    
+    // Location & Navigation
+    myLocation: 'Ma Position',
+    useCurrentLocation: 'Utiliser Position Actuelle',
+    detectingLocation: 'Détection de la position...',
+    newEscorts: 'Nouvelles Escorts',
+    escortsIn: 'Escorts à',
+    premiumEscorts: 'Escorts Premium',
+    standardEscorts: 'Escorts Standard',
+    noEscortsFound: 'Aucune escort trouvée',
+    
+    // Search & Filter
+    searchAndFilter: 'Recherche et Filtre',
+    filterActive: 'Filtre actif',
+    clearFilters: 'Effacer les filtres',
+    applyFilters: 'Appliquer les filtres',
+    
+    // Home Page specific
+    nearbyEscorts: 'Escorts Proches',
+    
+    // Location Selector
+    selectLocation: 'Sélectionner Position',
+    activatingGPS: 'Activation GPS...',
+    popularCities: 'Villes Populaires',
+    allCities: 'Toutes les Villes',
+    selectCity: 'Sélectionner ville...',
+    enterOtherCity: 'Saisir autre ville',
+    enterCityOrZip: 'Saisir ville ou code postal...',
     
     // Premium
     premium: 'Premium',

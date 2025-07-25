@@ -5,6 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { MapPin, Navigation, Search } from 'lucide-react';
 import { useGeolocation } from '@/hooks/useGeolocation';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface LocationSelectorProps {
   selectedLocation: string;
@@ -15,6 +16,7 @@ export function LocationSelector({ selectedLocation, onLocationChange }: Locatio
   const [isOpen, setIsOpen] = useState(false);
   const [customLocation, setCustomLocation] = useState('');
   const { coordinates, isLoading: gpsLoading, getCurrentLocation } = useGeolocation();
+  const { t } = useLanguage();
 
   // Major German cities
   const majorCities = [
@@ -38,7 +40,7 @@ export function LocationSelector({ selectedLocation, onLocationChange }: Locatio
   const handleUseCurrentLocation = () => {
     getCurrentLocation();
     // Pass a special flag to indicate GPS location is being used
-    onLocationChange('Aktuellen Standort verwenden');
+    onLocationChange(t?.useCurrentLocation || 'Aktuellen Standort verwenden');
     setIsOpen(false);
   };
 
@@ -70,7 +72,7 @@ export function LocationSelector({ selectedLocation, onLocationChange }: Locatio
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Standort auswählen</DialogTitle>
+          <DialogTitle>{t?.selectLocation || 'Standort auswählen'}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           {/* Current Location */}
@@ -80,12 +82,12 @@ export function LocationSelector({ selectedLocation, onLocationChange }: Locatio
             className="w-full justify-start bg-[#FF007F] hover:bg-[#FF007F]/90"
           >
             <Navigation className="w-4 h-4 mr-2" />
-            {gpsLoading ? 'Standort wird ermittelt...' : 'Aktuellen Standort verwenden'}
+            {gpsLoading ? (t?.detectingLocation || 'Standort wird ermittelt...') : (t?.useCurrentLocation || 'Aktuellen Standort verwenden')}
           </Button>
 
           {/* Major Cities */}
           <div>
-            <h4 className="text-sm font-medium mb-2">Beliebte Städte</h4>
+            <h4 className="text-sm font-medium mb-2">{t?.popularCities || 'Beliebte Städte'}</h4>
             <div className="grid grid-cols-2 gap-2">
               {majorCities.slice(0, 8).map((city) => (
                 <Button
@@ -103,10 +105,10 @@ export function LocationSelector({ selectedLocation, onLocationChange }: Locatio
 
           {/* All Cities Dropdown */}
           <div>
-            <h4 className="text-sm font-medium mb-2">Alle Städte</h4>
+            <h4 className="text-sm font-medium mb-2">{t?.allCities || 'Alle Städte'}</h4>
             <Select onValueChange={handleCitySelect}>
               <SelectTrigger>
-                <SelectValue placeholder="Stadt auswählen..." />
+                <SelectValue placeholder={t?.selectCity || "Stadt auswählen..."} />
               </SelectTrigger>
               <SelectContent>
                 {majorCities.map((city) => (
@@ -120,10 +122,10 @@ export function LocationSelector({ selectedLocation, onLocationChange }: Locatio
 
           {/* Custom Location */}
           <div>
-            <h4 className="text-sm font-medium mb-2">Andere Stadt eingeben</h4>
+            <h4 className="text-sm font-medium mb-2">{t?.enterOtherCity || 'Andere Stadt eingeben'}</h4>
             <div className="flex gap-2">
               <Input
-                placeholder="Stadt oder Postleitzahl eingeben..."
+                placeholder={t?.enterCityOrZip || "Stadt oder Postleitzahl eingeben..."}
                 value={customLocation}
                 onChange={(e) => setCustomLocation(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleCustomLocation()}

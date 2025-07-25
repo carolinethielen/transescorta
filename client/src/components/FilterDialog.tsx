@@ -6,6 +6,7 @@ import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Filter, X } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface FilterDialogProps {
   onFiltersChange: (filters: any) => void;
@@ -13,6 +14,7 @@ interface FilterDialogProps {
 
 export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useLanguage();
   const [filters, setFilters] = useState({
     ageRange: [18, 50],
     priceRange: [50, 500],

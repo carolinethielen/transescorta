@@ -34,7 +34,7 @@ export default function Home() {
   const { theme, toggleTheme } = useTheme();
   const { user, isAuthenticated } = useAuth();
   const { t } = useLanguage();
-  const [selectedLocation, setSelectedLocation] = useState(t?.location || 'Mein Standort');
+  const [selectedLocation, setSelectedLocation] = useState(t?.myLocation || 'Mein Standort');
   const [userCoordinates, setUserCoordinates] = useState<{ lat: number; lon: number } | null>(null);
   const [filters, setFilters] = useState<any>(null);
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -50,7 +50,7 @@ export default function Home() {
       setUserCoordinates({ lat: coordinates.latitude, lon: coordinates.longitude });
       
       // Always update location to show detected city when GPS is used
-      if (selectedLocation === 'Mein Standort' || selectedLocation === 'Aktuellen Standort verwenden' || selectedLocation === 'Standort wird ermittelt...') {
+      if (selectedLocation === (t?.myLocation || 'Mein Standort') || selectedLocation === (t?.useCurrentLocation || 'Aktuellen Standort verwenden') || selectedLocation === (t?.detectingLocation || 'Standort wird ermittelt...')) {
         setSelectedLocation(currentCity);
       }
     }
@@ -128,14 +128,14 @@ export default function Home() {
     console.log('HomeNew - Location changed to:', location, 'with coordinates:', coordinates);
     
     // If "Aktuellen Standort verwenden" was clicked, use GPS location
-    if (location === 'Aktuellen Standort verwenden' && currentCity) {
+    if ((location === (t?.useCurrentLocation || 'Aktuellen Standort verwenden')) && currentCity) {
       setSelectedLocation(currentCity);
       if (coordinates) {
         setUserCoordinates(coordinates);
       }
-    } else if (location === 'Aktuellen Standort verwenden' && !currentCity) {
+    } else if ((location === (t?.useCurrentLocation || 'Aktuellen Standort verwenden')) && !currentCity) {
       // GPS is being used but city not detected yet
-      setSelectedLocation('Standort wird ermittelt...');
+      setSelectedLocation(t?.detectingLocation || 'Standort wird ermittelt...');
       if (coordinates) {
         setUserCoordinates(coordinates);
       }
@@ -280,14 +280,14 @@ export default function Home() {
         <div className="container mx-auto px-4 py-6">
           {locationLoading && (
             <div className="text-center py-4">
-              <p className="text-sm text-gray-600 dark:text-gray-400">Standort wird ermittelt...</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{t?.detectingLocation || 'Standort wird ermittelt...'}</p>
             </div>
           )}
           
           {/* Premium Escorts Section */}
           {premiumEscorts.length > 0 && (
             <section className="mb-8">
-              <SectionHeader title="Premium Escorts" icon={Crown} />
+              <SectionHeader title={t?.premiumEscorts || "Premium Escorts"} icon={Crown} />
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
                 {premiumEscorts.map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
@@ -299,7 +299,7 @@ export default function Home() {
           {/* New Escorts Section */}
           {newEscorts.length > 0 && (
             <section className="mb-8">
-              <SectionHeader title="Neue Escorts" icon={Star} />
+              <SectionHeader title={t?.newEscorts || "Neue Escorts"} icon={Star} />
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
                 {newEscorts.map((escort) => (
                   <EscortCard key={escort.id} escort={escort} />
@@ -312,7 +312,7 @@ export default function Home() {
           {nearbyEscorts.length > 0 && (
             <section className="mb-8">
               <SectionHeader 
-                title={selectedLocation === 'Mein Standort' ? 'Escorts in der Nähe' : `Escorts in ${selectedLocation}`} 
+                title={selectedLocation === (t?.myLocation || 'Mein Standort') ? (t?.nearbyEscorts || 'Escorts in der Nähe') : `${t?.escortsIn || 'Escorts in'} ${selectedLocation}`} 
                 icon={MapPin} 
               />
               <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-5">
@@ -325,7 +325,7 @@ export default function Home() {
 
           {escorts.length === 0 && !isLoading && (
             <div className="text-center py-12">
-              <p className="text-gray-600 dark:text-gray-400">Keine Escorts in dieser Region verfügbar.</p>
+              <p className="text-gray-600 dark:text-gray-400">{t?.noEscortsFound || 'Keine Escorts in dieser Region verfügbar.'}</p>
             </div>
           )}
         </div>
