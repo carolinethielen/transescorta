@@ -28,8 +28,7 @@ export const users = pgTable("users", {
   id: varchar("id").primaryKey().notNull(),
   email: varchar("email").unique().notNull(),
   passwordHash: varchar("password_hash").notNull(),
-  firstName: varchar("first_name"),
-  lastName: varchar("last_name"),
+  username: varchar("username"),
   profileImageUrl: varchar("profile_image_url"),
   
   // Authentication fields
@@ -127,8 +126,7 @@ export const albumAccess = pgTable("album_access", {
 export const registerUserSchema = createInsertSchema(users, {
   email: z.string().email("Ungültige E-Mail-Adresse"),
   passwordHash: z.string().min(8, "Passwort muss mindestens 8 Zeichen lang sein"),
-  firstName: z.string().min(1, "Benutzername ist erforderlich"),
-  lastName: z.string().optional(),
+  username: z.string().min(1, "Benutzername ist erforderlich"),
   userType: z.enum(['trans', 'man'], { required_error: "Benutzertyp ist erforderlich" }),
 }).omit({ id: true, createdAt: true, updatedAt: true, isEmailVerified: true, lastSeen: true });
 
@@ -152,8 +150,7 @@ export const verifyEmailSchema = z.object({
 
 // Profile update schema for both user types
 export const updateProfileSchema = z.object({
-  firstName: z.string().min(1, "Vorname ist erforderlich").optional(),
-  lastName: z.string().optional(),
+  username: z.string().min(1, "Benutzername ist erforderlich").optional(),
   age: z.number().min(18, "Mindestens 18 Jahre").max(100, "Maximal 100 Jahre").optional(),
   bio: z.string().max(500, "Bio darf maximal 500 Zeichen lang sein").optional(),
   location: z.string().min(1, "Standort ist erforderlich").optional(),

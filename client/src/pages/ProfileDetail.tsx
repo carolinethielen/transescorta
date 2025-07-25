@@ -74,7 +74,7 @@ export default function ProfileDetail() {
     navigate(`/chat?user=${profileId}`);
     toast({
       title: "Chat wird geöffnet",
-      description: `Du startest eine Unterhaltung mit ${profile?.firstName || 'diesem Escort'}`,
+      description: `Du startest eine Unterhaltung mit ${profile?.username || 'diesem Escort'}`,
     });
   };
 
@@ -198,7 +198,7 @@ export default function ProfileDetail() {
         <Card>
           <CardContent className="p-6">
             <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold mb-2">{profile.firstName} {profile.lastName}</h2>
+              <h2 className="text-2xl font-bold mb-2">{profile.username}</h2>
               <div className="flex items-center justify-center gap-4 text-muted-foreground mb-4">
                 <div className="flex items-center gap-1">
                   <User className="w-4 h-4" />

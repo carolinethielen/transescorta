@@ -92,8 +92,7 @@ export default function ProfileEditUnified() {
   const form = useForm<UpdateProfile>({
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {
-      firstName: '',
-      lastName: '',
+      username: '',
       age: undefined,
       bio: '',
       location: '',
@@ -120,8 +119,7 @@ export default function ProfileEditUnified() {
       console.log('Updating form with user data:', currentUser);
       
       const formData = {
-        firstName: currentUser.firstName || '',
-        lastName: currentUser.lastName || '',
+        username: currentUser.username || '',
         age: currentUser.age || undefined,
         bio: currentUser.bio || '',
         location: currentUser.location || '',
@@ -287,34 +285,19 @@ export default function ProfileEditUnified() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="firstName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Vorname *</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Dein Vorname" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="lastName"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nachname</FormLabel>
-                        <FormControl>
-                          <Input placeholder="Dein Nachname" {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Benutzername *</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Dein Benutzername" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 <FormField
                   control={form.control}

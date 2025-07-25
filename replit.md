@@ -10,6 +10,16 @@ Preferred communication style: Simple, everyday language.
 
 ## Recent Changes (January 2025)
 
+### Username System Implementation (January 25, 2025)
+- **Schema Refactoring**: Replaced firstName/lastName fields with single "username" field across entire system
+- **Database Migration**: Updated PostgreSQL schema to use "username" column instead of separate name fields  
+- **Frontend Updates**: Modified all profile forms, display components, and views to use username
+- **Demo Data Updated**: All demo trans-escort profiles now use single usernames (Lena, Maya, Zara, etc.)
+- **Profile Editing**: ProfileEditUnified.tsx simplified to show single username field instead of first/last name
+- **Display Consistency**: EscortProfileView, ProfileDetail, and HomeNew all show username consistently
+
+## Recent Changes (January 2025)
+
 ### Complete Brand Rebrand - TransConnect → TransEscorta (January 25, 2025)
 - **Brand Name Change**: All references changed from "TransConnect" to "TransEscorta" throughout application
 - **Title Update**: Changed to "TransEscorta - Premium TS-Escorts" for professional escort positioning
