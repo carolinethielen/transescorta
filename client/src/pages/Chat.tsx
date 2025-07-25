@@ -136,28 +136,28 @@ export default function Chat() {
   }
 
   return (
-    <div className="h-screen bg-background">
+    <div className="w-full h-screen bg-background">
       {/* Mobile Layout */}
-      <div className="md:hidden flex flex-col h-full">
+      <div className="md:hidden flex flex-col h-full w-full bg-background">
         {!selectedChat ? (
           // Chat List
-          <div className="flex-1">
+          <div className="flex-1 bg-background">
             {/* Header */}
-            <div className="p-4 border-b border-border">
+            <div className="p-4 border-b border-border bg-background">
               <h2 className="text-xl font-bold">Nachrichten</h2>
             </div>
 
             {/* Chat Rooms */}
-            <div className="flex-1">
+            <div className="flex-1 bg-background">
               {chatRooms.length === 0 ? (
-                <div className="p-8 text-center">
+                <div className="p-8 text-center bg-background">
                   <p className="text-muted-foreground">Noch keine Nachrichten</p>
                 </div>
               ) : (
                 chatRooms.map((room: any) => (
                   <div
                     key={room.id}
-                    className="flex items-center space-x-3 p-3 hover:bg-muted cursor-pointer border-b border-border/50"
+                    className="flex items-center space-x-3 p-3 hover:bg-muted cursor-pointer border-b border-border/50 bg-background"
                     onClick={() => setSelectedChat(room.otherUser.id)}
                   >
                     <div className="relative">
@@ -296,20 +296,20 @@ export default function Chat() {
       </div>
 
       {/* Desktop Layout - Two Panel */}
-      <div className="hidden md:flex h-full">
+      <div className="hidden md:flex h-full w-full bg-background">
         {/* Left Panel - Chat List */}
-        <div className="w-1/3 border-r border-border flex flex-col">
+        <div className="w-1/3 border-r border-border flex flex-col bg-background">
           {/* Header */}
-          <div className="p-6 border-b border-border">
+          <div className="p-6 border-b border-border bg-background">
             <h1 className="text-2xl font-bold bg-gradient-to-r from-[#FF007F] to-purple-600 bg-clip-text text-transparent">
               Nachrichten
             </h1>
           </div>
 
           {/* Chat Rooms */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto bg-background">
             {chatRooms.length === 0 ? (
-              <div className="p-8 text-center">
+              <div className="p-8 text-center bg-background">
                 <p className="text-muted-foreground">Noch keine Nachrichten</p>
                 <p className="text-sm text-muted-foreground mt-2">
                   Starte ein Gespräch, indem du jemanden likest!
@@ -320,7 +320,7 @@ export default function Chat() {
                 <div
                   key={room.id}
                   className={`flex items-center space-x-4 p-4 hover:bg-muted cursor-pointer border-b border-border/50 transition-colors ${
-                    selectedChat === room.otherUser.id ? 'bg-[#FF007F]/10 border-l-4 border-l-[#FF007F]' : ''
+                    selectedChat === room.otherUser.id ? 'bg-[#FF007F]/10 border-l-4 border-l-[#FF007F]' : 'bg-background'
                   }`}
                   onClick={() => setSelectedChat(room.otherUser.id)}
                 >
@@ -373,11 +373,11 @@ export default function Chat() {
         </div>
 
         {/* Right Panel - Active Chat */}
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col bg-background">
           {selectedChat ? (
             <>
               {/* Chat Header */}
-              <div className="flex items-center justify-between p-6 bg-card border-b border-border">
+              <div className="flex items-center justify-between p-6 bg-background border-b border-border">
                 <div className="flex items-center space-x-4">
                   {selectedChatRoom?.otherUser.profileImageUrl ? (
                     <img 
@@ -412,7 +412,7 @@ export default function Chat() {
               </div>
 
               {/* Messages */}
-              <ScrollArea className="flex-1 p-6">
+              <ScrollArea className="flex-1 p-6 bg-background">
                 {messagesLoading ? (
                   <div className="flex justify-center py-8">
                     <div className="animate-spin w-8 h-8 border-4 border-[#FF007F] border-t-transparent rounded-full" />
@@ -433,7 +433,7 @@ export default function Chat() {
               </ScrollArea>
 
               {/* Message Input */}
-              <form onSubmit={handleSendMessage} className="p-6 bg-card border-t border-border">
+              <form onSubmit={handleSendMessage} className="p-6 bg-background border-t border-border">
                 <div className="flex items-center space-x-4">
                   <Input
                     type="text"
@@ -455,7 +455,7 @@ export default function Chat() {
             </>
           ) : (
             // No Chat Selected
-            <div className="flex-1 flex items-center justify-center">
+            <div className="flex-1 flex items-center justify-center bg-background">
               <div className="text-center">
                 <div className="w-20 h-20 bg-gradient-to-r from-[#FF007F] to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
                   <MessageCircle className="w-10 h-10 text-white" />

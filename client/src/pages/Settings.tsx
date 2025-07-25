@@ -211,10 +211,10 @@ export default function Settings() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="w-full min-h-screen bg-background">
       {/* Mobile Layout */}
-      <div className="md:hidden p-4 pb-24">
-        <div className="max-w-md mx-auto space-y-6">
+      <div className="md:hidden w-full bg-background p-4 pb-24">
+        <div className="max-w-md mx-auto space-y-6 bg-background">
           <h1 className="text-2xl font-bold text-foreground">Einstellungen</h1>
         
         {/* User Info Card */}

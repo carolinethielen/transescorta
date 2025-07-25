@@ -132,9 +132,9 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="w-full bg-background">
       {/* Mobile Header */}
-      <header className="md:hidden flex justify-between items-center p-4 border-b border-border">
+      <header className="md:hidden flex justify-between items-center p-4 border-b border-border bg-background">
         <h1 className="text-2xl font-bold text-[#FF007F] font-['Poppins']">TransEscorta</h1>
         <div className="flex items-center space-x-3">
           {/* Location Badge */}
@@ -187,7 +187,7 @@ export default function Home() {
       </header>
 
       {/* Content */}
-      <main className="p-4 md:p-0">
+      <main className="p-4 md:p-0 bg-background">
         {/* View Toggle */}
         <div className="flex mb-6 bg-muted rounded-lg p-1 max-w-xs md:max-w-sm">
           <Button
