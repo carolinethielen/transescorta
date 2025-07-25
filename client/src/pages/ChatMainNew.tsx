@@ -9,6 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { apiRequest } from '@/lib/queryClient';
 import { ArrowLeft, Send, MessageCircle, User2, Download, ExternalLink } from 'lucide-react';
 import { ChatInput } from '@/components/ChatInput';
@@ -44,6 +45,7 @@ export default function ChatMainNew() {
   const [, navigate] = useLocation();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const queryClient = useQueryClient();
   
   // Chat state
@@ -67,8 +69,8 @@ export default function ChatMainNew() {
         .catch((error) => {
           console.error('Failed to create chat room:', error);
           toast({
-            title: "Fehler",
-            description: `Chat konnte nicht gestartet werden: ${error.message || 'Unbekannter Fehler'}`,
+            title: t.error || "Fehler",
+            description: `${t.messageNotSent || 'Chat konnte nicht gestartet werden'}: ${error.message || t.error || 'Unbekannter Fehler'}`,
             variant: "destructive",
           });
         });
@@ -194,8 +196,8 @@ export default function ChatMainNew() {
       
       console.error('Send message error:', error);
       toast({
-        title: "Fehler",
-        description: "Nachricht konnte nicht gesendet werden. Bitte versuche es erneut.",
+        title: t.error || "Fehler",
+        description: t.messageNotSent || "Nachricht konnte nicht gesendet werden. Bitte versuche es erneut.",
         variant: "destructive",
       });
     },
@@ -373,7 +375,7 @@ export default function ChatMainNew() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center max-w-md mx-auto p-6">
-          <h2 className="text-xl font-semibold mb-2">Anmeldung erforderlich</h2>
+          <h2 className="text-xl font-semibold mb-2">{t.loginRequired || "Anmeldung erforderlich"}</h2>
           <p className="text-muted-foreground mb-6">Du musst angemeldet sein, um den Chat zu nutzen.</p>
           
           <div className="space-y-4">
@@ -403,7 +405,7 @@ export default function ChatMainNew() {
       <div className="flex flex-col h-screen bg-background">
         {/* Header */}
         <div className="p-4 border-b bg-card">
-          <h1 className="text-xl font-semibold">Nachrichten</h1>
+          <h1 className="text-xl font-semibold">{t.messages || "Nachrichten"}</h1>
         </div>
 
         {/* Chat List */}
@@ -427,7 +429,7 @@ export default function ChatMainNew() {
               <div className="p-8 text-center">
                 <MessageCircle className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-muted-foreground mb-2">
-                  Keine Unterhaltungen
+                  {t.noChatsYet || "Keine Unterhaltungen"}
                 </h3>
                 <p className="text-sm text-muted-foreground">
                   Starte eine neue Unterhaltung über ein Profil
@@ -472,7 +474,7 @@ export default function ChatMainNew() {
                         </div>
                         <div className="flex items-center justify-between">
                           <p className="text-sm text-muted-foreground truncate">
-                            {room.lastMessage?.content || 'Keine Nachrichten'}
+                            {room.lastMessage?.content || t.newMessage || 'Keine Nachrichten'}
                           </p>
                           {room.unreadCount > 0 && (
                             <Badge className="bg-[#FF007F] text-white text-xs min-w-[20px] h-5 rounded-full px-1.5">
@@ -551,7 +553,7 @@ export default function ChatMainNew() {
             ) : messages.length === 0 ? (
               <div className="text-center py-8 flex-1 flex items-center justify-center">
                 <div>
-                  <p className="text-muted-foreground">Noch keine Nachrichten</p>
+                  <p className="text-muted-foreground">{t.newMessage || "Noch keine Nachrichten"}</p>
                   <p className="text-sm text-muted-foreground mt-1">
                     Schreibe die erste Nachricht!
                   </p>

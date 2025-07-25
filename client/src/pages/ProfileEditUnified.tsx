@@ -69,13 +69,7 @@ const interests = [
   'Nachtleben', 'Theater', 'Kino', 'Lesen', 'Gaming', 'Fotografie'
 ];
 
-const bodyTypes = [
-  'Schlank', 'Athletisch', 'Durchschnittlich', 'Kurvig', 'Plus Size', 'Muskulös'
-];
-
-const ethnicities = [
-  'Kaukasisch', 'Lateinamerikanisch', 'Asiatisch', 'Afrikanisch', 'Arabisch', 'Gemischt'
-];
+// These will be dynamically generated from translations
 
 export default function ProfileEditUnified() {
   const [, navigate] = useLocation();
@@ -84,6 +78,12 @@ export default function ProfileEditUnified() {
   const { t } = useLanguage();
   const queryClient = useQueryClient();
   const { location: gpsLocation, detectLocation, isDetecting } = useLocationDetection();
+
+  // Create dynamic translated options
+  const bodyTypes = Object.values(t.bodyTypes);
+  const ethnicities = Object.values(t.ethnicities);
+  const positions = Object.values(t.positions);
+  const circumcisionTypes = Object.values(t.circumcisionTypes);
   
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
@@ -212,7 +212,7 @@ export default function ProfileEditUnified() {
     },
     onError: (error: Error) => {
       toast({
-        title: "Fehler beim Speichern",
+        title: t.errorSaving || "Fehler beim Speichern",
         description: error.message || "Profil konnte nicht aktualisiert werden.",
         variant: "destructive",
       });
@@ -249,9 +249,9 @@ export default function ProfileEditUnified() {
         <div className="flex items-center justify-between mb-6">
           <Button variant="ghost" onClick={() => navigate('/my-profile')}>
             <ArrowLeft className="w-4 h-4 mr-2" />
-            {t?.backButton || 'Zurück'}
+            {t.back || 'Zurück'}
           </Button>
-          <h1 className="text-2xl font-bold">{t?.editProfile || 'Profil bearbeiten'}</h1>
+          <h1 className="text-2xl font-bold">{t.editProfile || 'Profil bearbeiten'}</h1>
           <div className="w-20" />
         </div>
 
@@ -285,7 +285,7 @@ export default function ProfileEditUnified() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <User className="w-5 h-5 text-[#FF007F]" />
-                  Grundinformationen
+                  {t.basicInfo || "Grundinformationen"}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -582,12 +582,12 @@ export default function ProfileEditUnified() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <DollarSign className="w-5 h-5 text-[#FF007F]" />
-                    Services & Preise
+                    {t.servicesOffered || "Services & Preise"}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <Label className="text-base font-medium mb-3 block">Angebotene Services</Label>
+                    <Label className="text-base font-medium mb-3 block">{t.availableServices || "Angebotene Services"}</Label>
                     <div className="grid grid-cols-2 gap-2">
                       {services.map((service) => (
                         <div key={service} className="flex items-center space-x-2">
@@ -644,7 +644,7 @@ export default function ProfileEditUnified() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Heart className="w-5 h-5 text-[#FF007F]" />
-                  Interessen
+                  {t.interests || "Interessen"}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -693,12 +693,12 @@ export default function ProfileEditUnified() {
                 {updateProfileMutation.isPending ? (
                   <>
                     <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2" />
-                    Speichern...
+                    {t.save || "Speichern"}...
                   </>
                 ) : (
                   <>
                     <Save className="w-4 h-4 mr-2" />
-                    Profil speichern
+                    {t.save || "Profil speichern"}
                   </>
                 )}
               </Button>
