@@ -211,9 +211,11 @@ export default function Settings() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 pb-24">
-      <div className="max-w-md mx-auto space-y-6">
-        <h1 className="text-2xl font-bold text-foreground">Einstellungen</h1>
+    <div className="min-h-screen bg-background">
+      {/* Mobile Layout */}
+      <div className="md:hidden p-4 pb-24">
+        <div className="max-w-md mx-auto space-y-6">
+          <h1 className="text-2xl font-bold text-foreground">Einstellungen</h1>
         
         {/* User Info Card */}
         <Card>
@@ -567,6 +569,243 @@ export default function Settings() {
             </Card>
           </div>
         )}
+        </div>
+      </div>
+
+      {/* Desktop Layout */}
+      <div className="hidden md:block p-6">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-3xl font-bold text-foreground mb-8">Einstellungen</h1>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {/* Left Column */}
+            <div className="space-y-6">
+              {/* User Info Card */}
+              <Card>
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-16 h-16 bg-gradient-to-r from-[#FF007F] to-purple-600 rounded-full flex items-center justify-center">
+                      <User className="w-8 h-8 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold text-foreground">
+                        {user?.firstName} {user?.lastName}
+                      </h3>
+                      <div className="flex items-center gap-2 mt-1">
+                        <p className="text-muted-foreground">
+                          {user?.userType === 'trans' ? 'Trans Escort' : 'Kunde'}
+                        </p>
+                        {user?.isPremium && <Badge className="bg-[#FF007F] text-white">Premium</Badge>}
+                      </div>
+                    </div>
+                    <Button variant="outline" onClick={() => navigate('/my-profile')}>
+                      <User className="w-4 h-4 mr-2" />
+                      Profil bearbeiten
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Account Settings */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Key className="w-5 h-5" />
+                    Konto
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Button 
+                    variant="outline" 
+                    className="w-full justify-between"
+                    onClick={() => setShowChangePassword(true)}
+                  >
+                    <span>Passwort ändern</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </Button>
+                  
+                  {user?.userType === 'trans' && (
+                    <Button 
+                      variant="outline" 
+                      className={`w-full justify-between ${
+                        user?.isPremium 
+                          ? "border-green-500 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20"
+                          : "border-[#FF007F] text-[#FF007F] hover:bg-[#FF007F]/10"
+                      }`}
+                      onClick={() => navigate('/premium')}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Crown className="w-4 h-4" />
+                        <span>{user?.isPremium ? 'Premium aktiv' : 'Premium Upgrade'}</span>
+                        {!user?.isPremium && <Badge variant="secondary">Upgrade</Badge>}
+                      </div>
+                      <ChevronRight className="w-4 h-4" />
+                    </Button>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Right Column */}
+            <div className="space-y-6">
+              {/* Push Notifications */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Bell className="w-5 h-5" />
+                    Push-Benachrichtigungen
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <Smartphone className="w-5 h-5 text-muted-foreground" />
+                      <div>
+                        <div className="font-medium">Push-Benachrichtigungen</div>
+                        <div className="text-sm text-muted-foreground">
+                          Erhalte Benachrichtigungen auf deinem Gerät
+                        </div>
+                      </div>
+                    </div>
+                    <Switch 
+                      checked={settings.pushEnabled}
+                      onCheckedChange={settings.pushEnabled ? () => updateSetting('pushEnabled', false) : requestPushPermission}
+                    />
+                  </div>
+
+                  {settings.pushEnabled && (
+                    <>
+                      <Separator />
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            {settings.soundEnabled ? <Volume2 className="w-5 h-5 text-muted-foreground" /> : <VolumeX className="w-5 h-5 text-muted-foreground" />}
+                            <span className="font-medium">Ton</span>
+                          </div>
+                          <Switch 
+                            checked={settings.soundEnabled}
+                            onCheckedChange={(checked) => updateSetting('soundEnabled', checked)}
+                          />
+                        </div>
+
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <MessageSquare className="w-5 h-5 text-muted-foreground" />
+                            <span className="font-medium">Chat-Nachrichten</span>
+                          </div>
+                          <Switch 
+                            checked={settings.chatNotifications}
+                            onCheckedChange={(checked) => updateSetting('chatNotifications', checked)}
+                          />
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* More Options */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <HelpCircle className="w-5 h-5" />
+                    Mehr
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <button 
+                    className="w-full text-left flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors"
+                    onClick={() => setShowFAQ(true)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <HelpCircle className="w-5 h-5 text-muted-foreground" />
+                      <div>
+                        <div className="font-medium">Häufige Fragen</div>
+                        <div className="text-sm text-muted-foreground">
+                          Antworten auf häufige Fragen
+                        </div>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+
+                  <button 
+                    className="w-full text-left flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors"
+                    onClick={() => setShowContactSupport(true)}
+                  >
+                    <div className="flex items-center gap-3">
+                      <MessageSquare className="w-5 h-5 text-muted-foreground" />
+                      <div>
+                        <div className="font-medium">Support kontaktieren</div>
+                        <div className="text-sm text-muted-foreground">
+                          Hilfe und Unterstützung erhalten
+                        </div>
+                      </div>
+                    </div>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+
+                  <Separator />
+
+                  <button 
+                    className="w-full text-left flex items-center justify-between p-3 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-red-600"
+                    onClick={handleLogout}
+                  >
+                    <div className="flex items-center gap-3">
+                      <LogOut className="w-5 h-5" />
+                      <div>
+                        <div className="font-medium">Abmelden</div>
+                        <div className="text-sm text-red-500">
+                          Dich von deinem Konto abmelden
+                        </div>
+                      </div>
+                    </div>
+                  </button>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+
+          {/* Modals */}
+          <ChangePasswordModal 
+            open={showChangePassword} 
+            onOpenChange={setShowChangePassword} 
+          />
+          
+          <DeleteAccountModal 
+            open={showDeleteAccount} 
+            onOpenChange={setShowDeleteAccount} 
+          />
+          
+          <ContactSupportModal 
+            open={showContactSupport} 
+            onOpenChange={setShowContactSupport} 
+          />
+
+          {/* FAQ Modal */}
+          {showFAQ && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+              <Card className="w-full max-w-2xl max-h-[80vh] flex flex-col">
+                <CardHeader className="flex flex-row items-center justify-between flex-shrink-0">
+                  <CardTitle>Häufige Fragen</CardTitle>
+                  <Button variant="ghost" size="sm" onClick={() => setShowFAQ(false)}>
+                    ✕
+                  </Button>
+                </CardHeader>
+                <CardContent className="flex-1 overflow-y-auto">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {faqItems.map((item, index) => (
+                      <Card key={index} className="p-4">
+                        <h4 className="font-medium mb-2">{item.question}</h4>
+                        <p className="text-sm text-muted-foreground">{item.answer}</p>
+                      </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
