@@ -342,7 +342,7 @@ export default function Settings() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <MessageSquare className="w-5 h-5 text-muted-foreground" />
-                      <span className="font-medium">Chat-Nachrichten</span>
+                      <span className="font-medium">{t?.chatMessages || "Chat-Nachrichten"}</span>
                     </div>
                     <Switch 
                       checked={settings.chatNotifications}
@@ -401,7 +401,7 @@ export default function Settings() {
                 <Eye className="w-5 h-5 text-muted-foreground" />
                 <div>
                   <div className="font-medium">{t?.showOnlineStatus || "Online-Status anzeigen"}</div>
-                  <div className="text-sm text-muted-foreground">Anderen zeigen, wenn du online bist</div>
+                  <div className="text-sm text-muted-foreground">{t?.showOnlineStatusDesc || "Anderen zeigen, wenn du online bist"}</div>
                 </div>
               </div>
               <Switch 
@@ -429,7 +429,7 @@ export default function Settings() {
                 <MessageSquare className="w-5 h-5 text-muted-foreground" />
                 <div>
                   <div className="font-medium">{t?.messagePreview || "Nachrichten-Vorschau"}</div>
-                  <div className="text-sm text-muted-foreground">Nachrichteninhalt in Benachrichtigungen</div>
+                  <div className="text-sm text-muted-foreground">{t?.messageContentInNotifications || "Nachrichteninhalt in Benachrichtigungen"}</div>
                 </div>
               </div>
               <Switch 
@@ -452,7 +452,7 @@ export default function Settings() {
             >
               <div className="flex items-center gap-2">
                 <Archive className="w-4 h-4" />
-                <span>Meine Daten exportieren</span>
+                <span>{t?.exportMyData || "Meine Daten exportieren"}</span>
               </div>
               <ChevronRight className="w-4 h-4" />
             </Button>

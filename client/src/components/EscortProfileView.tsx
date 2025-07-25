@@ -127,7 +127,7 @@ export function EscortProfileView({
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
                       <Euro className="w-5 h-5 mr-2 text-[#FF007F]" />
-                      <span className="font-medium">Stundensatz</span>
+                      <span className="font-medium">{t?.pricePerHour || "Stundensatz"}</span>
                     </div>
                     <div className="text-xl font-bold text-[#FF007F]">
                       {user.hourlyRate}€
@@ -143,7 +143,7 @@ export function EscortProfileView({
                 <CardContent className="p-4">
                   <h3 className="font-semibold mb-3 flex items-center">
                     <UserIcon className="w-4 h-4 mr-2" />
-                    Körperliche Details
+                    {t?.physicalDetails || "Körperliche Details"}
                   </h3>
                   <div className="grid grid-cols-2 gap-3 text-sm">
                     {user.height && (
@@ -160,7 +160,7 @@ export function EscortProfileView({
                     )}
                     {user.bodyType && (
                       <div className="col-span-2">
-                        <span className="text-muted-foreground">Körpertyp: </span>
+                        <span className="text-muted-foreground">{t?.bodyType || "Körpertyp"}: </span>
                         <span className="font-medium">{user.bodyType}</span>
                       </div>
                     )}
@@ -186,7 +186,7 @@ export function EscortProfileView({
                   <div className="space-y-2 text-sm">
                     {user.cockSize && (
                       <div>
-                        <span className="text-muted-foreground">Größe: </span>
+                        <span className="text-muted-foreground">{t?.height || "Größe"}: </span>
                         <span className="font-medium">{user.cockSize} cm</span>
                       </div>
                     )}
@@ -213,7 +213,7 @@ export function EscortProfileView({
                 <CardContent className="p-4">
                   <h3 className="font-semibold mb-3 flex items-center">
                     <Star className="w-4 h-4 mr-2" />
-                    Angebotene Services
+                    {t?.servicesOffered || "Angebotene Services"}
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {user.services.map((service) => (

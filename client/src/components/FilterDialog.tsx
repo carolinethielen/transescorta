@@ -185,7 +185,7 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
                 <SelectValue placeholder={t?.selectPosition || "Position wählen..."} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Alle</SelectItem>
+                <SelectItem value="all">{t?.all || "Alle"}</SelectItem>
                 {positions.map((position) => (
                   <SelectItem key={position} value={position}>
                     {position === 'top' ? 'Top/Aktiv' : 
@@ -202,10 +202,10 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
             <label className="text-sm font-medium mb-2 block">{t?.circumcision || 'Beschneidung'}</label>
             <Select value={filters.circumcision || ''} onValueChange={(value) => setFilters({ ...filters, circumcision: value })}>
               <SelectTrigger>
-                <SelectValue placeholder="Beschneidung wählen..." />
+                <SelectValue placeholder={t?.selectCircumcision || "Beschneidung wählen..."} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Alle</SelectItem>
+                <SelectItem value="all">{t?.all || "Alle"}</SelectItem>
                 <SelectItem value="beschnitten">Beschnitten</SelectItem>
                 <SelectItem value="unbeschnitten">Unbeschnitten</SelectItem>
                 <SelectItem value="teilweise">Teilweise</SelectItem>
@@ -218,10 +218,10 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
             <label className="text-sm font-medium mb-2 block">{t?.bodyType || 'Körpertyp'}</label>
             <Select value={filters.bodyType} onValueChange={(value) => setFilters({ ...filters, bodyType: value })}>
               <SelectTrigger>
-                <SelectValue placeholder="Körpertyp wählen..." />
+                <SelectValue placeholder={t?.selectBodyType || "Körpertyp wählen..."} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Alle</SelectItem>
+                <SelectItem value="all">{t?.all || "Alle"}</SelectItem>
                 {bodyTypes.map((type) => (
                   <SelectItem key={type} value={type}>
                     {type}
@@ -236,10 +236,10 @@ export function FilterDialog({ onFiltersChange }: FilterDialogProps) {
             <label className="text-sm font-medium mb-2 block">{t?.ethnicity || 'Ethnizität'}</label>
             <Select value={filters.ethnicity} onValueChange={(value) => setFilters({ ...filters, ethnicity: value })}>
               <SelectTrigger>
-                <SelectValue placeholder="Ethnizität wählen..." />
+                <SelectValue placeholder={t?.selectEthnicity || "Ethnizität wählen..."} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Alle</SelectItem>
+                <SelectItem value="all">{t?.all || "Alle"}</SelectItem>
                 {ethnicities.map((ethnicity) => (
                   <SelectItem key={ethnicity} value={ethnicity}>
                     {ethnicity}

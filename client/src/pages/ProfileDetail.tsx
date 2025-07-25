@@ -180,7 +180,7 @@ export default function ProfileDetail() {
                 <div className="absolute top-4 right-4">
                   <Badge className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-black flex items-center gap-1">
                     <Crown className="w-3 h-3" />
-                    Premium
+                    {t?.premium || "Premium"}
                   </Badge>
                 </div>
               )}
@@ -265,21 +265,21 @@ export default function ProfileDetail() {
               {profile.height && (
                 <div className="flex items-center gap-2">
                   <Ruler className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">Größe:</span>
+                  <span className="text-muted-foreground">{t?.height || "Größe"}:</span>
                   <span>{profile.height} cm</span>
                 </div>
               )}
               {profile.weight && (
                 <div className="flex items-center gap-2">
                   <Weight className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">Gewicht:</span>
+                  <span className="text-muted-foreground">{t?.weight || "Gewicht"}:</span>
                   <span>{profile.weight} kg</span>
                 </div>
               )}
               {profile.bodyType && (
                 <div className="flex items-center gap-2">
                   <User className="w-4 h-4 text-muted-foreground" />
-                  <span className="text-muted-foreground">Körpertyp:</span>
+                  <span className="text-muted-foreground">{t?.bodyType || "Körpertyp"}:</span>
                   <span>{profile.bodyType}</span>
                 </div>
               )}
@@ -312,7 +312,7 @@ export default function ProfileDetail() {
         {profile.interests && profile.interests.length > 0 && (
           <Card>
             <CardContent className="p-6">
-              <h3 className="text-lg font-semibold mb-4">Interessen</h3>
+              <h3 className="text-lg font-semibold mb-4">{t?.interests || "Interessen"}</h3>
               <div className="flex flex-wrap gap-2">
                 {profile.interests.map((interest: string, index: number) => (
                   <Badge key={index} variant="outline" className="text-sm">

@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { MapPin, Crown } from 'lucide-react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { type User } from '@shared/schema';
 
 interface SwipeCardProps {
@@ -9,6 +10,7 @@ interface SwipeCardProps {
 }
 
 export function SwipeCard({ user, onSwipe }: SwipeCardProps) {
+  const { t } = useLanguage();
   const [exitX, setExitX] = useState(0);
   const x = useMotionValue(0);
   const rotate = useTransform(x, [-150, 150], [-30, 30]);
@@ -58,7 +60,7 @@ export function SwipeCard({ user, onSwipe }: SwipeCardProps) {
             {user.isPremium && (
               <div className="bg-[#FF007F] px-3 py-1 rounded-full text-xs font-bold flex items-center">
                 <Crown className="w-3 h-3 mr-1" />
-                Premium
+                {t?.premium || "Premium"}
               </div>
             )}
           </div>

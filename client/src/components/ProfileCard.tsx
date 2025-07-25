@@ -1,6 +1,7 @@
 import React from 'react';
 import { MapPin, Crown, User as UserIcon } from 'lucide-react';
 import { Card } from '@/components/ui/card';
+import { useLanguage } from '@/contexts/LanguageContext';
 import { type User } from '@shared/schema';
 
 interface ProfileCardProps {
@@ -9,6 +10,7 @@ interface ProfileCardProps {
 }
 
 export function ProfileCard({ user, onClick }: ProfileCardProps) {
+  const { t } = useLanguage();
   const displayName = user.firstName || 'Anonymer Nutzer';
   const displayAge = user.age ? `, ${user.age}` : '';
   
@@ -22,7 +24,7 @@ export function ProfileCard({ user, onClick }: ProfileCardProps) {
       {user.isPremium && (
         <div className="absolute top-2 left-2 bg-[#FF007F] text-white px-2 py-1 rounded-full text-xs font-bold z-10">
           <Crown className="w-3 h-3 inline mr-1" />
-          Premium
+          {t?.premium || "Premium"}
         </div>
       )}
       

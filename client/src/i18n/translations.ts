@@ -128,6 +128,20 @@ export interface Translations {
   // Additional auth fields
   usernamePlaceholder: string;
   
+  // Missing Keys for Components  
+  contact: string;
+  servicesOffered: string;
+  selectBodyType: string;
+  selectCircumcision: string;
+  selectEthnicity: string;
+  all: string;
+  chatMessages: string;
+  messageContentInNotifications: string;
+  exportMyData: string;
+  showOnlineStatusDesc: string;
+  locationDisplayInfo: string;
+  profileUpdatedSuccess: string;
+  
   // Push notifications
   pushNotificationsEnabled: string;
   pushNotificationsEnabledDesc: string;
@@ -385,6 +399,20 @@ export const translations: Record<string, Translations> = {
     
     // Additional auth fields
     usernamePlaceholder: 'Dein Benutzername',
+    
+    // Missing Keys for Components  
+    contact: 'Kontakt',
+    servicesOffered: 'Angebotene Services',
+    selectBodyType: 'Körpertyp wählen...',
+    selectCircumcision: 'Beschneidung wählen...',
+    selectEthnicity: 'Ethnizität wählen...',
+    all: 'Alle',
+    chatMessages: 'Chat-Nachrichten',
+    messageContentInNotifications: 'Nachrichteninhalt in Benachrichtigungen',
+    exportMyData: 'Meine Daten exportieren',
+    showOnlineStatusDesc: 'Anderen zeigen, wenn du online bist',
+    locationDisplayInfo: 'Dein Standort wird auf der Startseite mit Kilometerentfernung angezeigt',
+    profileUpdatedSuccess: 'Dein Profil wurde erfolgreich aktualisiert!',
     
     // Push notifications
     pushNotificationsEnabled: 'Push-Benachrichtigungen aktiviert',
@@ -712,6 +740,20 @@ export const translations: Record<string, Translations> = {
     
     // Additional auth fields
     usernamePlaceholder: 'Your username',
+    
+    // Missing Keys for Components  
+    contact: 'Contact',
+    servicesOffered: 'Services Offered',
+    selectBodyType: 'Select body type...',
+    selectCircumcision: 'Select circumcision...',
+    selectEthnicity: 'Select ethnicity...',
+    all: 'All',
+    chatMessages: 'Chat Messages',
+    messageContentInNotifications: 'Message content in notifications',
+    exportMyData: 'Export My Data',
+    showOnlineStatusDesc: 'Show others when you are online',
+    locationDisplayInfo: 'Your location will be shown on homepage with distance',
+    profileUpdatedSuccess: 'Your profile has been successfully updated!',
     
     // Push notifications
     pushNotificationsEnabled: 'Push notifications enabled',
@@ -1120,6 +1162,20 @@ export const translations: Record<string, Translations> = {
     // Additional auth fields
     usernamePlaceholder: 'Seu nome de usuário',
     
+    // Missing Keys for Components  
+    contact: 'Contato',
+    servicesOffered: 'Serviços Oferecidos',
+    selectBodyType: 'Selecionar tipo corporal...',
+    selectCircumcision: 'Selecionar circuncisão...',
+    selectEthnicity: 'Selecionar etnia...',
+    all: 'Todos',
+    chatMessages: 'Mensagens de Chat',
+    messageContentInNotifications: 'Conteúdo da mensagem em notificações',
+    exportMyData: 'Exportar Meus Dados',
+    showOnlineStatusDesc: 'Mostrar aos outros quando você está online',
+    locationDisplayInfo: 'Sua localização será mostrada na página inicial com distância',
+    profileUpdatedSuccess: 'Seu perfil foi atualizado com sucesso!',
+    
     // Push notifications
     pushNotificationsEnabled: 'Notificações push ativadas',
     pushNotificationsEnabledDesc: 'Você agora receberá notificações para novas mensagens',
@@ -1457,6 +1513,20 @@ export const translations: Record<string, Translations> = {
     // Additional auth fields
     usernamePlaceholder: 'Tu nombre de usuario',
     
+    // Missing Keys for Components  
+    contact: 'Contacto',
+    servicesOffered: 'Servicios Ofrecidos',
+    selectBodyType: 'Seleccionar tipo de cuerpo...',
+    selectCircumcision: 'Seleccionar circuncisión...',
+    selectEthnicity: 'Seleccionar etnia...',
+    all: 'Todos',
+    chatMessages: 'Mensajes de Chat',
+    messageContentInNotifications: 'Contenido del mensaje en notificaciones',
+    exportMyData: 'Exportar Mis Datos',
+    showOnlineStatusDesc: 'Mostrar a otros cuando estés en línea',
+    locationDisplayInfo: 'Tu ubicación se mostrará en la página de inicio con distancia',
+    profileUpdatedSuccess: '¡Tu perfil ha sido actualizado exitosamente!',
+    
     // Push notifications
     pushNotificationsEnabled: 'Notificaciones push activadas',
     pushNotificationsEnabledDesc: 'Ahora recibirás notificaciones para nuevos mensajes',
@@ -1793,6 +1863,20 @@ export const translations: Record<string, Translations> = {
     
     // Additional auth fields
     usernamePlaceholder: 'Votre nom d\'utilisateur',
+    
+    // Missing Keys for Components  
+    contact: 'Contact',
+    servicesOffered: 'Services Offerts',
+    selectBodyType: 'Sélectionner type de corps...',
+    selectCircumcision: 'Sélectionner circoncision...',
+    selectEthnicity: 'Sélectionner ethnicité...',
+    all: 'Tous',
+    chatMessages: 'Messages de Chat',
+    messageContentInNotifications: 'Contenu du message dans les notifications',
+    exportMyData: 'Exporter Mes Données',
+    showOnlineStatusDesc: 'Montrer aux autres quand vous êtes en ligne',
+    locationDisplayInfo: 'Votre localisation sera affichée sur la page d\'accueil avec la distance',
+    profileUpdatedSuccess: 'Votre profil a été mis à jour avec succès!',
     
     // Push notifications
     pushNotificationsEnabled: 'Notifications push activées',

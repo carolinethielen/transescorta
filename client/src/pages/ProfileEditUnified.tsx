@@ -204,7 +204,7 @@ export default function ProfileEditUnified() {
       
       toast({
         title: "Profil gespeichert",
-        description: "Dein Profil wurde erfolgreich aktualisiert!",
+        description: t?.profileUpdatedSuccess || "Dein Profil wurde erfolgreich aktualisiert!",
       });
       setTimeout(() => {
         navigate('/my-profile');
@@ -400,7 +400,7 @@ export default function ProfileEditUnified() {
                   </div>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Dein Standort wird auf der Startseite mit Kilometerentfernung angezeigt
+                  {t?.locationDisplayInfo || "Dein Standort wird auf der Startseite mit Kilometerentfernung angezeigt"}
                 </p>
               </CardContent>
             </Card>
