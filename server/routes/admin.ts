@@ -91,7 +91,26 @@ router.put("/users/:userId", requireAdmin, async (req, res) => {
     const updates = req.body;
     const adminId = req.user!.id;
 
-    const updatedUser = await storage.updateUserAsAdmin(adminId, userId, updates);
+    // Handle specific actions
+    if (updates.action === 'togglePremium') {
+      if (updates.isPremium) {
+        await storage.activatePremium(adminId, userId, updates.days || 30);
+      } else {
+        await storage.deactivatePremium(adminId, userId);
+      }
+    } else if (updates.action === 'toggleBlock') {
+      if (updates.isBlocked) {
+        await storage.blockUser(adminId, userId, updates.reason);
+      } else {
+        await storage.unblockUser(adminId, userId);
+      }
+    } else {
+      // Regular update
+      await storage.updateUserAsAdmin(adminId, userId, updates);
+    }
+
+    // Return updated user
+    const updatedUser = await storage.getUser(userId);
     res.json(updatedUser);
   } catch (error) {
     console.error("Error updating user:", error);
@@ -151,6 +170,19 @@ router.post("/users/:userId/premium/activate", requireAdmin, async (req, res) =>
   } catch (error) {
     console.error("Error activating premium:", error);
     res.status(500).json({ message: "Fehler beim Aktivieren von Premium" });
+  }
+});
+
+router.post("/users/:userId/premium/deactivate", requireAdmin, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const adminId = req.user!.id;
+
+    await storage.deactivatePremium(adminId, userId);
+    res.json({ message: "Premium erfolgreich deaktiviert" });
+  } catch (error) {
+    console.error("Error deactivating premium:", error);
+    res.status(500).json({ message: "Fehler beim Deaktivieren von Premium" });
   }
 });
 

@@ -973,6 +973,21 @@ export class DatabaseStorage implements IStorage {
       premiumSubscriptions: premiumCount.count
     };
   }
+
+  async getAdminLogs(page: number, limit: number, adminId?: string): Promise<{ logs: any[]; total: number }> {
+    const offset = (page - 1) * limit;
+    
+    const [logResults, totalResult] = await Promise.all([
+      db.select().from(adminLogs)
+        .limit(limit).offset(offset).orderBy(desc(adminLogs.createdAt)),
+      db.select({ count: count() }).from(adminLogs).where(adminId ? eq(adminLogs.adminId, adminId) : undefined)
+    ]);
+    
+    return {
+      logs: logResults,
+      total: totalResult[0].count
+    };
+  }
 }
 
 
