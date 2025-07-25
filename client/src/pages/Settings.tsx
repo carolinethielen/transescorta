@@ -262,12 +262,16 @@ export default function Settings() {
             {user?.userType === 'trans' && (
               <Button 
                 variant="outline" 
-                className="w-full justify-between border-[#FF007F] text-[#FF007F] hover:bg-[#FF007F]/10"
-                onClick={() => navigate('/subscribe')}
+                className={`w-full justify-between ${
+                  user?.isPremium 
+                    ? "border-green-500 text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20"
+                    : "border-[#FF007F] text-[#FF007F] hover:bg-[#FF007F]/10"
+                }`}
+                onClick={() => navigate('/premium')}
               >
                 <div className="flex items-center gap-2">
                   <Crown className="w-4 h-4" />
-                  <span>Premium Abo</span>
+                  <span>{user?.isPremium ? 'Premium aktiv' : 'Premium Upgrade'}</span>
                   {!user?.isPremium && <Badge variant="secondary">Upgrade</Badge>}
                 </div>
                 <ChevronRight className="w-4 h-4" />
