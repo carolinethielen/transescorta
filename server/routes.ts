@@ -6,7 +6,9 @@ import { storage } from "./storage";
 import { setupCustomAuth, isAuthenticated } from "./customAuth";
 import { sendMessageSchema, createMatchSchema, updateProfileSchema } from "@shared/schema";
 import { z } from "zod";
-import { uploadProfile, uploadChat, uploadGeneral } from "./cloudinary";
+import { uploadProfile, uploadChat, uploadGeneral, cloudinary } from "./cloudinary";
+import { eq, and, desc } from "drizzle-orm";
+import { users, privateAlbums, albumAccess } from "@shared/schema";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
@@ -705,6 +707,129 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Resend verification error:', error);
       res.status(500).json({ message: 'Fehler beim Versenden der Verifizierungs-E-Mail' });
+    }
+  });
+
+  // Private Albums API Endpoints
+  // Get user's private albums
+  app.get('/api/private-albums', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      
+      const userAlbums = await storage.getUserPrivateAlbums(userId);
+
+      res.json(userAlbums);
+    } catch (error) {
+      console.error('Error fetching private albums:', error);
+      res.status(500).json({ message: 'Fehler beim Laden der Alben' });
+    }
+  });
+
+  // Create new private album
+  app.post('/api/private-albums', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const { title, description } = req.body;
+
+      const newAlbum = await storage.createPrivateAlbum(userId, { title, description });
+
+      res.json(newAlbum);
+    } catch (error) {
+      console.error('Error creating private album:', error);
+      res.status(500).json({ message: 'Fehler beim Erstellen des Albums' });
+    }
+  });
+
+  // Upload images to private album
+  app.post('/api/private-albums/:albumId/upload', isAuthenticated, uploadGeneral.array('images', 10), async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const { albumId } = req.params;
+      const files = req.files as Express.Multer.File[];
+
+      if (!files || files.length === 0) {
+        return res.status(400).json({ message: 'Keine Bilder ausgewählt' });
+      }
+
+      // Check if album belongs to user
+      const albums = await storage.getUserPrivateAlbums(userId);
+      const album = albums.find(a => a.id === albumId);
+
+      if (!album) {
+        return res.status(404).json({ message: 'Album nicht gefunden' });
+      }
+
+      // Check if user is premium for image limits
+      const user = await storage.getUser(userId);
+      if (!user?.isPremium) {
+        const currentImageCount = album.imageUrls?.length || 0;
+        if (currentImageCount + files.length > 5) {
+          return res.status(400).json({ 
+            message: `Kostenloses Limit: Maximal 5 Bilder pro Album. Du kannst noch ${5 - currentImageCount} Bilder hinzufügen.` 
+          });
+        }
+      }
+
+      // Upload images to Cloudinary
+      const uploadResults = await Promise.all(
+        files.map(file => 
+          new Promise((resolve, reject) => {
+            const stream = cloudinary.uploader.upload_stream(
+              {
+                folder: 'transescorta/private_albums',
+                resource_type: 'image',
+                transformation: [
+                  { width: 1000, height: 1000, crop: 'limit', quality: 'auto', fetch_format: 'auto' }
+                ]
+              },
+              (error, result) => {
+                if (error) reject(error);
+                else resolve(result);
+              }
+            );
+            stream.end(file.buffer);
+          })
+        )
+      );
+
+      const newImageUrls = uploadResults.map((result: any) => result.secure_url);
+      const updatedImageUrls = [...(album.imageUrls || []), ...newImageUrls];
+
+      // Update album with new images
+      await storage.updateAlbumImages(albumId, updatedImageUrls);
+
+      res.json({ 
+        message: 'Bilder erfolgreich hochgeladen',
+        imageUrls: newImageUrls,
+        totalImages: updatedImageUrls.length
+      });
+    } catch (error) {
+      console.error('Error uploading album images:', error);
+      res.status(500).json({ message: 'Fehler beim Hochladen der Bilder' });
+    }
+  });
+
+  // Delete private album
+  app.delete('/api/private-albums/:albumId', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const { albumId } = req.params;
+
+      // Check if album belongs to user
+      const albums = await storage.getUserPrivateAlbums(userId);
+      const album = albums.find(a => a.id === albumId);
+
+      if (!album) {
+        return res.status(404).json({ message: 'Album nicht gefunden' });
+      }
+
+      // Delete album
+      await storage.deletePrivateAlbum(albumId);
+
+      res.json({ message: 'Album erfolgreich gelöscht' });
+    } catch (error) {
+      console.error('Error deleting private album:', error);
+      res.status(500).json({ message: 'Fehler beim Löschen des Albums' });
     }
   });
 

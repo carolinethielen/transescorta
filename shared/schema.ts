@@ -184,6 +184,33 @@ export const createMatchSchema = createInsertSchema(matches, {
   isLike: z.boolean(),
 }).omit({ id: true, userId: true, createdAt: true, isMutual: true });
 
+// Private Album schemas
+export const createPrivateAlbumSchema = z.object({
+  title: z.string().min(1, "Album-Titel ist erforderlich"),
+  description: z.string().optional(),
+});
+
+export const updatePrivateAlbumSchema = z.object({
+  title: z.string().min(1, "Album-Titel ist erforderlich").optional(),
+  description: z.string().optional(),
+  imageUrls: z.array(z.string().url()).optional(),
+});
+
+export const shareAlbumSchema = z.object({
+  albumId: z.string().min(1, "Album-ID ist erforderlich"),
+  chatRoomId: z.string().min(1, "Chat-ID ist erforderlich"),
+});
+
+// Insert schemas
+export const insertPrivateAlbumSchema = createInsertSchema(privateAlbums).omit({ id: true, createdAt: true, updatedAt: true });
+export const insertAlbumAccessSchema = createInsertSchema(albumAccess).omit({ id: true, createdAt: true });
+
+// Additional type exports for private albums
+export type PrivateAlbumType = typeof privateAlbums.$inferSelect;
+export type InsertPrivateAlbumType = typeof privateAlbums.$inferInsert;
+export type AlbumAccessType = typeof albumAccess.$inferSelect;
+export type InsertAlbumAccessType = typeof albumAccess.$inferInsert;
+
 // Type definitions
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;

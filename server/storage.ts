@@ -48,8 +48,10 @@ export interface IStorage {
   getPublicTransUsers(limit: number): Promise<User[]>;
   
   // Album operations
-  createPrivateAlbum(ownerId: string, albumData: any): Promise<any>;
-  getUserAlbums(userId: string): Promise<any[]>;
+  createPrivateAlbum(ownerId: string, albumData: any): Promise<PrivateAlbum>;
+  getUserPrivateAlbums(userId: string): Promise<PrivateAlbum[]>;
+  updateAlbumImages(albumId: string, imageUrls: string[]): Promise<PrivateAlbum>;
+  deletePrivateAlbum(albumId: string): Promise<void>;
   grantAlbumAccess(albumId: string, userId: string, grantedBy: string): Promise<void>;
   getUserAccessibleAlbums(userId: string): Promise<any[]>;
   
@@ -793,6 +795,86 @@ export class DatabaseStorage implements IStorage {
       .where(eq(albumAccess.userId, userId));
     
     return accessibleAlbums.map(item => item.album);
+  }
+
+  // Album operations
+  async createPrivateAlbum(ownerId: string, albumData: { title: string; description?: string }): Promise<PrivateAlbum> {
+    const albumId = `album_${Date.now()}_${nanoid(10)}`;
+    
+    // Check if user is trans escort
+    const user = await this.getUser(ownerId);
+    if (!user || user.userType !== 'trans') {
+      throw new Error('Nur Trans-Escorts können private Alben erstellen');
+    }
+    
+    // Check album limits for non-premium users
+    if (!user.isPremium) {
+      const existingAlbums = await this.getUserPrivateAlbums(ownerId);
+      if (existingAlbums.length >= 1) {
+        throw new Error('Kostenlose Nutzer können nur 1 Album erstellen. Upgrade auf Premium für unbegrenzte Alben.');
+      }
+    }
+    
+    const newAlbum = await db
+      .insert(privateAlbums)
+      .values({
+        id: albumId,
+        ownerId,
+        title: albumData.title,
+        description: albumData.description,
+        imageUrls: [],
+      })
+      .returning();
+      
+    return newAlbum[0];
+  }
+
+  async getUserPrivateAlbums(userId: string): Promise<PrivateAlbum[]> {
+    return await db
+      .select()
+      .from(privateAlbums)
+      .where(eq(privateAlbums.ownerId, userId))
+      .orderBy(desc(privateAlbums.createdAt));
+  }
+
+  async updateAlbumImages(albumId: string, imageUrls: string[]): Promise<PrivateAlbum> {
+    const updatedAlbum = await db
+      .update(privateAlbums)
+      .set({ 
+        imageUrls,
+        updatedAt: new Date()
+      })
+      .where(eq(privateAlbums.id, albumId))
+      .returning();
+      
+    return updatedAlbum[0];
+  }
+
+  async deletePrivateAlbum(albumId: string): Promise<void> {
+    // Delete album access records first
+    await db.delete(albumAccess).where(eq(albumAccess.albumId, albumId));
+    
+    // Delete album
+    await db.delete(privateAlbums).where(eq(privateAlbums.id, albumId));
+  }
+
+  async grantAlbumAccess(albumId: string, userId: string, grantedBy: string): Promise<void> {
+    const accessId = `access_${Date.now()}_${nanoid(10)}`;
+    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours from now
+    
+    await db
+      .insert(albumAccess)
+      .values({
+        id: accessId,
+        albumId,
+        userId,
+        grantedBy,
+        expiresAt,
+      });
+  }
+
+  async getUserAccessibleAlbums(userId: string): Promise<any[]> {
+    return [];
   }
 }
 
