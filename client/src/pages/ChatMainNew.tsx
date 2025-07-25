@@ -325,18 +325,26 @@ export default function ChatMainNew() {
     }
   };
 
-  const handleSendPrivateAlbum = (albumId: string) => {
+  const handleSendPrivateAlbum = async (albumId: string) => {
     if (!selectedChatUserId || sendMessageMutation.isPending) return;
     
     try {
-      sendMessageMutation.mutate({
-        receiverId: selectedChatUserId,
-        content: messageText.trim() || '',
-        messageType: 'private_album',
-        privateAlbumId: albumId
+      // Share the album with 24h access
+      await apiRequest('POST', `/api/private-albums/${albumId}/share`, {
+        receiverId: selectedChatUserId
+      });
+      
+      toast({
+        title: "Album geteilt",
+        description: "Das private Album wurde mit 24h Zugang geteilt.",
       });
     } catch (error) {
-      console.error('Failed to send private album:', error);
+      console.error('Failed to share private album:', error);
+      toast({
+        title: "Fehler",
+        description: "Album konnte nicht geteilt werden. Bitte versuche es erneut.",
+        variant: "destructive",
+      });
     }
   };
 

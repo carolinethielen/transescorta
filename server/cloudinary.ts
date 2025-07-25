@@ -55,21 +55,40 @@ const chatStorage = new CloudinaryStorage({
 export const uploadProfile = multer({
   storage: profileStorage,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB limit
+    fileSize: 15 * 1024 * 1024, // 15MB limit
   },
 });
 
 export const uploadChat = multer({
   storage: chatStorage,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB limit for chat images
+    fileSize: 15 * 1024 * 1024, // 15MB limit for chat images
   },
 });
 
 export const uploadGeneral = multer({
   storage: storage,
   limits: {
-    fileSize: 10 * 1024 * 1024, // 10MB limit
+    fileSize: 15 * 1024 * 1024, // 15MB limit
+  },
+});
+
+// Private album storage with higher quality
+export const uploadPrivateAlbum = multer({
+  storage: new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+      folder: 'transescorta/private-albums',
+      allowed_formats: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+      transformation: [
+        { width: 1800, height: 1800, crop: 'limit' }, // Higher quality for private albums
+        { quality: 'auto:best' }, // Best quality
+        { fetch_format: 'auto' }
+      ]
+    } as any
+  }),
+  limits: {
+    fileSize: 15 * 1024 * 1024, // 15MB limit
   },
 });
 

@@ -36,10 +36,10 @@ export function ChatInput({
   const { data: privateAlbums = [] } = useQuery<Array<{
     id: string;
     title: string;
-    coverImage: string;
-    imageCount: number;
+    imageUrls: string[];
+    createdAt: string;
   }>>({
-    queryKey: ['/api/albums/private'],
+    queryKey: ['/api/private-albums'],
     enabled: !!user && user.userType === 'trans',
     retry: 1,
   });
@@ -105,9 +105,9 @@ export function ChatInput({
                       >
                         <CardContent className="p-3">
                           <div className="aspect-square bg-muted rounded-lg mb-2 overflow-hidden">
-                            {album.coverImage ? (
+                            {album.imageUrls && album.imageUrls.length > 0 ? (
                               <img 
-                                src={album.coverImage} 
+                                src={album.imageUrls[0]} 
                                 alt={album.title}
                                 className="w-full h-full object-cover"
                               />
@@ -119,7 +119,7 @@ export function ChatInput({
                           </div>
                           <p className="text-xs font-medium truncate">{album.title}</p>
                           <Badge variant="secondary" className="text-xs mt-1">
-                            {album.imageCount} Fotos
+                            {album.imageUrls?.length || 0} Fotos
                           </Badge>
                         </CardContent>
                       </Card>

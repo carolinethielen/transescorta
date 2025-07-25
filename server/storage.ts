@@ -53,6 +53,7 @@ export interface IStorage {
   updateAlbumImages(albumId: string, imageUrls: string[]): Promise<PrivateAlbum>;
   deletePrivateAlbum(albumId: string): Promise<void>;
   grantAlbumAccess(albumId: string, userId: string, grantedBy: string): Promise<void>;
+  checkAlbumAccess(albumId: string, userId: string): Promise<boolean>;
   getUserAccessibleAlbums(userId: string): Promise<any[]>;
   
   // Match operations
@@ -695,43 +696,32 @@ export class DatabaseStorage implements IStorage {
     return updatedUser;
   }
 
-  // Album operations
-  async createPrivateAlbum(ownerId: string, albumData: any): Promise<PrivateAlbum> {
-    const albumId = nanoid();
-    
-    const [album] = await db
-      .insert(privateAlbums)
-      .values({
-        id: albumId,
-        ownerId,
-        ...albumData,
-      })
-      .returning();
-    
-    return album;
-  }
 
-  async getUserAlbums(userId: string): Promise<PrivateAlbum[]> {
-    const albums = await db
+
+  async checkAlbumAccess(albumId: string, userId: string): Promise<boolean> {
+    // Check if user is the owner of the album
+    const [album] = await db
       .select()
       .from(privateAlbums)
-      .where(eq(privateAlbums.ownerId, userId))
-      .orderBy(desc(privateAlbums.createdAt));
+      .where(and(eq(privateAlbums.id, albumId), eq(privateAlbums.ownerId, userId)));
     
-    return albums;
-  }
-
-  async grantAlbumAccess(albumId: string, userId: string, grantedBy: string): Promise<void> {
-    const accessId = nanoid();
+    if (album) {
+      return true;
+    }
     
-    await db
-      .insert(albumAccess)
-      .values({
-        id: accessId,
-        albumId,
-        userId,
-        grantedBy,
-      });
+    // Check if user has been granted access and it hasn't expired
+    const [access] = await db
+      .select()
+      .from(albumAccess)
+      .where(
+        and(
+          eq(albumAccess.albumId, albumId),
+          eq(albumAccess.userId, userId),
+          sql`${albumAccess.expiresAt} > NOW()`
+        )
+      );
+    
+    return !!access;
   }
 
   async getUserAccessibleAlbums(userId: string): Promise<PrivateAlbum[]> {
@@ -823,8 +813,23 @@ export class DatabaseStorage implements IStorage {
       });
   }
 
-  async getUserAccessibleAlbums(userId: string): Promise<any[]> {
-    return [];
+  async getUserAccessibleAlbums(userId: string): Promise<PrivateAlbum[]> {
+    // Get albums where user has been granted access and it hasn't expired
+    const accessibleAlbums = await db
+      .select({
+        album: privateAlbums,
+      })
+      .from(albumAccess)
+      .innerJoin(privateAlbums, eq(albumAccess.albumId, privateAlbums.id))
+      .where(
+        and(
+          eq(albumAccess.userId, userId),
+          sql`${albumAccess.expiresAt} > NOW()`
+        )
+      )
+      .orderBy(desc(albumAccess.grantedAt));
+    
+    return accessibleAlbums.map(item => item.album);
   }
 }
 

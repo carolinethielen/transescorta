@@ -6,7 +6,7 @@ import { storage } from "./storage";
 import { setupCustomAuth, isAuthenticated } from "./customAuth";
 import { sendMessageSchema, createMatchSchema, updateProfileSchema } from "@shared/schema";
 import { z } from "zod";
-import { uploadProfile, uploadChat, uploadGeneral, cloudinary } from "./cloudinary";
+import { uploadProfile, uploadChat, uploadGeneral, uploadPrivateAlbum, cloudinary } from "./cloudinary";
 import { eq, and, desc } from "drizzle-orm";
 import { users, privateAlbums, albumAccess } from "@shared/schema";
 
@@ -748,7 +748,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Upload images to private album
-  app.post('/api/private-albums/:albumId/upload', isAuthenticated, uploadGeneral.array('images', 10), async (req: any, res) => {
+  app.post('/api/private-albums/:albumId/upload', isAuthenticated, uploadPrivateAlbum.array('images', 10), async (req: any, res) => {
     try {
       const userId = req.user.id;
       const { albumId } = req.params;
@@ -777,33 +777,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      // Upload images to Cloudinary
-      const uploadResults = await Promise.all(
-        files.map(file => 
-          new Promise((resolve, reject) => {
-            const stream = cloudinary.uploader.upload_stream(
-              {
-                folder: 'transescorta/private_albums',
-                resource_type: 'image',
-                transformation: [
-                  { width: 1000, height: 1000, crop: 'limit', quality: 'auto', fetch_format: 'auto' }
-                ]
-              },
-              (error, result) => {
-                if (error) reject(error);
-                else resolve(result);
-              }
-            );
-            stream.end(file.buffer);
-          })
-        )
-      );
-
-      const newImageUrls = uploadResults.map((result: any) => result.secure_url);
+      // Get the uploaded image URLs from Cloudinary (already uploaded via multer-storage-cloudinary)
+      const newImageUrls = files.map(file => file.path);
       const updatedImageUrls = [...(album.imageUrls || []), ...newImageUrls];
 
       // Update album with new images
       await storage.updateAlbumImages(albumId, updatedImageUrls);
+
+      console.log(`Added ${newImageUrls.length} images to album ${albumId}`);
 
       res.json({ 
         message: 'Bilder erfolgreich hochgeladen',
@@ -813,6 +794,80 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Error uploading album images:', error);
       res.status(500).json({ message: 'Fehler beim Hochladen der Bilder' });
+    }
+  });
+
+  // Share private album with 24h access
+  app.post('/api/private-albums/:albumId/share', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const { albumId } = req.params;
+      const { receiverId } = req.body;
+
+      if (!receiverId) {
+        return res.status(400).json({ message: 'Empfänger-ID ist erforderlich' });
+      }
+
+      // Check if album belongs to user
+      const albums = await storage.getUserPrivateAlbums(userId);
+      const album = albums.find(a => a.id === albumId);
+
+      if (!album) {
+        return res.status(404).json({ message: 'Album nicht gefunden' });
+      }
+
+      // Grant 24-hour access
+      await storage.grantAlbumAccess(albumId, receiverId, userId);
+
+      // Send a message with album link
+      const messageData = {
+        receiverId,
+        content: `💎 Private Album geteilt: "${album.title}" - 24h Zugang gewährt`,
+        messageType: 'private_album' as const,
+        privateAlbumId: albumId,
+        privateAlbumAccessExpiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+      };
+
+      const message = await storage.sendMessage(userId, messageData);
+
+      res.json({ 
+        message: 'Album erfolgreich geteilt',
+        albumAccess: {
+          albumId,
+          expiresAt: messageData.privateAlbumAccessExpiresAt
+        }
+      });
+    } catch (error) {
+      console.error('Error sharing private album:', error);
+      res.status(500).json({ message: 'Fehler beim Teilen des Albums' });
+    }
+  });
+
+  // Get shared album with access check
+  app.get('/api/private-albums/:albumId/shared', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.id;
+      const { albumId } = req.params;
+
+      // Check if user has access to this album
+      const hasAccess = await storage.checkAlbumAccess(albumId, userId);
+      
+      if (!hasAccess) {
+        return res.status(403).json({ message: 'Kein Zugang zu diesem Album oder Zugang abgelaufen' });
+      }
+
+      // Get album details
+      const albums = await storage.getUserPrivateAlbums(userId);
+      const album = albums.find(a => a.id === albumId);
+
+      if (!album) {
+        return res.status(404).json({ message: 'Album nicht gefunden' });
+      }
+
+      res.json(album);
+    } catch (error) {
+      console.error('Error accessing shared album:', error);
+      res.status(500).json({ message: 'Fehler beim Zugriff auf das geteilte Album' });
     }
   });
 
