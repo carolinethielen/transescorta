@@ -810,71 +810,6 @@ export class DatabaseStorage implements IStorage {
     };
   }
 
-  async blockUser(adminId: string, userId: string, reason?: string): Promise<void> {
-    await db.update(users).set({ isBlocked: true }).where(eq(users.id, userId));
-    await this.logAdminAction(adminId, 'block_user', userId, { reason });
-  }
-
-  async unblockUser(adminId: string, userId: string): Promise<void> {
-    await db.update(users).set({ isBlocked: false }).where(eq(users.id, userId));
-    await this.logAdminAction(adminId, 'unblock_user', userId, {});
-  }
-
-  async activatePremium(adminId: string, userId: string, days: number): Promise<void> {
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + days);
-    
-    await db.update(users).set({ 
-      isPremium: true, 
-      premiumExpiresAt: expiresAt 
-    }).where(eq(users.id, userId));
-    
-    await this.logAdminAction(adminId, 'activate_premium', userId, { days });
-  }
-
-  async deactivatePremium(adminId: string, userId: string): Promise<void> {
-    await db.update(users).set({ 
-      isPremium: false, 
-      premiumExpiresAt: null 
-    }).where(eq(users.id, userId));
-    
-    await this.logAdminAction(adminId, 'deactivate_premium', userId, {});
-  }
-
-  async updateUserAsAdmin(adminId: string, userId: string, updates: Partial<User>): Promise<User> {
-    const [updatedUser] = await db.update(users)
-      .set({ ...updates, updatedAt: new Date() })
-      .where(eq(users.id, userId))
-      .returning();
-    
-    await this.logAdminAction(adminId, 'edit_user', userId, { updates });
-    return updatedUser;
-  }
-
-  async deleteUserAsAdmin(adminId: string, userId: string, reason?: string): Promise<void> {
-    await this.logAdminAction(adminId, 'delete_user', userId, { reason });
-    
-    // Delete related data first
-    try {
-      await db.delete(messages).where(or(eq(messages.senderId, userId), eq(messages.receiverId, userId)));
-    } catch (e) { console.log("No messages to delete") }
-    
-    try {
-      await db.delete(matches).where(or(eq(matches.userId, userId), eq(matches.targetUserId, userId)));
-    } catch (e) { console.log("No matches to delete") }
-    
-    try {
-      await db.delete(privateAlbums).where(eq(privateAlbums.ownerId, userId));
-    } catch (e) { console.log("No albums to delete") }
-    
-    try {
-      await db.delete(imageModeration).where(eq(imageModeration.userId, userId));  
-    } catch (e) { console.log("No image moderation to delete") }
-    
-    // Finally delete the user
-    await db.delete(users).where(eq(users.id, userId));
-  }
-
   async getPendingImages(page: number, limit: number): Promise<{ images: any[]; total: number }> {
     const offset = (page - 1) * limit;
     
@@ -903,6 +838,23 @@ export class DatabaseStorage implements IStorage {
     };
   }
 
+  async logAdminAction(adminId: string, action: string, targetId: string, targetType: string, details: string): Promise<void> {
+    try {
+      await db.insert(adminLogs).values({
+        id: nanoid(),
+        adminId,
+        action,
+        targetId,
+        targetType,
+        details,
+        ipAddress: null,
+        createdAt: new Date()
+      });
+    } catch (error) {
+      console.error("Error logging admin action:", error);
+    }
+  }
+
   async approveImage(adminId: string, imageId: string): Promise<void> {
     await db.update(imageModeration).set({
       status: 'approved',
@@ -910,7 +862,7 @@ export class DatabaseStorage implements IStorage {
       moderatedBy: adminId
     }).where(eq(imageModeration.id, imageId));
     
-    await this.logAdminAction(adminId, 'approve_image', imageId, {});
+    await this.logAdminAction(adminId, 'approve_image', imageId, 'image', 'Image approved');
   }
 
   async rejectImage(adminId: string, imageId: string, reason?: string): Promise<void> {
@@ -935,7 +887,7 @@ export class DatabaseStorage implements IStorage {
       }
     }
     
-    await this.logAdminAction(adminId, 'reject_image', imageId, { reason });
+    await this.logAdminAction(adminId, 'reject_image', imageId, 'image', reason || 'Image rejected');
   }
 
   async createImageModeration(userId: string, imageUrl: string, imageType: 'profile' | 'gallery'): Promise<ImageModeration> {
@@ -991,6 +943,99 @@ export class DatabaseStorage implements IStorage {
     } catch (error) {
       console.error("Error fetching admin logs:", error);
       return { logs: [], total: 0 };
+    }
+  }
+
+  // Admin CRUD operations
+  async updateUserAsAdmin(adminId: string, userId: string, updates: Partial<User>): Promise<User> {
+    console.log("updateUserAsAdmin called:", { adminId, userId, updates });
+    
+    const [updatedUser] = await db
+      .update(users)
+      .set({ ...updates, updatedAt: new Date() })
+      .where(eq(users.id, userId))
+      .returning();
+
+    await this.logAdminAction(adminId, 'user_update', userId, 'user', JSON.stringify(updates));
+    return updatedUser;
+  }
+
+  async deleteUserAsAdmin(adminId: string, userId: string, reason: string): Promise<void> {
+    console.log("deleteUserAsAdmin called:", { adminId, userId, reason });
+    
+    await db.delete(users).where(eq(users.id, userId));
+    await this.logAdminAction(adminId, 'user_delete', userId, 'user', reason);
+  }
+
+  async blockUser(adminId: string, userId: string, reason: string): Promise<void> {
+    console.log("blockUser called:", { adminId, userId, reason });
+    
+    await db
+      .update(users)
+      .set({ isBlocked: true, updatedAt: new Date() })
+      .where(eq(users.id, userId));
+
+    await this.logAdminAction(adminId, 'user_block', userId, 'user', reason);
+  }
+
+  async unblockUser(adminId: string, userId: string): Promise<void> {
+    console.log("unblockUser called:", { adminId, userId });
+    
+    await db
+      .update(users)
+      .set({ isBlocked: false, updatedAt: new Date() })
+      .where(eq(users.id, userId));
+
+    await this.logAdminAction(adminId, 'user_unblock', userId, 'user', 'User unblocked');
+  }
+
+  async activatePremium(adminId: string, userId: string, days: number): Promise<void> {
+    console.log("activatePremium called:", { adminId, userId, days });
+    
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + days);
+
+    await db
+      .update(users)
+      .set({ 
+        isPremium: true, 
+        premiumExpiresAt: expiresAt,
+        updatedAt: new Date() 
+      })
+      .where(eq(users.id, userId));
+
+    await this.logAdminAction(adminId, 'premium_activate', userId, 'user', `Premium activated for ${days} days`);
+  }
+
+  async deactivatePremium(adminId: string, userId: string): Promise<void> {
+    console.log("deactivatePremium called:", { adminId, userId });
+    
+    await db
+      .update(users)
+      .set({ 
+        isPremium: false, 
+        premiumExpiresAt: null,
+        updatedAt: new Date() 
+      })
+      .where(eq(users.id, userId));
+
+    await this.logAdminAction(adminId, 'premium_deactivate', userId, 'user', 'Premium deactivated');
+  }
+
+  async logAdminAction(adminId: string, action: string, targetId: string, targetType: string, details: string): Promise<void> {
+    try {
+      await db.insert(adminLogs).values({
+        id: nanoid(),
+        adminId,
+        action,
+        targetId,
+        targetType,
+        details,
+        ipAddress: null,
+        createdAt: new Date()
+      });
+    } catch (error) {
+      console.error("Error logging admin action:", error);
     }
   }
 }
