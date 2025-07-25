@@ -59,7 +59,7 @@ export function BottomNavigation() {
       {isAuthenticated && !isLoading ? (
         // Authenticated Navigation
         <div className="flex justify-around py-3">
-          {getNavItems(user?.userType || undefined).map(({ path, icon: Icon, label }) => {
+          {getNavItems(user?.userType || undefined, t).map(({ path, icon: Icon, label }) => {
             const isActive = location === path;
             return (
               <Link

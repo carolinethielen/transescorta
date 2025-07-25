@@ -103,6 +103,21 @@ export interface Translations {
   applyFilters: string;
   newEscorts: string;
   nearbyEscorts: string;
+  
+  // Additional Settings translations
+  settingSaved: string;
+  privacySettingUpdated: string;
+  settingNotSaved: string;
+  pushNotificationsEnabled: string;
+  pushNotificationsEnabledDesc: string;
+  permissionDenied: string;
+  pushNotificationsBrowserSettings: string;
+  pushNotificationsNotActivated: string;
+  logoutSuccess: string;
+  logoutSuccessDesc: string;
+  transEscort: string;
+  customer: string;
+  upgrade: string;
 }
 
 export const supportedLanguages = [
@@ -218,6 +233,21 @@ export const translations: Record<string, Translations> = {
     applyFilters: 'Filter anwenden',
     newEscorts: 'Neue Escorts',
     nearbyEscorts: 'Escorts in der Nähe',
+    
+    // Additional Settings translations
+    settingSaved: 'Einstellung gespeichert',
+    privacySettingUpdated: 'Privatsphäre-Einstellung aktualisiert',
+    settingNotSaved: 'Einstellung konnte nicht gespeichert werden',
+    pushNotificationsEnabled: 'Push-Benachrichtigungen aktiviert',
+    pushNotificationsEnabledDesc: 'Du erhältst jetzt Benachrichtigungen für neue Nachrichten',
+    permissionDenied: 'Berechtigung verweigert',
+    pushNotificationsBrowserSettings: 'Push-Benachrichtigungen können in den Browser-Einstellungen aktiviert werden',
+    pushNotificationsNotActivated: 'Push-Benachrichtigungen konnten nicht aktiviert werden',
+    logoutSuccess: 'Erfolgreich abgemeldet',
+    logoutSuccessDesc: 'Du wurdest erfolgreich abgemeldet',
+    transEscort: 'Trans Escort',
+    customer: 'Kunde',
+    upgrade: 'Upgrade',
   },
   
   en: {
@@ -324,6 +354,21 @@ export const translations: Record<string, Translations> = {
     applyFilters: 'Apply Filters',
     newEscorts: 'New Escorts',
     nearbyEscorts: 'Nearby Escorts',
+    
+    // Additional Settings translations
+    settingSaved: 'Setting Saved',
+    privacySettingUpdated: 'Privacy Setting Updated',
+    settingNotSaved: 'Setting Could Not Be Saved',
+    pushNotificationsEnabled: 'Push Notifications Enabled',
+    pushNotificationsEnabledDesc: 'You will now receive notifications for new messages',
+    permissionDenied: 'Permission Denied',
+    pushNotificationsBrowserSettings: 'Push notifications can be enabled in browser settings',
+    pushNotificationsNotActivated: 'Push notifications could not be activated',
+    logoutSuccess: 'Successfully Logged Out',
+    logoutSuccessDesc: 'You have been successfully logged out',
+    transEscort: 'Trans Escort',
+    customer: 'Customer',
+    upgrade: 'Upgrade',
   },
   
   pt: {
@@ -430,6 +475,21 @@ export const translations: Record<string, Translations> = {
     applyFilters: 'Aplicar Filtros',
     newEscorts: 'Novos Escorts',
     nearbyEscorts: 'Escorts Próximos',
+    
+    // Additional Settings translations
+    settingSaved: 'Configuração Salva',
+    privacySettingUpdated: 'Configuração de Privacidade Atualizada',
+    settingNotSaved: 'Configuração Não Pôde Ser Salva',
+    pushNotificationsEnabled: 'Notificações Push Ativadas',
+    pushNotificationsEnabledDesc: 'Você receberá notificações para novas mensagens',
+    permissionDenied: 'Permissão Negada',
+    pushNotificationsBrowserSettings: 'Notificações push podem ser ativadas nas configurações do navegador',
+    pushNotificationsNotActivated: 'Notificações push não puderam ser ativadas',
+    logoutSuccess: 'Logout Realizado com Sucesso',
+    logoutSuccessDesc: 'Você foi desconectado com sucesso',
+    transEscort: 'Trans Escort',
+    customer: 'Cliente',
+    upgrade: 'Upgrade',
   },
   
   es: {
@@ -536,6 +596,21 @@ export const translations: Record<string, Translations> = {
     applyFilters: 'Aplicar Filtros',
     newEscorts: 'Nuevos Escorts',
     nearbyEscorts: 'Escorts Cercanos',
+    
+    // Additional Settings translations
+    settingSaved: 'Configuración Guardada',
+    privacySettingUpdated: 'Configuración de Privacidad Actualizada',
+    settingNotSaved: 'No Se Pudo Guardar la Configuración',
+    pushNotificationsEnabled: 'Notificaciones Push Activadas',
+    pushNotificationsEnabledDesc: 'Ahora recibirás notificaciones para nuevos mensajes',
+    permissionDenied: 'Permiso Denegado',
+    pushNotificationsBrowserSettings: 'Las notificaciones push se pueden activar en la configuración del navegador',
+    pushNotificationsNotActivated: 'No se pudieron activar las notificaciones push',
+    logoutSuccess: 'Sesión Cerrada Exitosamente',
+    logoutSuccessDesc: 'Has cerrado sesión exitosamente',
+    transEscort: 'Trans Escort',
+    customer: 'Cliente',
+    upgrade: 'Actualizar',
   },
   
   fr: {
@@ -642,5 +717,20 @@ export const translations: Record<string, Translations> = {
     applyFilters: 'Appliquer les Filtres',
     newEscorts: 'Nouveaux Escorts',
     nearbyEscorts: 'Escorts à Proximité',
+    
+    // Additional Settings translations
+    settingSaved: 'Paramètre Sauvegardé',
+    privacySettingUpdated: 'Paramètre de Confidentialité Mis à Jour',
+    settingNotSaved: 'Le Paramètre N\'a Pas Pu Être Sauvegardé',
+    pushNotificationsEnabled: 'Notifications Push Activées',
+    pushNotificationsEnabledDesc: 'Vous recevrez maintenant des notifications pour les nouveaux messages',
+    permissionDenied: 'Permission Refusée',
+    pushNotificationsBrowserSettings: 'Les notifications push peuvent être activées dans les paramètres du navigateur',
+    pushNotificationsNotActivated: 'Les notifications push n\'ont pas pu être activées',
+    logoutSuccess: 'Déconnexion Réussie',
+    logoutSuccessDesc: 'Vous avez été déconnecté avec succès',
+    transEscort: 'Trans Escort',
+    customer: 'Client',
+    upgrade: 'Mise à Niveau',
   },
 };

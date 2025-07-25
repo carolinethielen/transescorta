@@ -9,7 +9,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { LanguageSelector } from '@/components/LanguageSelector';
-import { LanguageTest } from '@/components/LanguageTest';
+
 import { useToast } from '@/hooks/use-toast';
 import { ChangePasswordModal } from '@/components/ChangePasswordModal';
 import { DeleteAccountModal } from '@/components/DeleteAccountModal';
@@ -218,7 +218,6 @@ export default function Settings() {
   return (
     <div className="min-h-screen bg-background p-4 pb-24">
       <div className="max-w-md mx-auto space-y-6">
-        <LanguageTest />
         <h1 className="text-2xl font-bold text-foreground">{t?.settings || 'Einstellungen'}</h1>
         
         {/* User Info Card */}
