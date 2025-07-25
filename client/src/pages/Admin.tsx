@@ -94,14 +94,33 @@ export default function Admin() {
 
   // Mutations
   const updateUserMutation = useMutation({
-    mutationFn: (data: { userId: string; updates: Partial<User> }) =>
-      apiRequest(`/api/admin/users/${data.userId}`, "PUT", data.updates),
+    mutationFn: async (data: { userId: string; updates: Partial<User> }) => {
+      console.log("updateUserMutation sending:", data);
+      const response = await fetch(`/api/admin/users/${data.userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(data.updates)
+      });
+      
+      if (!response.ok) {
+        const error = await response.text();
+        console.error("Update user error:", error);
+        throw new Error(error);
+      }
+      
+      return response.json();
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
       queryClient.invalidateQueries({ queryKey: ['/api/admin/stats'] });
       toast({ title: "Benutzer aktualisiert", description: "Änderungen wurden erfolgreich gespeichert." });
       setIsUserDialogOpen(false);
     },
+    onError: (error) => {
+      console.error("Update user mutation error:", error);
+      toast({ title: "Fehler", description: "Benutzer konnte nicht aktualisiert werden.", variant: "destructive" });
+    }
   });
 
   const blockUserMutation = useMutation({
@@ -125,13 +144,32 @@ export default function Admin() {
   });
 
   const activatePremiumMutation = useMutation({
-    mutationFn: (data: { userId: string; days: number }) =>
-      apiRequest(`/api/admin/users/${data.userId}/premium/activate`, "POST", { days: data.days }),
+    mutationFn: async (data: { userId: string; days: number }) => {
+      console.log("activatePremiumMutation sending:", data);
+      const response = await fetch(`/api/admin/users/${data.userId}/premium/activate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ days: data.days })
+      });
+      
+      if (!response.ok) {
+        const error = await response.text();
+        console.error("Activate premium error:", error);
+        throw new Error(error);
+      }
+      
+      return response.json();
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
       queryClient.invalidateQueries({ queryKey: ['/api/admin/stats'] });
       toast({ title: "Premium aktiviert", description: "Premium-Status wurde erfolgreich aktiviert." });
     },
+    onError: (error) => {
+      console.error("Activate premium mutation error:", error);
+      toast({ title: "Fehler", description: "Premium konnte nicht aktiviert werden.", variant: "destructive" });
+    }
   });
 
   const deactivatePremiumMutation = useMutation({
@@ -173,14 +211,33 @@ export default function Admin() {
   });
 
   const deleteUserMutation = useMutation({
-    mutationFn: (data: { userId: string; reason: string }) =>
-      apiRequest(`/api/admin/users/${data.userId}`, "DELETE", { reason: data.reason }),
+    mutationFn: async (data: { userId: string; reason: string }) => {
+      console.log("deleteUserMutation sending:", data);
+      const response = await fetch(`/api/admin/users/${data.userId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ reason: data.reason })
+      });
+      
+      if (!response.ok) {
+        const error = await response.text();
+        console.error("Delete user error:", error);
+        throw new Error(error);
+      }
+      
+      return response.json();
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
       queryClient.invalidateQueries({ queryKey: ['/api/admin/stats'] });
       toast({ title: "Benutzer gelöscht", description: "Der Benutzer wurde erfolgreich gelöscht." });
       setIsUserDialogOpen(false);
     },
+    onError: (error) => {
+      console.error("Delete user mutation error:", error);
+      toast({ title: "Fehler", description: "Benutzer konnte nicht gelöscht werden.", variant: "destructive" });
+    }
   });
 
   const handleSwipeApprove = () => {
