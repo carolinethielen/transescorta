@@ -90,9 +90,11 @@ export default function Home() {
   const filteredEscorts = filters ? escorts.filter(escort => {
     if (filters.ageRange && (escort.age < filters.ageRange[0] || escort.age > filters.ageRange[1])) return false;
     if (filters.priceRange && escort.hourlyRate && (escort.hourlyRate < filters.priceRange[0] || escort.hourlyRate > filters.priceRange[1])) return false;
-    if (filters.position && escort.position !== filters.position) return false;
-    if (filters.bodyType && escort.bodyType !== filters.bodyType) return false;
-    if (filters.ethnicity && escort.ethnicity !== filters.ethnicity) return false;
+    if (filters.cockSizeRange && escort.cockSize && (escort.cockSize < filters.cockSizeRange[0] || escort.cockSize > filters.cockSizeRange[1])) return false;
+    if (filters.position && filters.position !== 'all' && escort.position !== filters.position) return false;
+    if (filters.bodyType && filters.bodyType !== 'all' && escort.bodyType !== filters.bodyType) return false;
+    if (filters.ethnicity && filters.ethnicity !== 'all' && escort.ethnicity !== filters.ethnicity) return false;
+    if (filters.circumcision && filters.circumcision !== 'all' && escort.circumcision !== filters.circumcision) return false;
     if (filters.onlineOnly && !escort.isOnline) return false;
     if (filters.premiumOnly && !escort.isPremium) return false;
     if (filters.services && filters.services.length > 0) {
