@@ -70,10 +70,11 @@ function Router() {
           {/* Premium subscription only for trans escorts */}
           <Route path="/subscribe" component={Subscribe} />
           <Route path="/premium" component={Premium} />
-          {/* Admin route - only for admins */}
-          <Route path="/admin" component={Admin} />
         </>
       )}
+      
+      {/* Admin route - accessible for all authenticated users (protection handled in component) */}
+      <Route path="/admin" component={Admin} />
       
       {/* Premium success/failure routes - accessible without auth for payment callbacks */}
       <Route path="/premium-success" component={PremiumSuccess} />
