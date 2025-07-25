@@ -13,29 +13,33 @@ interface AuthenticatedRequest extends Request {
 const router = Router();
 
 // Middleware to check admin access
-const requireAdmin = async (req: AuthenticatedRequest, res: any, next: any) => {
+const requireAdmin = async (req: any, res: any, next: any) => {
   try {
+    console.log("Admin middleware - checking user:", req.user);
+    
     if (!req.user) {
       return res.status(401).json({ message: "Nicht authentifiziert" });
     }
 
-    const user = await storage.getUser(req.user!.id);
+    const user = await storage.getUser(req.user.id);
+    console.log("Admin middleware - found user:", user?.email, "isAdmin:", user?.isAdmin);
+    
     if (!user || !user.isAdmin) {
       return res.status(403).json({ message: "Admin-Berechtigung erforderlich" });
     }
 
     next();
   } catch (error) {
-    console.error("Admin auth error:", error);
-    res.status(500).json({ message: "Server-Fehler bei der Admin-Authentifizierung" });
+    console.error("Admin middleware error:", error);
+    res.status(500).json({ message: "Server-Fehler" });
   }
 };
 
-// Apply admin middleware to all routes
-router.use(requireAdmin);
+// Apply admin middleware to all routes EXCEPT the router itself
+// The middleware is applied per route instead
 
 // Statistics
-router.get("/stats/users", async (req, res) => {
+router.get("/stats", requireAdmin, async (req, res) => {
   try {
     const stats = await storage.getUserStats();
     res.json(stats);
@@ -56,7 +60,7 @@ router.get("/stats/revenue", async (req, res) => {
 });
 
 // User Management
-router.get("/users", async (req, res) => {
+router.get("/users", requireAdmin, async (req, res) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 20;
@@ -71,7 +75,7 @@ router.get("/users", async (req, res) => {
   }
 });
 
-router.put("/users/:userId", async (req, res) => {
+router.put("/users/:userId", requireAdmin, async (req, res) => {
   try {
     const { userId } = req.params;
     const updates = req.body;
@@ -85,7 +89,7 @@ router.put("/users/:userId", async (req, res) => {
   }
 });
 
-router.delete("/users/:userId", async (req, res) => {
+router.delete("/users/:userId", requireAdmin, async (req, res) => {
   try {
     const { userId } = req.params;
     const { reason } = req.body;
@@ -99,7 +103,7 @@ router.delete("/users/:userId", async (req, res) => {
   }
 });
 
-router.post("/users/:userId/block", async (req, res) => {
+router.post("/users/:userId/block", requireAdmin, async (req, res) => {
   try {
     const { userId } = req.params;
     const { reason } = req.body;
@@ -113,7 +117,7 @@ router.post("/users/:userId/block", async (req, res) => {
   }
 });
 
-router.post("/users/:userId/unblock", async (req, res) => {
+router.post("/users/:userId/unblock", requireAdmin, async (req, res) => {
   try {
     const { userId } = req.params;
     const adminId = req.user!.id;
@@ -126,7 +130,7 @@ router.post("/users/:userId/unblock", async (req, res) => {
   }
 });
 
-router.post("/users/:userId/premium/activate", async (req, res) => {
+router.post("/users/:userId/premium/activate", requireAdmin, async (req, res) => {
   try {
     const { userId } = req.params;
     const { days = 30 } = req.body;
@@ -140,7 +144,7 @@ router.post("/users/:userId/premium/activate", async (req, res) => {
   }
 });
 
-router.post("/users/:userId/premium/deactivate", async (req, res) => {
+router.post("/users/:userId/premium/deactivate", requireAdmin, async (req, res) => {
   try {
     const { userId } = req.params;
     const adminId = req.user!.id;
@@ -154,7 +158,7 @@ router.post("/users/:userId/premium/deactivate", async (req, res) => {
 });
 
 // Image Moderation
-router.get("/images/pending", async (req, res) => {
+router.get("/images/pending", requireAdmin, async (req, res) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 10;
@@ -167,7 +171,7 @@ router.get("/images/pending", async (req, res) => {
   }
 });
 
-router.post("/images/:imageId/approve", async (req, res) => {
+router.post("/images/:imageId/approve", requireAdmin, async (req, res) => {
   try {
     const { imageId } = req.params;
     const adminId = req.user!.id;
@@ -180,7 +184,7 @@ router.post("/images/:imageId/approve", async (req, res) => {
   }
 });
 
-router.post("/images/:imageId/reject", async (req, res) => {
+router.post("/images/:imageId/reject", requireAdmin, async (req, res) => {
   try {
     const { imageId } = req.params;
     const { reason } = req.body;
@@ -199,7 +203,7 @@ router.post("/images/:imageId/reject", async (req, res) => {
 });
 
 // Admin Logs
-router.get("/logs", async (req, res) => {
+router.get("/logs", requireAdmin, async (req, res) => {
   try {
     const page = parseInt(req.query.page as string) || 1;
     const limit = parseInt(req.query.limit as string) || 50;

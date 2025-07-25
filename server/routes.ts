@@ -578,8 +578,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Admin routes
-  app.use('/api/admin', adminRoutes);
+  // Admin routes - must be after auth setup
+  app.use('/api/admin', isAuthenticated, adminRoutes);
 
   // Create HTTP server
   const httpServer = createServer(app);
