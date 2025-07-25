@@ -103,16 +103,16 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <LanguageProvider>
+      <LanguageProvider>
+        <ThemeProvider>
           <TooltipProvider>
-            <Toaster />
             <Layout>
               <Router />
             </Layout>
+            <Toaster />
           </TooltipProvider>
-        </LanguageProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </LanguageProvider>
     </QueryClientProvider>
   );
 }
