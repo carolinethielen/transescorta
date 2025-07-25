@@ -950,13 +950,32 @@ export class DatabaseStorage implements IStorage {
   async updateUserAsAdmin(adminId: string, userId: string, updates: Partial<User>): Promise<User> {
     console.log("updateUserAsAdmin called:", { adminId, userId, updates });
     
+    // Clean the updates object - remove id, createdAt, and convert date strings to Date objects
+    const cleanUpdates = { ...updates };
+    delete cleanUpdates.id;
+    delete cleanUpdates.createdAt;
+    
+    // Convert string dates to Date objects if they exist
+    if (cleanUpdates.lastLoginAt && typeof cleanUpdates.lastLoginAt === 'string') {
+      cleanUpdates.lastLoginAt = new Date(cleanUpdates.lastLoginAt);
+    }
+    if (cleanUpdates.lastSeen && typeof cleanUpdates.lastSeen === 'string') {
+      cleanUpdates.lastSeen = new Date(cleanUpdates.lastSeen);
+    }
+    if (cleanUpdates.premiumExpiresAt && typeof cleanUpdates.premiumExpiresAt === 'string') {
+      cleanUpdates.premiumExpiresAt = new Date(cleanUpdates.premiumExpiresAt);
+    }
+    if (cleanUpdates.passwordResetExpires && typeof cleanUpdates.passwordResetExpires === 'string') {
+      cleanUpdates.passwordResetExpires = new Date(cleanUpdates.passwordResetExpires);
+    }
+    
     const [updatedUser] = await db
       .update(users)
-      .set({ ...updates, updatedAt: new Date() })
+      .set({ ...cleanUpdates, updatedAt: new Date() })
       .where(eq(users.id, userId))
       .returning();
 
-    await this.logAdminAction(adminId, 'user_update', userId, 'user', JSON.stringify(updates));
+    await this.logAdminAction(adminId, 'user_update', userId, 'user', JSON.stringify(cleanUpdates));
     return updatedUser;
   }
 

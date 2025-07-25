@@ -711,9 +711,37 @@ export default function Admin() {
                     <Button 
                       onClick={() => {
                         console.log("Saving user:", selectedUser);
+                        
+                        // Only send relevant fields, not the entire user object
+                        const updates = {
+                          firstName: selectedUser.firstName,
+                          lastName: selectedUser.lastName,
+                          email: selectedUser.email,
+                          username: selectedUser.username,
+                          bio: selectedUser.bio,
+                          age: selectedUser.age,
+                          height: selectedUser.height,
+                          weight: selectedUser.weight,
+                          cockSize: selectedUser.cockSize,
+                          circumcision: selectedUser.circumcision,
+                          position: selectedUser.position,
+                          bodyType: selectedUser.bodyType,
+                          ethnicity: selectedUser.ethnicity,
+                          services: selectedUser.services,
+                          hourlyRate: selectedUser.hourlyRate,
+                          location: selectedUser.location,
+                          isAdmin: selectedUser.isAdmin,
+                          isBlocked: selectedUser.isBlocked,
+                          isPremium: selectedUser.isPremium,
+                          isEmailVerified: selectedUser.isEmailVerified,
+                          showOnlineStatus: selectedUser.showOnlineStatus,
+                          showLastSeen: selectedUser.showLastSeen,
+                          allowMessagePreviews: selectedUser.allowMessagePreviews
+                        };
+                        
                         updateUserMutation.mutate({ 
                           userId: selectedUser.id, 
-                          updates: selectedUser 
+                          updates: updates 
                         });
                       }}
                       disabled={updateUserMutation.isPending}

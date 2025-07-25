@@ -1,0 +1,131 @@
+ stallwart: failed ping 1
+ 
+      /////////////////////
+   ///////////////////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////        Curious and driven?
+  ///////////////@@@@@@@///////        Work with us!
+  ///////////////@@@@@@@///////
+  ///////////////@@@@@@@///////        https://join.replit.com/hack.with.us
+  ////////@@@@@@@//////////////
+  ////////@@@@@@@//////////////
+  ////////@@@@@@#//////////////
+   ///////////////////////////
+      /////////////////////
+      
+ [LaunchDarkly] LaunchDarkly client initialized
+AttachmentTracker:1 Banner not shown: beforeinstallpromptevent.preventDefault() called. The page must call beforeinstallpromptevent.prompt() to show the banner.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+Error while parsing the 'sandbox' attribute: 'allow-downloads-without-user-activation' is an invalid sandbox flag.
+ Unrecognized feature: 'ambient-light-sensor'.
+_ @ framework-29239f63c0f77ffb.js:1
+ Unrecognized feature: 'battery'.
+_ @ framework-29239f63c0f77ffb.js:1
+ Unrecognized feature: 'execution-while-not-rendered'.
+_ @ framework-29239f63c0f77ffb.js:1
+ Unrecognized feature: 'execution-while-out-of-viewport'.
+_ @ framework-29239f63c0f77ffb.js:1
+ Unrecognized feature: 'layout-animations'.
+_ @ framework-29239f63c0f77ffb.js:1
+ Unrecognized feature: 'legacy-image-formats'.
+_ @ framework-29239f63c0f77ffb.js:1
+ Unrecognized feature: 'navigation-override'.
+_ @ framework-29239f63c0f77ffb.js:1
+ Unrecognized feature: 'oversized-images'.
+_ @ framework-29239f63c0f77ffb.js:1
+ Unrecognized feature: 'publickey-credentials'.
+_ @ framework-29239f63c0f77ffb.js:1
+ Unrecognized feature: 'speaker-selection'.
+_ @ framework-29239f63c0f77ffb.js:1
+ Unrecognized feature: 'unoptimized-images'.
+_ @ framework-29239f63c0f77ffb.js:1
+ Unrecognized feature: 'unsized-media'.
+_ @ framework-29239f63c0f77ffb.js:1
+ Unrecognized feature: 'pointer-lock'.
+_ @ framework-29239f63c0f77ffb.js:1
+ Allow attribute will take precedence over 'allowfullscreen'.
+_ @ framework-29239f63c0f77ffb.js:1
+ Allow attribute will take precedence over 'allowpaymentrequest'.
+_ @ framework-29239f63c0f77ffb.js:1
+workspace_iframe.html:32 Unrecognized feature: 'ambient-light-sensor'.
+workspace_iframe.html:32 Unrecognized feature: 'battery'.
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-not-rendered'.
+workspace_iframe.html:32 Unrecognized feature: 'execution-while-out-of-viewport'.
+workspace_iframe.html:32 Unrecognized feature: 'layout-animations'.
+workspace_iframe.html:32 Unrecognized feature: 'legacy-image-formats'.
+workspace_iframe.html:32 Unrecognized feature: 'navigation-override'.
+workspace_iframe.html:32 Unrecognized feature: 'oversized-images'.
+workspace_iframe.html:32 Unrecognized feature: 'publickey-credentials'.
+workspace_iframe.html:32 Unrecognized feature: 'speaker-selection'.
+workspace_iframe.html:32 Unrecognized feature: 'unoptimized-images'.
+workspace_iframe.html:32 Unrecognized feature: 'unsized-media'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowfullscreen'.
+workspace_iframe.html:32 Allow attribute will take precedence over 'allowpaymentrequest'.
+Network.js:227 WebSocket connection to 'wss://267ab3e5-cbb9-42c3-80dc-bb6cd22ae3bd-00-3bp6ijuj765eh.kirk.replit.dev/?token=C3nJtppy3ah9' failed: 
+t @ Network.js:227
+Network.js:227 Uncaught (in promise) SyntaxError: Failed to construct 'WebSocket': The URL 'wss://localhost:undefined/?token=C3nJtppy3ah9' is invalid.
+    at new t (Network.js:227:18)
+    at setupWebSocket (client:536:19)
+    at fallback (client:509:16)
+    at WebSocket.<anonymous> (client:555:7)
+267ab3e5-cbb9-42c3-80dc-bb6cd22ae3bd-00-3bp6ijuj765eh.kirk.replit.dev/api/users/recommended:1 
+            
+            
+           Failed to load resource: the server responded with a status of 404 (Not Found)
+Console.js:61 Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+Mt.forEach.n.<computed> @ Console.js:61
+Console.js:61 activatePremiumMutation sending: Object
+Console.js:61 Saving user: Object
+Console.js:61 updateUserMutation sending: Object
+267ab3e5-cbb9-42c3-80dc-bb6cd22ae3bd-00-3bp6ijuj765eh.kirk.replit.dev/api/admin/users/s1-khGY0h_JrhLOMofw_6:1 
+            
+            
+           Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+Console.js:61 Update user error: {"message":"Fehler beim Aktualisieren des Benutzers"}
+Mt.forEach.n.<computed> @ Console.js:61
+Console.js:61 Update user mutation error: Error: {"message":"Fehler beim Aktualisieren des Benutzers"}
+    at Object.mutationFn (Admin.tsx:109:15)
+Mt.forEach.n.<computed> @ Console.js:61
+Console.js:61 Saving user: Object
+Console.js:61 updateUserMutation sending: Object
+267ab3e5-cbb9-42c3-80dc-bb6cd22ae3bd-00-3bp6ijuj765eh.kirk.replit.dev/api/admin/users/s1-khGY0h_JrhLOMofw_6:1 
+            
+            
+           Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+Console.js:61 Update user error: {"message":"Fehler beim Aktualisieren des Benutzers"}
+Mt.forEach.n.<computed> @ Console.js:61
+Console.js:61 Update user mutation error: Error: {"message":"Fehler beim Aktualisieren des Benutzers"}
+    at Object.mutationFn (Admin.tsx:109:15)
+Mt.forEach.n.<computed> @ Console.js:61
+Console.js:61 Saving user: Object
+Console.js:61 updateUserMutation sending: Object
+267ab3e5-cbb9-42c3-80dc-bb6cd22ae3bd-00-3bp6ijuj765eh.kirk.replit.dev/api/admin/users/s1-khGY0h_JrhLOMofw_6:1 
+            
+            
+           Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+Console.js:61 Update user error: {"message":"Fehler beim Aktualisieren des Benutzers"}
+Mt.forEach.n.<computed> @ Console.js:61
+Console.js:61 Update user mutation error: Error: {"message":"Fehler beim Aktualisieren des Benutzers"}
+    at Object.mutationFn (Admin.tsx:109:15)
+Mt.forEach.n.<computed> @ Console.js:61
