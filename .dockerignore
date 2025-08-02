@@ -1,0 +1,55 @@
+# Dependencies
+node_modules
+npm-debug.log*
+
+# Development files
+.env
+.env.local
+.env.development
+.env.test
+
+# Build artifacts
+dist
+.next
+build
+
+# Runtime files
+*.log
+logs
+*.pid
+*.seed
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Testing
+coverage
+.nyc_output
+
+# Documentation
+README.md
+*.md
+docs/
+
+# Development tools
+.replit
+replit.nix
+
+# Temporary files
+tmp/
+temp/
+uploads/
+
+# Local state
+.local/

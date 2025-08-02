@@ -1,0 +1,184 @@
+
++38 (067) 823-83-81
+support@hostpro.ua
+1
+English
+René Glöckner
+Services
+Domains
+Billing
+Support
+Affiliates
+Configure
+Basic-SSD-VPS
+SSD VPS-1
+1 vCPU 2 GB RAM 50 GB SSD-drive
+Select the payment period for the
+$10.00 / mo
+Triennially
+
+$10.00 / mo
+Biennially
+
+$10.00 / mo
+Annually
+
+$10.00 / mo
+Semi-Annually
+
+$10.00 / mo
+Quarterly
+
+$10.00
+Monthly
+
+Configure Server
+Hostname
+server2605.server-vps.com
+Data Center
+Kyiv
+Ukraine
+
+Amsterdam
+Netherlands
+
+Tampa
+USA
+
+Warsaw
+Poland
+
+Operating system
+Debian OS
+
+Select version
+
+Almalinux OS
+
+Select version
+
+Ubuntu OS
+
+Select version
+
+Fedora OS
+
+Select version
+
+Rocky OS
+
+Select version
+
+Control panel
+
+None
+Додаткові IPv4
+
+1 $3.00
+Auto Installer
+
+None
+Additional Services
+CloudLinux OS Shared
+$13.45 Monthly
+
+CloudLinux OS is the leading platform for multitenancy. It improves server stability, density, and security by isolating each tenant and giving them allocated server resources.
+
+Imunify AV+
+$7.00 Monthly
+
+ImunifyAV+ виявляє всі види шкідливих програм у всіх типах файлів, більше 97% з яких можна очистити автоматично.
+
+WP Guardian (cPanel Addon) 10 sites
+$15.00 Monthly
+
+Блокуйте зловмисні запити та зменшуйте вразливості, не змінюючи код веб-сайту та не впливаючи на продуктивність сайту. Захистіть сервери та сайти WordPress без встановлення оновлень.
+
+WP Guardian (cPanel Addon) 30 sites
+$29.85 Monthly
+
+Блокуйте зловмисні запити та зменшуйте вразливості, не змінюючи код веб-сайту та не впливаючи на продуктивність сайту. Захистіть сервери та сайти WordPress без встановлення оновлень.
+
+WP Guardian (cPanel Addon) 100 sites
+$74.85 Monthly
+
+Блокуйте зловмисні запити та зменшуйте вразливості, не змінюючи код веб-сайту та не впливаючи на продуктивність сайту. Захистіть сервери та сайти WordPress без встановлення оновлень.
+
+Order Summary
+Basic-SSD-VPS - SSD VPS-1
+$10.00
+Data Center: Kyiv
+$0.00
+Operating system: Ubuntu Server 24.04
+$0.00
+Control panel: None
+$0.00
+Додаткові IPv4: 1
+$3.00
+Auto Installer: None
+$0.00
+Total Recurring
+Monthly
+$13.00
+Total Due Today
+$13.00
+© HostPro Ukraine 2025
+All rights reserved
+Domains
+
+Domain Register
+Transfer domain
+Domain sale
+Domain ID protection
+Hosting
+
+The fastest hosting
+Linux Hosting
+PRO Linux Hosting
+Windows Hоsting
+WordPress Hosting
+CMS Hosting
+Cloud Site
+Reseller Hosting
+Servers
+
+SSD VPS
+NVMe VPS
+Premium NVMe VPS
+Turbo VPS
+Windows VPS
+Storage VPS
+Dedicated servers
+Services
+
+Transfer site
+SSL Certificаtes
+Clоudflare
+Website Builder
+Microsoft License Rental
+Tariffs archive
+Help
+
+Blog
+Hostpro Wiki
+Knowledgebase
+Company
+
+About us
+Contacts
+Documents
+Payment Methods
+Client Area
+Affiliate Program
+Privacy Policy for PayPal
+24/7 Support
+
+Need help? Contact us:
+
+support@hostpro.ua
++38 (067) 823-83-81
++38 (093) 170-72-81
++38 (044) 585-77-96
+Write a request for support
+Social Networks:
+

@@ -1,0 +1,132 @@
+Cloudinary Logo
+
+Home
+
+Assets
+
+Image
+
+Video
+
+MediaFlows
+
+3D
+
+FinalTouch
+
+
+
+
+
+TP
+
+DF
+dfdzhyosd
+Image Home
+Media Library
+Manage Transformations
+
+Optimize and Deliver
+Documentation
+Developer Getting Started
+
+Get Started with Cloudinary Image and Video
+
+1
+Choose an SDK
+
+
+All SDKs
+
+Node.js
+
+React
+
+Next.js
+
+Python
+2
+Install Cloudinary
+
+Get the Cloudinary Node.js SDK
+
+npm
+pnpm
+yarn
+
+Copy
+npm i cloudinary
+3
+Upload, Optimize and Transform
+
+
+Watch tutorial
+
+View API Keys
+index.js
+
+Copy
+import { v2 as cloudinary } from 'cloudinary';
+
+(async function() {
+
+    // Configuration
+    cloudinary.config({ 
+        cloud_name: 'dfdzhyosd', 
+        api_key: '368975572136879', 
+        api_secret: '<your_api_secret>' // Click 'View API Keys' above to copy your API secret
+    });
+    
+    // Upload an image
+     const uploadResult = await cloudinary.uploader
+       .upload(
+           'https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg', {
+               public_id: 'shoes',
+           }
+       )
+       .catch((error) => {
+           console.log(error);
+       });
+    
+    console.log(uploadResult);
+    
+    // Optimize delivery by resizing and applying auto-format and auto-quality
+    const optimizeUrl = cloudinary.url('shoes', {
+        fetch_format: 'auto',
+        quality: 'auto'
+    });
+    
+    console.log(optimizeUrl);
+    
+    // Transform the image: auto-crop to square aspect_ratio
+    const autoCropUrl = cloudinary.url('shoes', {
+        crop: 'auto',
+        gravity: 'auto',
+        width: 500,
+        height: 500,
+    });
+    
+    console.log(autoCropUrl);    
+})();
+4
+Explore
+
+Video
+Transform and Customize
+Optimize and Deliver
+Manage and Analyze
+
+Product Environment Credentials
+
+Cloud name	
+dfdzhyosd
+API key	
+368975572136879
+API secret	
+9j9jwDO03Yc1UgzJO7pmppt4mwo
+
+API environment variable	
+CLOUDINARY_URL=cloudinary://368975572136879:**********@dfdzhyosd
+
+
+Close

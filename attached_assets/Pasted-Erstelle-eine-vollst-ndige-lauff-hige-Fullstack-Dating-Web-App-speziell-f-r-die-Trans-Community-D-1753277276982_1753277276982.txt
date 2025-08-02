@@ -1,0 +1,55 @@
+Erstelle eine vollständige, lauffähige Fullstack-Dating-Web-App, speziell für die Trans-Community. Die App soll sich wie eine moderne **mobile Web-App** anfühlen – inspiriert von Plattformen wie PlanetRomeo oder Grindr – aber mit einem **noch besseren UX/UI**, optimiert für mobile Nutzung.
+
+
+
+---
+
+## ✅ Funktionen & Aufbau
+
+### 🔷 VISUELLES & UX-ZIEL
+- **Modernes App-ähnliches Design** (wie bei Grindr/PlanetRomeo)
+- **Fixierte Menüleiste unten** (mit Icons: Home, Chat, Profile, Explore, Settings) ALLES AUF DEUTSCH 
+- **Dark Mode + Light Mode**, umschaltbar, mit Animation
+- Mobile-first Layout mit elegantem, intuitivem Flow
+- Farben:
+  - Dark Hintergrund: #0E0E0E
+  - Akzent: #FF007F
+  - Helle Variante: #FFFFFF
+
+---
+
+### 🔷 FRONTEND (Next.js + Tailwind CSS + Framer Motion)
+- Grid View mit Nutzerkarten (Profilbilder, Name, Standort)
+- Swipe View (Tinder-artig)
+- Profildetailseiten mit Bildgalerie, Tags, Standort (Google Maps)
+- Chatbereich im WhatsApp-Web-Stil mit Bubble-Effekten
+- Profilbearbeitung (Bild, Name, Bio, Interessen)
+- Premium-Promotion-CTA auf Profilen
+
+---
+
+### 🔷 BACKEND (Node.js + Express + MongoDB)
+- Authentifizierung via JWT (Login, Registrierung)
+- Datenbank: MongoDB
+- Live-Chat mit Socket.io
+- Stripe Integration:
+  - Nutzer können Premium-Zugänge kaufen
+  - Premium zeigt sie weiter oben, Highlighting im Grid
+  - Premium-Filter (mehr Likes, Farben, Infos etc.)
+- API-Endpunkte:
+  - /users, /chat, /premium, /auth, /profile
+
+---
+
+### 🔷 EXTRAS
+- Dummy-User mit Bildern im /public/dummy-images/ Ordner
+- .env.example mit allen Keys (Maps, Stripe)
+- **README.md** mit Setup-Anleitung für Replit, Railway, Vercel
+- Alles lauffähig mit Public URL direkt in Replit testbar
+
+---
+
+## ✅ Ziel:
+Ein echtes, elegantes, responsives Online-Dating-Erlebnis für Trans*-User, optimiert für Smartphone-Nutzung – mit Swipe-UX, Grid-System, Chat, Location-Funktionen und Premium-Profilen. Alles sofort nutzbar in Replit, live testbar, modern und technisch sauber aufgebaut.
+
+**Bitte beginne die vollständige Generierung dieses Projekts in diesem Repl. Erstelle alle benötigten Dateien und Verzeichnisse mit Code, Assets und Dummy-Daten.**

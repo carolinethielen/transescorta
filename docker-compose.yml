@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  transescorta:
+    build: .
+    container_name: transescorta-app
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    networks:
+      - transescorta-network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: transescorta-db
+    restart: always
+    environment:
+      POSTGRES_DB: transescorta
+      POSTGRES_USER: transescorta
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - transescorta-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: transescorta-nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - transescorta
+    networks:
+      - transescorta-network
+
+volumes:
+  postgres_data:
+
+networks:
+  transescorta-network:
+    driver: bridge
